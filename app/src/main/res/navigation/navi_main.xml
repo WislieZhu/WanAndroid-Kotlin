@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/navi_main"
+    android:label="main"
+    app:startDestination="@id/fragment_main">
+
+
+    <fragment
+        android:id="@+id/fragment_main"
+        android:name="com.wislie.wanandroid.fragment.MainFragment"
+        tools:layout="@layout/fragment_main">
+
+        <action
+            android:id="@+id/action_fragment_main_to_fragment_search_article"
+            app:destination="@id/fragment_search_article" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/fragment_search_article"
+        android:name="com.wislie.wanandroid.fragment.SearchArticleFragment"
+        tools:layout="@layout/fragment_search_article">
+        <action
+            android:id="@+id/action_fragment_search_article_to_fragment_search_article_result"
+            app:destination="@id/fragment_search_article_result" />
+    </fragment>
+
+
+    <fragment
+        android:id="@+id/fragment_search_article_result"
+        android:name="com.wislie.wanandroid.fragment.SearchArticleResultFragment"
+        tools:layout="@layout/fragment_search_article_result">
+        <argument
+            android:name="hotKey"
+            app:argType="string" />
+
+        <action
+            android:id="@+id/action_fragment_search_article_result_to_fragment_web"
+            app:destination="@id/fragment_web" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/fragment_web"
+        android:name="com.wislie.wanandroid.fragment.WebFragment"
+        tools:layout="@layout/fragment_web">
+        <!--<argument
+            android:name="linkUrl"
+            app:argType="String" />-->
+
+    </fragment>
+
+    <fragment
+        android:id="@+id/fragment_login"
+        android:name="com.wislie.wanandroid.fragment.LoginFragment"
+        tools:layout="@layout/fragment_login">
+
+    </fragment>
+
+
+
+</navigation>

@@ -1,0 +1,113 @@
+ext.deps = [:]
+
+def versions = [:]
+versions.retrofit="2.9.0"
+versions.cookieJar = "v1.0.1"
+versions.loggingInterceptor = "3.9.0"
+versions.lifecycle = "2.4.1"
+versions.niceDialog = "1.2.0"
+versions.navigation = "2.5.3"
+versions.recyclerviewx = "1.3.2"
+versions.paging_version = "3.1.1"
+versions.swiperefreshlayout = "1.1.0"
+versions.loadsir = "1.3.8"
+versions.bannerviewpager = "3.1.5"
+versions.glide = "4.13.2"
+versions.flowlayout = "1.1.2"
+versions.agentweb = "v5.0.6-androidx"
+versions.downloader = "v5.0.4-androidx"
+versions.splashscreen = "1.0.0-beta02"
+versions.pictureselector = "v3.10.7"
+versions.magicIndicator = "1.7.0"
+versions.mmkv = "1.2.14"
+versions.permissionx = "1.7.1"
+versions.leakcanary = "2.10"
+versions.camerax = "1.0.0"
+versions.tkrefreshlayout = "1.0.7"
+
+def retrofit = [:]
+retrofit.runtime="com.squareup.retrofit2:retrofit:$versions.retrofit"
+retrofit.gson = "com.squareup.retrofit2:converter-gson:$versions.retrofit"
+//retrofit.adapter = "com.squareup.retrofit2:adapter-rxjava3:$versions.retrofit"
+deps.retrofit = retrofit
+
+def cookieJar = [:]
+cookieJar.PersistentCookieJar="com.github.franmontiel:PersistentCookieJar:$versions.cookieJar"
+deps.cookieJar = cookieJar
+
+def okhttp_logging = [:]
+okhttp_logging.interceptor = "com.squareup.okhttp3:logging-interceptor:$versions.loggingInterceptor"
+deps.okhttp_logging=okhttp_logging
+
+def lifecycle = [:]
+lifecycle.livedata = "androidx.lifecycle:lifecycle-livedata-ktx:$versions.lifecycle"
+lifecycle.runtime = "androidx.lifecycle:lifecycle-runtime-ktx:$versions.lifecycle"
+lifecycle.viewmodel = "androidx.lifecycle:lifecycle-viewmodel-ktx:$versions.lifecycle"
+deps.lifecycle = lifecycle
+
+def niceDialog =  "com.github.SheHuan:NiceDialog:$versions.niceDialog"
+deps.niceDialog = niceDialog
+
+
+def navigation = [:]
+navigation.fragment="androidx.navigation:navigation-fragment-ktx:$versions.navigation"
+navigation.ui="androidx.navigation:navigation-ui-ktx:$versions.navigation"
+deps.navigation = navigation
+
+def recyclerviewx = "com.yanzhenjie.recyclerview:x:$versions.recyclerviewx"
+deps.recyclerviewx = recyclerviewx
+
+def paging = "androidx.paging:paging-runtime:$versions.paging_version"
+deps.paging = paging
+
+def swiperefreshlayout = "androidx.swiperefreshlayout:swiperefreshlayout:$versions.swiperefreshlayout"
+deps.swiperefreshlayout = swiperefreshlayout
+
+def loadsir = "com.kingja.loadsir:loadsir:$versions.loadsir"
+deps.loadsir = loadsir
+
+def bannerviewpager = "com.github.zhpanvip:BannerViewPager:$versions.bannerviewpager"
+deps.bannerviewpager = bannerviewpager
+
+def glide = [:]
+glide.runtime = "com.github.bumptech.glide:glide:$versions.glide"
+glide.compiler = "com.github.bumptech.glide:compiler:$versions.glide"
+deps.glide = glide
+
+def flowlayout = "com.hyman:flowlayout-lib:$versions.flowlayout"
+deps.flowlayout = flowlayout
+
+def agentweb=[:]
+agentweb.core="com.github.Justson.AgentWeb:agentweb-core:$versions.agentweb"
+agentweb.filechooser="com.github.Justson.AgentWeb:agentweb-filechooser:$versions.agentweb"
+deps.agentweb = agentweb
+
+def downloader="com.github.Justson:Downloader:$versions.downloader"
+deps.downloader = downloader
+
+def splashscreen = "androidx.core:core-splashscreen:$versions.splashscreen"
+deps.splashscreen = splashscreen
+
+def magicIndicator="com.github.hackware1993:MagicIndicator:$versions.magicIndicator"
+deps.magicIndicator = magicIndicator
+
+def mmkv = "com.tencent:mmkv:$versions.mmkv"
+deps.mmkv=mmkv
+
+def permissionx = "com.guolindev.permissionx:permissionx:$versions.permissionx"
+deps.permissionx = permissionx
+
+def camerax = [:]
+camerax.core = "androidx.camera:camera-core:$versions.camerax"
+camerax.camera2 = "androidx.camera:camera-camera2:$versions.camerax"
+camerax.lifecycle = "androidx.camera:camera-lifecycle:$versions.camerax"
+deps.camerax = camerax
+//camerax.view = "androidx.camera:camera-core:$versions.camerax"
+
+def tkrefreshlayout = "com.lcodecorex:tkrefreshlayout:$versions.tkrefreshlayout"
+deps.tkrefreshlayout = tkrefreshlayout
+
+def leakcanary ="com.squareup.leakcanary:leakcanary-android:$versions.leakcanary"
+deps.leakcanary=leakcanary
+
+deps.baseUrl = "https://www.wanandroid.com/"

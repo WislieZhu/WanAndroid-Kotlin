@@ -1,0 +1,473 @@
+
+
+这个项目争取用navigation的方式写一遍
+
+BaseNetworkApi
+1.提供可扩展的OkhttpClientBuilder作为形参的抽象方法
+2.提供可扩展的RetrofitBuilder作为形参的抽象方法
+3.创建okhttpClient
+4.接收Class<T>作为形参, 返回参数为T
+NetworkApi
+1.继承BaseNetworkApi
+2.重写setOkhttpClientBuilder：添加缓存目录, cookieJar, 公共拦截器, 缓存拦截器, 日志拦截器, 超时时间 连接、读、写
+3.重写setRetrofitBuilder: 添加gson转换
+ApiService
+创建ApiService懒汉式单例
+
+
+
+
+一.缓存拦截器 CacheInterceptor
+@Override public Response intercept(Chain chain) throws IOException {
+    Response cacheCandidate = cache != null
+        ? cache.get(chain.request())
+        : null;
+    //步骤1
+    CacheStrategy strategy = new CacheStrategy.Factory(now, chain.request(), cacheCandidate).get();
+
+    //如果有缓存，更新统计指标, 增加命中率
+    if (cache != null) {
+      cache.trackResponse(strategy);
+    }
+
+    //步骤4
+    //处理方式一
+    //如果当前没有网络且找不到缓存
+    if (networkRequest == null && cacheResponse == null) {
+        return new Response.Builder()
+          .request(chain.request())
+          .protocol(Protocol.HTTP_1_1)
+          .code(504)
+          .message("Unsatisfiable Request (only-if-cached)")
+          .body(Util.EMPTY_RESPONSE)
+          .sentRequestAtMillis(-1L)
+          .receivedResponseAtMillis(System.currentTimeMillis())
+          .build();
+    }
+
+    //步骤5
+    //处理方式二
+    //如果不使用网络请求，直接返回缓存的Response
+    if (networkRequest == null) {
+        return cacheResponse.newBuilder()
+          .cacheResponse(stripBody(cacheResponse))
+          .build();
+    }
+
+    //步骤6
+    //处理方式三
+    //本地有缓存,服务器返回状态码为HTTP_NOT_MODIFIED(304),使用缓存数据
+    if (cacheResponse != null) {
+        if (networkResponse.code() == HTTP_NOT_MODIFIED) {
+        Response response = cacheResponse.newBuilder()
+            .headers(combine(cacheResponse.headers(), networkResponse.headers()))
+            .sentRequestAtMillis(networkResponse.sentRequestAtMillis())
+            .receivedResponseAtMillis(networkResponse.receivedResponseAtMillis())
+            .cacheResponse(stripBody(cacheResponse))
+            .networkResponse(stripBody(networkResponse))
+            .build();
+        networkResponse.body().close();
+
+        // Update the cache after combining headers but before stripping the
+        // Content-Encoding header (as performed by initContentStream()).
+        cache.trackConditionalCacheHit();
+        cache.update(cacheResponse, response);
+        return response;
+        } else {
+        closeQuietly(cacheResponse.body());
+        }
+    }
+
+    //步骤7
+    //处理方式四
+    //如果服务器资源已经修改，使用网络响应返回的最新数据
+    Response response = networkResponse.newBuilder()
+        .cacheResponse(stripBody(cacheResponse))
+        .networkResponse(stripBody(networkResponse))
+        .build();
+
+    if (cache != null) {
+      if (HttpHeaders.hasBody(response) && CacheStrategy.isCacheable(response, networkRequest)) {
+        // Offer this request to the cache.
+        CacheRequest cacheRequest = cache.put(response);
+        return cacheWritingResponse(cacheRequest, response);
+      }
+
+      if (HttpMethod.invalidatesCache(networkRequest.method())) {
+        try {
+          cache.remove(networkRequest);
+        } catch (IOException ignored) {
+          // The cache cannot be written.
+        }
+      }
+    }
+    return response;
+
+}
+
+public CacheStrategy get() {
+  //步骤2
+  CacheStrategy candidate = getCandidate();
+
+  if (candidate.networkRequest != null && request.cacheControl().onlyIfCached()) {
+    // We're forbidden from using the network and the cache is insufficient.
+    return new CacheStrategy(null, null);
+  }
+
+  return candidate;
+}
+
+//步骤3
+private CacheStrategy getCandidate() {
+  //找不到缓存，需要网络请求
+  if (cacheResponse == null) {
+    return new CacheStrategy(request, null);
+  }
+
+  // 如果是https请求且缺少握手操作，需要网络请求
+  if (request.isHttps() && cacheResponse.handshake() == null) {
+    return new CacheStrategy(request, null);
+  }
+
+  // 判断网络请求该不该缓存下来，不该缓存则，需要网络请求
+  if (!isCacheable(cacheResponse, request)) {
+    return new CacheStrategy(request, null);
+  }
+
+
+  // 如果指定不缓存或者是可选择的请求，需要网络请求
+  CacheControl requestCaching = request.cacheControl();
+  if (requestCaching.noCache() || hasConditions(request)) {
+    return new CacheStrategy(request, null);
+  }
+
+  //上述需要网络请求返回的 CacheStrategy 第一个参数传入request
+
+  //如果缓存是不受影响的，CacheStrategy传入cacheResponse
+  CacheControl responseCaching = cacheResponse.cacheControl();
+  if (responseCaching.immutable()) {
+    return new CacheStrategy(null, cacheResponse);
+  }
+
+
+  //可以缓存，添加请求头信息
+  if (!responseCaching.noCache() && ageMillis + minFreshMillis < freshMillis + maxStaleMillis) {
+    Response.Builder builder = cacheResponse.newBuilder();
+    if (ageMillis + minFreshMillis >= freshMillis) {
+      builder.addHeader("Warning", "110 HttpURLConnection \"Response is stale\"");
+    }
+    long oneDayMillis = 24 * 60 * 60 * 1000L;
+    if (ageMillis > oneDayMillis && isFreshnessLifetimeHeuristic()) {
+      builder.addHeader("Warning", "113 HttpURLConnection \"Heuristic expiration\"");
+    }
+    return new CacheStrategy(null, builder.build());
+  }
+
+  ...
+}
+
+综上述:
+一.如果当前没有网络且找不到缓存,返回504
+二.如果当前没有网络，有本地缓存,直接返回缓存的Response
+三.本地有缓存,服务器返回状态码为HTTP_NOT_MODIFIED(304),使用缓存数据
+四.如果服务器资源已经修改，使用网络响应返回的最新数据
+
+用代码表示
+class LogInterceptor : Interceptor {
+    override fun intercept(chain: Interceptor.Chain): Response {
+
+        val request = chain.request()
+        val response = chain.proceed(request)
+
+        //第一种情况:没有网络，也没有缓存， 返回504
+        if (response.cacheResponse() == null && !NetworkUtil.isNetworkAvailable(Utils.getApp())) {
+            Log.i("WislieZhu", "504")
+        }
+        //第二种情况:没有网络，本地有缓存,使用本地缓存
+        if (response.cacheResponse() != null && !NetworkUtil.isNetworkAvailable(Utils.getApp())) {
+            Log.i("WislieZhu", "从缓存中获取数据")
+
+        }
+        //第三种情况:访问服务器资源，返回的状态码为304,本地有缓存,使用本地缓存
+        if (response.cacheResponse() != null) {
+            response.networkResponse()?.let { networkResponse ->
+                if (networkResponse.code() == HttpURLConnection.HTTP_NOT_MODIFIED) {
+                    Log.i("WislieZhu", "从缓存中获取数据 code=${networkResponse.code()}")
+                }
+            }
+        }
+        //第四种情况:访问服务器资源，资源发生变化,使用网络访问
+        response.networkResponse()?.let {networkResponse ->
+            if (networkResponse.code() != HttpURLConnection.HTTP_NOT_MODIFIED) {
+                Log.i("WislieZhu", "从网络中获取数据 code=${networkResponse.code()}")
+            }
+        }
+
+        return response
+    }
+}
+
+二.是否缓存
+public static boolean invalidatesCache(String method) {
+    return method.equals("POST")
+        || method.equals("PATCH")
+        || method.equals("PUT")
+        || method.equals("DELETE")
+        || method.equals("MOVE");     // WebDAV
+}
+如果请求的method 是post,patch,put,delete,move 那么okhttp不作缓存
+
+三.Response.Build中addHeader和header的区别
+
+List<String> namesAndValues = new ArrayList<>(20);
+addHeader:
+public Builder addHeader(String name, String value) {
+  headers.add(name, value);
+  return this;
+}
+public Builder add(String name, String value) {
+  checkName(name);
+  checkValue(value, name);
+  return addLenient(name, value);
+}
+Builder addLenient(String name, String value) {
+  namesAndValues.add(name);
+  namesAndValues.add(value.trim());
+  return this;
+}
+header:
+public Builder header(String name, String value) {
+  headers.set(name, value);
+  return this;
+}
+public Builder set(String name, String value) {
+  checkName(name);
+  checkValue(value, name);
+  removeAll(name);
+  addLenient(name, value);
+  return this;
+}
+public Builder removeAll(String name) {
+  for (int i = 0; i < namesAndValues.size(); i += 2) {
+    if (name.equalsIgnoreCase(namesAndValues.get(i))) {
+      namesAndValues.remove(i); // name
+      namesAndValues.remove(i); // value
+      i -= 2;
+    }
+  }
+  return this;
+}
+
+四.本地缓存添加方式:
+客户端第一次请求网络时，服务器返回回复信息。如果数据正常的话，客户端缓存在本地的缓存目录。
+当客户端再次访问同一个地址时，客户端会检测本地有没有缓存，如果有缓存的话，数据是有没有过期，如果没有过期的话则直接运用缓存内容
+1.指定缓存目录
+Cache(File(Utils.getApp().cacheDir, "xx_network_cache")
+android 10.0及以上的需要做存储兼容适配, 为了适配不同的android版本, 使用cacheDir
+2.Cache-Control
+是由服务器返回的Response中添加的头信息，它的目的是告诉客户端是要从本地读取缓存还是直接从服务器摘取消息
+FORCE_NETWORK 强制使用网络请求
+FORCE_CACHE 只取本地的缓存
+private 客户端可以缓存
+public  客户端和代理服务器都可以缓存
+max-age=xxx 缓存数据在xxx秒后过期
+
+
+五.addNetworkInterceptor和addInterceptor的区别
+addInterceptor
+1.有无网络都会被调用到
+2.addInterceptor() 方法添加的拦截器是放在最前面
+
+addNetworkInterceptor
+1.无网络时不会被调用
+2.在非 WebSocket 请求时，添加在 ConnectInterceptor 和 CallServerInterceptor 之间的, 也就是在发起请求和响应之间
+
+六.Http不同的状态码
+1XX Informational(信息性状态码) 接收的请求正在处理
+2XX Success(成功状态码) 请求正常处理完毕
+3XX Redirection(重定向状态码) 需要进行附加操作以完成请求
+4XX ClientError(客户端错误状态码) 服务器无法处理请求
+5XX ServerError(服务端错误状态码) 服务器处理请求出错
+ 200: '服务器成功返回请求的数据。'
+ 201: '新建或修改数据成功。'
+ 202: '一个请求已经进入后台排队（异步任务）。'
+ 204: '删除数据成功。'
+ 400: '发出的请求有错误，服务器没有进行新建或修改数据的操作。'
+ 401: '用户没有权限（令牌、用户名、密码错误）。'
+ 403: '用户得到授权，但是访问是被禁止的。'
+ 404: '发出的请求针对的是不存在的记录，服务器没有进行操作。'
+ 406: '请求的格式不可得。'
+ 410: '请求的资源被永久删除，且不会再得到的。'
+ 422: '当创建一个对象时，发生一个验证错误。'
+ 500: '服务器发生错误，请检查服务器。'
+ 502: '网关错误。'
+ 503: '服务不可用，服务器暂时过载或维护。'
+ 504: '网关超时。'
+
+七.GET请求与Post请求区别
+ post:
+ post请求会把前端html表单中的所有数据放到Request body，用户无法直接观察到
+ post请求不会缓存
+ post请求不会把数据直接暴露在URL键值对中，所以适合处理敏感数据，如密码、金额等
+ post请求没有参数长度的限制，所以支持更多更大的数据包
+ post请求接受参数数据类型没有限制
+ get:
+ get请求把参数数据队列加到前端html提交表单的action属性所指的URL中，值和表单内各个字段一一对应，在URL中可以看到
+ get请求会把数据直接暴露在URL键值对中，所以不适合处理敏感数据，如密码、金额等
+ get请求可被缓存，浏览器回退时则是无害的，因为已被缓存，不会再次重复提交请求
+ get请求只接受参数数据类型为ASCII字符
+ get请求会限制参数长度，如超出限制长度则无法发出请求
+
+综上述:
+post请求只应当用于处理数据(传送数据)，而不适用于获取数据;
+get请求只应当用于取回数据(获取数据)，而不适用于传送数据;
+
+待理解的问题
+1.没看出addNetworkInterceptor重定向的问题
+2.拦截器的添加顺序
+3.okhttp是长连接还是短连接
+
+
+1.文件存储适配
+
+
+协程
+delay() 非阻塞
+
+GlobalScope启动的协程无法使进程保持活动状态，它们就像守护线程, 当主线程的执行完, 协程作用域GlobalScope内的函数也会执行完
+协程是轻量级的，不像线程一样容易发生内存不足
+可以抽取launch内部的代码块作为一个独立的函数，需要声明为挂起函数
+runBlocking 是一个普通函数, runBlocking方法会阻塞当前线程, coroutineScope是一个挂起函数
+协程取消 job.cancel, cancelAndJoin的结合
+
+
+
+继续看okhttp
+https://juejin.cn/post/6844903752424488974
+
+
+------性能优化------
+冷启动：后台没有我们的进程了(手动干掉或者系统回收了)，点击桌面的app应用图标启动
+
+
+
+一定要尝试:一半布局一半compose-ui
+
+databinding中lib和app的包名不能一致
+
+
+1.主页
+请求到数据
+将数据显示到recyclerview
+点击存在问题
+刷新和加载更多, 还有分页，空白页
+asm点击次数控制
+
+FATAL EXCEPTION: main
+Process: com.wislie.wanandroid, PID: 20592
+retrofit2.HttpException: HTTP 504 Unsatisfiable Request (only-if-cached)
+
+1.状态栏
+
+
+
+
+https://github.com/hongyangAndroid/FlowLayout
+
+
+android 启动动画
+1.依赖
+2.主题适配
+android11及以下
+<!-- android11及以下的启动动画适配 -->
+<style name="MySplashTheme" parent="Theme.SplashScreen">
+    <item name="windowSplashScreenBackground">@color/purple_500</item>
+    <item name="windowSplashScreenAnimatedIcon">@mipmap/ic_launcher</item>
+    <item name="windowSplashScreenAnimationDuration">200</item>
+    <item name="postSplashScreenTheme">@style/SplashAppTheme</item> <!-- 必须 -->
+</style>
+
+<style name="SplashAppTheme" parent="Theme.MaterialComponents.DayNight.NoActionBar">
+    <item name="colorPrimary">@color/purple_500</item>
+    <item name="colorPrimaryDark">@color/purple_500</item>
+    <item name="colorAccent">@color/purple_500</item>
+</style>
+
+android12及以上
+<!-- android12启动动画适配 -->
+<style name="MySplashTheme" parent="Theme.SplashScreen">
+    <item name="android:windowSplashScreenBackground">@color/purple_500</item>
+    <item name="android:windowSplashScreenAnimatedIcon">@mipmap/ic_launcher</item>
+    <item name="android:windowSplashScreenAnimationDuration">200</item>
+    <item name="android:windowSplashScreenIconBackgroundColor">@color/purple_500</item>
+    <item name="postSplashScreenTheme">@style/SplashAppTheme</item> <!-- 必须 -->
+</style>
+
+<style name="SplashAppTheme" parent="Theme.MaterialComponents.DayNight.NoActionBar">
+    <item name="colorPrimary">@color/purple_500</item>
+    <item name="colorPrimaryDark">@color/purple_500</item>
+    <item name="colorAccent">@color/purple_500</item>
+</style>
+
+3.启动的activity
+需要在super.onCreate方法前调用 installSplashScreen()
+
+
+LeakCanary的工作原理
+将activity包装到weakreference中,如果weakreference包装过的activity被回收，该weakreference引用会被放到ReferenceQueue中, 监测ReferenceQueue检查activity是否能够被回收
+常见的内存泄漏:
+1.fragment
+第一点:Fragment.onDestroyView() 的时候没有去清除和view相关的变量
+第二点:将activity对象作为Context
+第三点:注册之后忘记 解除注册(比如rxjava, 广播)
+
+
+
+
+1.click只能点击一次
+2.底部虚拟导航栏
+3.还有没有网络的提示
+4.加载更多, 加载中。。 没感受到效果
+5.还有banner的点击
+
+
+解决的问题有:
+1.那个页面加载，那个页面消失
+2.PageDataAdapter 数据的修改
+
+
+
+
+
+
+
+
+
+目标是没有网络点击不动 哈哈哈
+
+
+PagingDataAdapter
+https://mp.weixin.qq.com/s?__biz=MzA5MzI3NjE2MA==&mid=2650253490&idx=1&sn=2e82553e9d835b6544591abb9dc855b5&chksm=886359ddbf14d0cb8d18bd053ade2f1131e76cac930e27068cef881d3cc4b689734a6a2ce22c&scene=27
+
+工作职责:
+工作情况:
+自主学习情况:
+
+
+Process: com.wislie.wanandroid, PID: 23026
+    java.lang.IllegalStateException: Fragment already added: NoLeakNiceDialog{a3da971} (05d6adf7-f6c0-4ce9-a6e3-8d727c7c3cd0 tag=NoLeakNiceDialog)
+        at androidx.fragment.app.FragmentStore.addFragment(FragmentStore.java:92)
+        at androidx.fragment.app.FragmentManager.addFragment(FragmentManager.java:1481)
+        at androidx.fragment.app.BackStackRecord.executeOps(BackStackRecord.java:387)
+        at androidx.fragment.app.FragmentManager.executeOps(FragmentManager.java:1965)
+        at androidx.fragment.app.FragmentManager.executeOpsTogether(FragmentManager.java:1873)
+        at androidx.fragment.app.FragmentManager.removeRedundantOperationsAndExecute(FragmentManager.java:1823)
+        at androidx.fragment.app.FragmentManager.execPendingActions(FragmentManager.java:1760)
+        at androidx.fragment.app.FragmentManager$5.run(FragmentManager.java:547)
+        at android.os.Handler.handleCallback(Handler.java:938)
+        at android.os.Handler.dispatchMessage(Handler.java:99)
+        at android.os.Looper.loop(Looper.java:223)
+        at android.app.ActivityThread.main(ActivityThread.java:7656)
+        at java.lang.reflect.Method.invoke(Native Method)
+        at com.android.internal.os.RuntimeInit$MethodAndArgsCaller.run(RuntimeInit.java:592)
+        at com.android.internal.os.ZygoteInit.main(ZygoteInit.java:947)

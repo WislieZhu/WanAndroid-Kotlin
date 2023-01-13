@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+
+    </data>
+
+    <androidx.fragment.app.FragmentContainerView
+        android:id="@+id/fragment_container_view"
+        android:name="com.wislie.common.navigation.NavHostFragment"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/white"
+        app:defaultNavHost="true"
+        app:itemIconTint="@drawable/im_select_color_state_menu"
+        app:itemTextColor="@drawable/im_select_color_state_menu"
+        app:labelVisibilityMode="labeled"
+        app:navGraph="@navigation/navi_main" />
+
+
+</layout>
