@@ -16,6 +16,7 @@ import com.wislie.common.ext.toHtml
 import com.wislie.wanandroid.R
 import com.wislie.wanandroid.data.ArticleInfo
 import com.wislie.wanandroid.util.AnimatorUtil
+import java.text.SimpleDateFormat
 
 @BindingAdapter("author")
 fun bindAuthor(view: TextView, articleInfo: ArticleInfo) { //首页的文章作者
@@ -67,4 +68,26 @@ fun bindCoinCount(view: TextView, coinCount: Int?) {
 @BindingAdapter("rank")
 fun bindRank(view: TextView, rank: String?) {
     view.text = rank ?: "--"
+}
+
+@BindingAdapter("myCoinCount")
+fun bindMyCoinCount(view: TextView, myCoinCount: Int?) {
+    view.text = "+$myCoinCount"
+}
+
+@BindingAdapter("myCoinDesc")
+fun bindMyCoinDesc(view: TextView, myCoinDesc: String?) {
+    myCoinDesc?.run {
+        if (this.contains("积分")) {
+            view.text = this.subSequence(this.indexOf("积分"), this.length)
+        }
+    }
+}
+
+@BindingAdapter("date")
+fun bindDate(view: TextView, date: Long?) {
+    date?.run {
+        val formatDate = SimpleDateFormat("yyyy-MM-dd HH:mm:ss")
+        view.text = formatDate.format(date)
+    }
 }

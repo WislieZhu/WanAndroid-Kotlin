@@ -8,6 +8,7 @@ import com.wislie.common.base.BaseViewModelFragment
 import com.wislie.common.base.parseListState
 import com.wislie.common.ext.addFreshListener
 import com.wislie.common.ext.init
+import com.wislie.wanandroid.App
 import com.wislie.wanandroid.R
 import com.wislie.wanandroid.adapter.FirstPageArticleAdapter
 import com.wislie.wanandroid.databinding.FragmentProjectArticleBinding
@@ -75,6 +76,25 @@ class ProjectCategoryFragment :
                 startLogin()
             })
         }
+        App.instance()
+            .appViewModel
+            .userInfoLiveData
+            .observe(viewLifecycleOwner) { userInfo ->
+                val list = adapter.snapshot().items
+                if (userInfo == null) { //用户未登录, 显示未收藏
+                    for (i in list.indices) {
+                        list[i].collect = false
+                    }
+                    adapter.notifyItemRangeChanged(0, list.size, Any())
+                } else { //用户已登录, 显示收藏
+                    for (i in list.indices) {
+                        if (list[i].id in userInfo.collectIds) {
+                            list[i].collect = true
+                            adapter.notifyItemChanged(i, Any())
+                        }
+                    }
+                }
+            }
     }
 
     override fun loadData() {

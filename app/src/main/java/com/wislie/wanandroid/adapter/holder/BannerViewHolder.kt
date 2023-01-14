@@ -9,10 +9,12 @@ import com.wislie.wanandroid.R
 import com.wislie.wanandroid.data.Banner
 import com.zhpan.bannerview.BaseViewHolder
 
-class BannerViewHolder( itemView: View): BaseViewHolder<Banner>(itemView) {
+class BannerViewHolder(itemView: View) : BaseViewHolder<Banner>(itemView) {
+
     override fun bindData(data: Banner, position: Int, pageSize: Int) {
         val imageView = itemView.findViewById<ImageView>(R.id.banner_image)
-        Glide.with(Utils.getApp()).load(data.imagePath).transform( RoundedCorners(80))
+        Glide.with(itemView.context).load(data.imagePath)
+            .transform(RoundedCorners(80))
             .into(imageView)
     }
 }

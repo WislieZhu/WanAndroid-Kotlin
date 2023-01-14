@@ -29,7 +29,7 @@ interface ApiService {
     ): ApiResponse<UserInfo?>
 
     @GET("user/logout/json")
-    suspend fun logout():ApiResponse<Any?> //退出登录
+    suspend fun logout(): ApiResponse<Any?> //退出登录
 
 
     @GET("banner/json")
@@ -83,13 +83,10 @@ interface ApiService {
 
 
     @GET("lg/coin/list/{page}/json")
-    suspend fun getCoinList(): ApiResponse<ApiPageResponse<CoinItem>?>  //获取个人积分获取列表，需要登录后访问
-
-
-
-
-
-
+    suspend fun getMyCoinList(
+        @Path("page") pageNo: Long,
+        @Query("page_size") page_size:Int
+    ): ApiResponse<ApiPageResponse<CoinItem>?>  //获取个人积分获取列表，需要登录后访问
 
 
 }

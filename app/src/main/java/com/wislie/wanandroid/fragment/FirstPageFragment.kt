@@ -38,7 +38,6 @@ class FirstPageFragment : BaseViewModelFragment<BaseViewModel, FragmentFirstPage
     private val articlesViewModel: ArticlesViewModel by viewModels()
 
     private val adapter by lazy {
-
         FirstPageArticleAdapter { position, articleInfo ->
             articleInfo?.also {
                 if (it.collect != null && it.collect) {
@@ -100,9 +99,10 @@ class FirstPageFragment : BaseViewModelFragment<BaseViewModel, FragmentFirstPage
                 val header = binding.rvArticles.getChildAt(0)
                 if (header != null && header is BannerViewPager<*, *>) {
                     val bannerVp = header as BannerViewPager<Banner, BannerViewHolder>
+                    val bannerPager = BannerPager()
                     bannerVp
                         .setIndicatorGravity(IndicatorGravity.CENTER) /*指示器的位置*/
-                        .setAdapter(BannerPager())  //设置适配器    必须
+                        .setAdapter(bannerPager)  //设置适配器    必须
                         .setIndicatorStyle(IndicatorStyle.ROUND_RECT)  /*设置指示器样式*/
                         .setIndicatorSliderGap(BannerUtils.dp2px(2F)) /*指示器的间距*/
                         .create(banners)  /*设置数据*/   /*必须*/

@@ -5,9 +5,11 @@ import androidx.fragment.app.viewModels
 
 import com.wislie.common.base.BaseViewModelFragment
 import com.wislie.common.base.parseState
+import com.wislie.common.ext.findNav
 import com.wislie.wanandroid.App
 import com.wislie.wanandroid.R
 import com.wislie.wanandroid.databinding.FragmentMineBinding
+import com.wislie.wanandroid.util.Settings
 import com.wislie.wanandroid.util.startLogin
 import com.wislie.wanandroid.viewmodel.CoinViewModel
 import com.wislie.wanandroid.viewmodel.LoginViewModel
@@ -18,7 +20,6 @@ import com.wislie.wanandroid.viewmodel.MineStateViewModel
  * 我的 todo 如果没有登录到登录, 还会不会调用 loadData
  */
 class MineFragment : BaseViewModelFragment<MineStateViewModel, FragmentMineBinding>() {
-
 
     private val coinViewModel: CoinViewModel by viewModels()
 
@@ -31,8 +32,6 @@ class MineFragment : BaseViewModelFragment<MineStateViewModel, FragmentMineBindi
     override fun init(root: View) {
         super.init(root)
         binding.mineViewModel = mViewModel
-
-
         binding.btnScore.setOnClickListener {
             coinViewModel.getCoin()
         }
@@ -40,6 +39,8 @@ class MineFragment : BaseViewModelFragment<MineStateViewModel, FragmentMineBindi
         binding.btnLogout.setOnClickListener {
             logoutViewModel.logout()
         }
+
+
 
 //        binding.btnFaceRecognize.setOnClickListener { view ->//人脸识别 上传
         /*PermissionX.init(this)
@@ -60,11 +61,9 @@ class MineFragment : BaseViewModelFragment<MineStateViewModel, FragmentMineBindi
     }
 
     override fun loadData() { //表示已登录
-        App.instance()
-            .appViewModel
-            .userInfoLiveData.value?.run {
-                coinViewModel.getCoin()
-            }
+        if(Settings.isLogined){
+            coinViewModel.getCoin()
+        }
         //如果没有登录, 积分显示为--, 当前排名显示为--, 用户名显示为--
         //如果登录了, 积分显示为 coinCount, 当前排名显示为 rank, 用户名显示为username
 
@@ -81,6 +80,7 @@ class MineFragment : BaseViewModelFragment<MineStateViewModel, FragmentMineBindi
                 parseState(resultState, { coin ->
                     coin?.run {
                         mViewModel?.coin?.set(this)
+                        findNav().navigate(R.id.fragment_my_coin)
                     }
                 }, {
                     startLogin()
@@ -99,9 +99,12 @@ class MineFragment : BaseViewModelFragment<MineStateViewModel, FragmentMineBindi
 
         logoutViewModel.logoutResultLiveData.observe(viewLifecycleOwner) { resultState ->
             parseState(resultState, {
+                Settings.isLogined = false
                 App.instance().appViewModel.userInfoLiveData.value = null
                 mViewModel?.coin?.set(null)
             })
         }
+
+
     }
 }

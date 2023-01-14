@@ -1,10 +1,15 @@
 package com.wislie.wanandroid.viewmodel
 
 import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.viewModelScope
+import androidx.paging.Pager
+import androidx.paging.PagingConfig
+import androidx.paging.cachedIn
 import com.wislie.common.base.BaseViewModel
 import com.wislie.common.base.ResultState
 import com.wislie.common.base.request
 import com.wislie.wanandroid.data.Coin
+import com.wislie.wanandroid.datasource.MyCoinListPagingSource
 import com.wislie.wanandroid.network.apiService
 
 
@@ -27,8 +32,14 @@ class CoinViewModel : BaseViewModel() {
         }, coinResultLiveData)
     }
 
-
-
+    //我的积分列表
+    val myCoinListList by lazy {
+        Pager(
+            PagingConfig(PAGE_SIZE, enablePlaceholders = false),
+            pagingSourceFactory = { MyCoinListPagingSource(PAGE_SIZE) })
+            .flow
+            .cachedIn(viewModelScope)
+    }
 
 
 
