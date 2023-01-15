@@ -39,8 +39,8 @@ class FirstPageFragment : BaseViewModelFragment<BaseViewModel, FragmentFirstPage
 
     private val adapter by lazy {
         FirstPageArticleAdapter { position, articleInfo ->
-            articleInfo?.also {
-                if (it.collect != null && it.collect) {
+            articleInfo?.run {
+                if (collect != null && collect) {
                     articlesViewModel.uncollect(articleInfo, position)
                 } else {
                     articlesViewModel.collect(articleInfo, position)
@@ -94,7 +94,6 @@ class FirstPageFragment : BaseViewModelFragment<BaseViewModel, FragmentFirstPage
         articlesViewModel.bannerResultLiveData.observe(
             viewLifecycleOwner
         ) { resultState ->
-
             parseState(resultState,{ banners ->
                 val header = binding.rvArticles.getChildAt(0)
                 if (header != null && header is BannerViewPager<*, *>) {

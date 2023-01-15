@@ -9,8 +9,8 @@ import com.wislie.common.base.BaseViewModelFragment
 import com.wislie.common.ext.addFreshListener
 import com.wislie.common.ext.findNav
 import com.wislie.common.ext.init
-import com.wislie.common.util.Utils
 import com.wislie.wanandroid.R
+import com.wislie.wanandroid.adapter.LoadStateFooterAdapter
 import com.wislie.wanandroid.adapter.MyCoinAdapter
 import com.wislie.wanandroid.databinding.FragmentMyCoinListBinding
 import com.wislie.wanandroid.viewmodel.CoinViewModel
@@ -25,20 +25,20 @@ import kotlinx.coroutines.launch
  *    desc   : 我的积分列表
  *    version: 1.0
  */
-class MyCoinListFragment: BaseViewModelFragment<BaseViewModel, FragmentMyCoinListBinding>() {
+class MyCoinListFragment : BaseViewModelFragment<BaseViewModel, FragmentMyCoinListBinding>() {
 
     private val adapter by lazy {
         MyCoinAdapter()
     }
 
-    private val coinViewModel:CoinViewModel by viewModels()
+    private val coinViewModel: CoinViewModel by viewModels()
 
     override fun init(root: View) {
         super.init(root)
 
         with(toolbar) {
             setNavigationIcon(R.mipmap.ic_back)
-            setBackgroundColor(ContextCompat.getColor(Utils.getApp(), R.color.purple_500))
+            setBackgroundColor(ContextCompat.getColor(hostActivity, R.color.purple_500))
             title = "积分记录"
             setNavigationOnClickListener {
                 findNav().navigateUp()
@@ -48,7 +48,12 @@ class MyCoinListFragment: BaseViewModelFragment<BaseViewModel, FragmentMyCoinLis
             adapter.refresh() //点击即刷新
         }
         binding.swipeRefreshLayout.init(adapter)
-        binding.rvCoin.adapter = adapter
+        binding.rvCoin.adapter =
+            adapter.withLoadStateFooter(
+                footer = LoadStateFooterAdapter(
+                    retry = { adapter.retry() })
+            )
+//        binding.rvCoin.adapter = adapter
         adapter.addFreshListener(mBaseLoadService)
     }
 

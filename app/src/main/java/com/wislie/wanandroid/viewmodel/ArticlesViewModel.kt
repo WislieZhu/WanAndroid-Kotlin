@@ -13,6 +13,7 @@ import com.wislie.wanandroid.data.Banner
 import com.wislie.wanandroid.data.ProjectCategory
 import com.wislie.wanandroid.datasource.ArticleCategoryPagingSource
 import com.wislie.wanandroid.datasource.ArticlePagingSource
+import com.wislie.wanandroid.datasource.WendaArticlePagingSource
 import com.wislie.wanandroid.network.apiService
 
 
@@ -22,6 +23,14 @@ class ArticlesViewModel : BaseViewModel() {
         Pager(
             PagingConfig(PAGE_SIZE, enablePlaceholders = false),
             pagingSourceFactory = { ArticlePagingSource() })
+            .flow
+            .cachedIn(viewModelScope)
+    }
+
+    val wendaArticleList by lazy {
+        Pager(
+            PagingConfig(pageSize = 1), //, enablePlaceholders = false
+            pagingSourceFactory = { WendaArticlePagingSource() })
             .flow
             .cachedIn(viewModelScope)
     }

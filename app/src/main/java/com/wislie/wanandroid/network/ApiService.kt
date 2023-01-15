@@ -78,14 +78,19 @@ interface ApiService {
     suspend fun uncollect(@Path("id") id: Int): ApiResponse<Any?> //取消收藏文章
 
 
+    @GET("wenda/list/{page}/json")
+    suspend fun getWendaArticles(
+        @Path("page") pageNo: Long
+    ): ApiResponse<ApiPageResponse<ArticleInfo>?> //问答列表数据
+
+
     @GET("lg/coin/userinfo/json")
     suspend fun getCoin(): ApiResponse<Coin?> //获取个人积分，需要登录后访问
 
 
     @GET("lg/coin/list/{page}/json")
     suspend fun getMyCoinList(
-        @Path("page") pageNo: Long,
-        @Query("page_size") page_size:Int
+        @Path("page") pageNo: Long
     ): ApiResponse<ApiPageResponse<CoinItem>?>  //获取个人积分获取列表，需要登录后访问
 
 

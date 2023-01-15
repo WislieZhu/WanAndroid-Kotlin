@@ -32,6 +32,11 @@ class MineFragment : BaseViewModelFragment<MineStateViewModel, FragmentMineBindi
     override fun init(root: View) {
         super.init(root)
         binding.mineViewModel = mViewModel
+
+        binding.btnWenda.setOnClickListener { //问答
+            findNav().navigate(R.id.fragment_wenda)
+        }
+
         binding.btnScore.setOnClickListener {
             coinViewModel.getCoin()
         }

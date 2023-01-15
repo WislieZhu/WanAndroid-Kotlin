@@ -26,7 +26,7 @@ abstract class BaseAdapter<T : Any, Binding : ViewDataBinding, VH : BaseVHolder<
      */
     private lateinit var mOnPrependStateListener: (State) -> Unit
 
-    init {
+    /*init {
         addLoadStateListener {
 
 
@@ -38,24 +38,24 @@ abstract class BaseAdapter<T : Any, Binding : ViewDataBinding, VH : BaseVHolder<
                     mOnRefreshStateListener
                 )
             }
-            /* if (::mOnLoadMoreStateListener.isInitialized) {
-                 dispatchState(
-                     it.append, //在加载更多的时候使用
-                     it.source.append.endOfPaginationReached,
-                     mOnLoadMoreStateListener
-                 )
-             }
+            if (::mOnLoadMoreStateListener.isInitialized) {
+                dispatchState(
+                    it.append, //在加载更多的时候使用
+                    it.source.append.endOfPaginationReached,
+                    mOnLoadMoreStateListener
+                )
+            }
              if (::mOnPrependStateListener.isInitialized) {
                  dispatchState(
                      it.prepend, //在当前列表头部添加数据的时候使用
                      it.source.append.endOfPaginationReached,
                      mOnPrependStateListener
                  )
-             }*/
+             }
         }
 
 
-    }
+    }*/
 
 
     private fun dispatchState(

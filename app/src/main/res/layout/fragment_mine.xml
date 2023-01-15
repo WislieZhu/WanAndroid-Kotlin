@@ -80,7 +80,12 @@
         </LinearLayout>
 
 
-
+        <Button
+            android:gravity="center"
+            android:text="问答"
+            android:id="@+id/btn_wenda"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"/>
         <Button
             android:gravity="center"
             android:text="我的积分"

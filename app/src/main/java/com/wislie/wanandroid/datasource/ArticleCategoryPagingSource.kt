@@ -26,19 +26,15 @@ class ArticleCategoryPagingSource(private val cid: Int) : PagingSource<Long, Art
                 val articleListResp = if (cid == 0)
                     apiService.getProjectLatest(currentPage)
                 else apiService.getProjectByCategory(currentPage, cid)
-
-                if (articleListResp.errorCode == 0) {
-                    //上一页
-                    val prevPage = if (currentPage >= 1) currentPage - 1 else null
-                    //下一页
-                    var nextPage = currentPage + 1
-
-                    articleListResp.data?.also {
-                        if (it.pageCount <= nextPage) {
-                            nextPage = currentPage
+                //当前页码小于总页码页面加1
+                var nextPage: Long? = null
+                if (articleListResp != null && articleListResp.errorCode == 0) {
+                    articleListResp.data?.run {
+                        if (currentPage + 1 < this.pageCount) {
+                            nextPage = currentPage + 1
                         }
                     }
-                    LoadResult.Page(articleListResp.data?.datas ?: listOf(), prevPage, nextPage)
+                    LoadResult.Page(articleListResp.data?.datas ?: listOf(), null, nextPage)
                 } else {
                     LoadResult.Error(Exception(articleListResp.errorMsg))
                 }
