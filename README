@@ -427,13 +427,15 @@ LeakCanary的工作原理
 1.click只能点击一次
 2.底部虚拟导航栏
 3.还有没有网络的提示
-4.加载更多, 加载中。。 没感受到效果
-6.navigation 传参
+4.navigation 传参
+
 
 
 解决的问题有:
 1.那个页面加载，那个页面消失
 2.PageDataAdapter 数据的修改
+3.Paging3接口分页 有时初始的currentPage = 0 有时 currentPage = 1
+4.Paging3加载中没展示, 很大可能是布局写的文字默认和背景色一样，要根据bind时的LoadState做处理
 
 
 
@@ -454,20 +456,14 @@ https://mp.weixin.qq.com/s?__biz=MzA5MzI3NjE2MA==&mid=2650253490&idx=1&sn=2e8255
 自主学习情况:
 
 
-Process: com.wislie.wanandroid, PID: 23026
-    java.lang.IllegalStateException: Fragment already added: NoLeakNiceDialog{a3da971} (05d6adf7-f6c0-4ce9-a6e3-8d727c7c3cd0 tag=NoLeakNiceDialog)
-        at androidx.fragment.app.FragmentStore.addFragment(FragmentStore.java:92)
-        at androidx.fragment.app.FragmentManager.addFragment(FragmentManager.java:1481)
-        at androidx.fragment.app.BackStackRecord.executeOps(BackStackRecord.java:387)
-        at androidx.fragment.app.FragmentManager.executeOps(FragmentManager.java:1965)
-        at androidx.fragment.app.FragmentManager.executeOpsTogether(FragmentManager.java:1873)
-        at androidx.fragment.app.FragmentManager.removeRedundantOperationsAndExecute(FragmentManager.java:1823)
-        at androidx.fragment.app.FragmentManager.execPendingActions(FragmentManager.java:1760)
-        at androidx.fragment.app.FragmentManager$5.run(FragmentManager.java:547)
-        at android.os.Handler.handleCallback(Handler.java:938)
-        at android.os.Handler.dispatchMessage(Handler.java:99)
-        at android.os.Looper.loop(Looper.java:223)
-        at android.app.ActivityThread.main(ActivityThread.java:7656)
-        at java.lang.reflect.Method.invoke(Native Method)
-        at com.android.internal.os.RuntimeInit$MethodAndArgsCaller.run(RuntimeInit.java:592)
-        at com.android.internal.os.ZygoteInit.main(ZygoteInit.java:947)
+
+模拟器install apk的时候 提示 目标计算机拒绝连接
+解决办法：1.w+r, 切换到sdk下的platform-tools目录
+        2.adb kill-server
+        3.adb start-server
+
+
+
+
+
+https://www.cnblogs.com/mymy-android/p/14896898.html#tag5

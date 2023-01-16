@@ -1,6 +1,5 @@
 package com.wislie.wanandroid.datasource
 
-import android.util.Log
 import androidx.paging.PagingSource
 import androidx.paging.PagingState
 import com.wislie.wanandroid.data.ArticleInfo
@@ -18,36 +17,14 @@ class WendaArticlePagingSource : PagingSource<Long, ArticleInfo>() {
     override suspend fun load(params: LoadParams<Long>): LoadResult<Long, ArticleInfo> {
 
         return withContext(Dispatchers.IO) {
+            val currentPage = params.key ?: 0
             try {
-            //页码未定义置为1
-            var currentPage = params.key ?: 1
-            //仓库层请求数据
-            Log.d("MainActivity", "请求第${currentPage}页")
-            var demoReqData = apiService.getWendaArticles(currentPage)
-            //当前页码 小于 总页码 页面加1
-            var nextPage = if (currentPage < demoReqData.data?.pageCount ?: 0) {
-                currentPage + 1
-            } else {
-                //没有更多数据
-                null
-            }
-
-            LoadResult.Page(
-                data = demoReqData.data?.datas?: listOf(),
-                prevKey = null,
-                nextKey = nextPage
-            )
-
-           /* val currentPage = params.key ?: 0
-            try {
-
-
                 val articleListResp = apiService.getWendaArticles(currentPage)
                 //当前页码小于总页码页面加1
                 var nextPage: Long? = null
                 if (articleListResp != null && articleListResp.errorCode == 0) {
                     articleListResp?.data?.run {
-                        if (currentPage + 1 < this.pageCount) {
+                        if (currentPage < this.pageCount) {
                             nextPage = currentPage + 1
                         }
                     }
@@ -58,11 +35,10 @@ class WendaArticlePagingSource : PagingSource<Long, ArticleInfo>() {
                     )
                 } else {
                     LoadResult.Error(Exception(articleListResp.errorMsg))
-                }*/
+                }
             } catch (e: java.lang.Exception) {
                 LoadResult.Error(e)
             }
-
         }
     }
 }

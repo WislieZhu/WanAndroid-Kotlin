@@ -77,7 +77,6 @@ class FirstPageFragment : BaseViewModelFragment<BaseViewModel, FragmentFirstPage
         }
 
         binding.swipeRefreshLayout.init(adapter)
-        //todo 感觉没什么效果
         binding.rvArticles.adapter =
             adapter.withLoadStateFooter(footer = LoadStateFooterAdapter { adapter.retry() })
         adapter.addFreshListener(mBaseLoadService)

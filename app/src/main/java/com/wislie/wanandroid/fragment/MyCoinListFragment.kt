@@ -53,7 +53,6 @@ class MyCoinListFragment : BaseViewModelFragment<BaseViewModel, FragmentMyCoinLi
                 footer = LoadStateFooterAdapter(
                     retry = { adapter.retry() })
             )
-//        binding.rvCoin.adapter = adapter
         adapter.addFreshListener(mBaseLoadService)
     }
 

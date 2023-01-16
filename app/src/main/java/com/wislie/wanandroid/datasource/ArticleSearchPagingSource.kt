@@ -27,7 +27,7 @@ class ArticleSearchPagingSource(val hotKey: String) : PagingSource<Long, Article
                 var nextPage: Long? = null
                 if (articleListResp != null && articleListResp.errorCode == 0) {
                     articleListResp.data?.run {
-                        if (currentPage + 1 < this.pageCount) {
+                        if (currentPage < this.pageCount) {
                             nextPage = currentPage + 1
                         }
                     }

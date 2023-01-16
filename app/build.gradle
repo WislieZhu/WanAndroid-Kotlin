@@ -59,7 +59,7 @@ dependencies {
     implementation deps.okhttp_logging.interceptor
 
 
-    implementation deps.recyclerviewx
+
 
     implementation deps.bannerviewpager
 

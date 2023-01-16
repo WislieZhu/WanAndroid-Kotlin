@@ -98,7 +98,6 @@ class ProjectCategoryFragment :
     }
 
     override fun loadData() {
-
         cid?.also { id ->
             lifecycleScope.launch {
                 projectArticlesViewModel.getArticleListByCategory(id)
@@ -111,6 +110,4 @@ class ProjectCategoryFragment :
             }
         }
     }
-
-
 }

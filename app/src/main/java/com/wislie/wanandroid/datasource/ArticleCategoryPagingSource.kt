@@ -30,7 +30,7 @@ class ArticleCategoryPagingSource(private val cid: Int) : PagingSource<Long, Art
                 var nextPage: Long? = null
                 if (articleListResp != null && articleListResp.errorCode == 0) {
                     articleListResp.data?.run {
-                        if (currentPage + 1 < this.pageCount) {
+                        if (currentPage  < this.pageCount) {
                             nextPage = currentPage + 1
                         }
                     }

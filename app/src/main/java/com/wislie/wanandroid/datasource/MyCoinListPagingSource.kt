@@ -20,14 +20,14 @@ class MyCoinListPagingSource : PagingSource<Long, CoinItem>() {
     override suspend fun load(params: LoadParams<Long>): LoadResult<Long, CoinItem> {
 
         return withContext(Dispatchers.IO) {
-            val currentPage = params.key ?: 0
+            val currentPage = params.key ?: 1 //currentPage 有些是从0开始，有些是从1开始，有点乱
             try {
                 val myCoinListResp = apiService.getMyCoinList(currentPage)
                 //当前页码小于总页码页面加1
                 var nextPage: Long? = null
                 if (myCoinListResp != null && myCoinListResp.errorCode == 0) {
                     myCoinListResp.data?.run {
-                        if (currentPage + 1 < this.pageCount) {
+                        if (currentPage  < this.pageCount) {
                             nextPage = currentPage + 1
                         }
                     }

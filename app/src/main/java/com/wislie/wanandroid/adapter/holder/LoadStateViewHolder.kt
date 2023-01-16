@@ -1,6 +1,5 @@
 package com.wislie.wanandroid.adapter.holder
 
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -14,24 +13,32 @@ class LoadStateViewHolder(parent: ViewGroup, var retry: () -> Unit) :
         LayoutInflater.from(parent.context).inflate(R.layout.item_load_state, parent, false)
     ) {
     var binding: ItemLoadStateBinding = ItemLoadStateBinding.bind(itemView)
-    fun bindState(loadState: LoadState) {
-        when (loadState) {
-            is LoadState.Error -> {
-                binding.btnRetry.visibility = View.VISIBLE
-                binding.btnRetry.setOnClickListener {
-                    retry()
-                }
-                Log.d("wislieZhu", "Error了吧")
-            }
-            is LoadState.Loading -> {
-                binding.llLoading.visibility = View.VISIBLE
-                Log.d("wislieZhu", "Loading了吧")
-            }
-            else -> {
-                Log.d("wislieZhu", "else了吧")
-            }
+
+    init {
+        binding.btnRetry.setOnClickListener {
+            retry()
         }
     }
 
-
+    fun bindState(loadState: LoadState) {
+        when (loadState) {
+            is LoadState.Error -> {
+                binding.tvNoMoreData.visibility = View.GONE
+                binding.btnRetry.visibility = View.VISIBLE
+                binding.llLoading.visibility = View.GONE
+            }
+            is LoadState.Loading -> {
+                binding.tvNoMoreData.visibility = View.GONE
+                binding.btnRetry.visibility = View.GONE
+                binding.llLoading.visibility = View.VISIBLE
+            }
+            is LoadState.NotLoading -> {
+                if (loadState.endOfPaginationReached) {
+                    binding.tvNoMoreData.visibility = View.VISIBLE
+                    binding.btnRetry.visibility = View.GONE
+                    binding.llLoading.visibility = View.GONE
+                }
+            }
+        }
+    }
 }
