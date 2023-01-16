@@ -9,6 +9,7 @@ import com.wislie.common.base.BaseViewModel
 import com.wislie.common.base.ResultState
 import com.wislie.common.base.request
 import com.wislie.wanandroid.data.Coin
+import com.wislie.wanandroid.datasource.CoinRankPagingSource
 import com.wislie.wanandroid.datasource.MyCoinListPagingSource
 import com.wislie.wanandroid.network.apiService
 
@@ -33,15 +34,22 @@ class CoinViewModel : BaseViewModel() {
     }
 
     //我的积分列表
-    val myCoinListList by lazy {
+    val myCoinList by lazy {
         Pager(
-            PagingConfig(pageSize = 1),//, enablePlaceholders = false
+            PagingConfig(pageSize = PAGE_SIZE, enablePlaceholders = false),
             pagingSourceFactory = { MyCoinListPagingSource() })
             .flow
-//            .cachedIn(viewModelScope)
+            .cachedIn(viewModelScope)
     }
 
-
+    //积分排行榜
+    val coinRankList by lazy {
+        Pager(
+            PagingConfig(pageSize = PAGE_SIZE, enablePlaceholders = false),
+            pagingSourceFactory = { CoinRankPagingSource() })
+            .flow
+            .cachedIn(viewModelScope)
+    }
 
 }
 

@@ -10,7 +10,7 @@ import com.wislie.wanandroid.App
 import com.wislie.wanandroid.R
 import com.wislie.wanandroid.databinding.FragmentMineBinding
 import com.wislie.wanandroid.util.Settings
-import com.wislie.wanandroid.util.startLogin
+import com.wislie.wanandroid.util.startDestination
 import com.wislie.wanandroid.viewmodel.CoinViewModel
 import com.wislie.wanandroid.viewmodel.LoginViewModel
 import com.wislie.wanandroid.viewmodel.MineStateViewModel
@@ -37,11 +37,13 @@ class MineFragment : BaseViewModelFragment<MineStateViewModel, FragmentMineBindi
             findNav().navigate(R.id.fragment_wenda)
         }
 
-        binding.btnScore.setOnClickListener {
-            coinViewModel.getCoin()
+        binding.btnScore.setOnClickListener { //积分
+            startDestination{
+                findNav().navigate(R.id.fragment_coin_rank)
+            }
         }
 
-        binding.btnLogout.setOnClickListener {
+        binding.btnLogout.setOnClickListener { //退出登录
             logoutViewModel.logout()
         }
 
@@ -85,10 +87,7 @@ class MineFragment : BaseViewModelFragment<MineStateViewModel, FragmentMineBindi
                 parseState(resultState, { coin ->
                     coin?.run {
                         mViewModel?.coin?.set(this)
-                        findNav().navigate(R.id.fragment_my_coin)
                     }
-                }, {
-                    startLogin()
                 })
             }
 

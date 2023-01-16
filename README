@@ -428,14 +428,14 @@ LeakCanary的工作原理
 2.底部虚拟导航栏
 3.还有没有网络的提示
 4.navigation 传参
-
+5.没有网络的情况下加载列表, 有没有报错的提示
 
 
 解决的问题有:
 1.那个页面加载，那个页面消失
 2.PageDataAdapter 数据的修改
 3.Paging3接口分页 有时初始的currentPage = 0 有时 currentPage = 1
-4.Paging3加载中没展示, 很大可能是布局写的文字默认和背景色一样，要根据bind时的LoadState做处理
+4.Paging3加载中,加载更多,请重试没展示, 很大可能是布局写的文字默认和背景色一样，要根据bind时的LoadState做处理
 
 
 
@@ -461,6 +461,42 @@ https://mp.weixin.qq.com/s?__biz=MzA5MzI3NjE2MA==&mid=2650253490&idx=1&sn=2e8255
 解决办法：1.w+r, 切换到sdk下的platform-tools目录
         2.adb kill-server
         3.adb start-server
+
+
+asm地址 https://blog.51cto.com/lsieun/category2/p_4
+asm的要点回顾:
+.java文件经过Java编译器（javac）编译之后会生成一个.class文件;在.class文件中，存储的是字节码（ByteCode）数据
+ASM处理字节码的方式是“拆分－修改－合并”
+ASM能够做什么?
+父类：修改成一个新的父类
+接口：添加一个新的接口、删除已有的接口
+字段：添加一个新的字段、删除已有的字段
+方法：添加一个新的方法、删除已有的方法、修改已有的方法
+
+java8版本的lambda表达式是通过asm实现的
+ClassVisitor
+
+ClassWriter
+
+FieldVisitor
+
+FieldWriter
+
+MethodVisitor
+
+MethodWriter
+
+Label
+
+Opcodes
+
+ClassReader
+
+Type
+
+示例
+
+工具类
 
 
 

@@ -11,10 +11,12 @@ import com.wislie.common.base.BaseAdapter
 import com.wislie.common.base.State
 import com.yanzhenjie.recyclerview.SwipeRecyclerView
 
+/**
+ * 监听刷新
+ */
 fun BaseAdapter<*, *, *>.addFreshListener(
     loadService: LoadService<*>
 ) {
-
     setOnRefreshStateListener {
         when (it) {
             is State.Loading -> {
@@ -35,7 +37,9 @@ fun BaseAdapter<*, *, *>.addFreshListener(
 }
 
 
-
+/**
+ * 刷新
+ */
 fun SwipeRefreshLayout.init(adapter: PagingDataAdapter<*, *>) {
     this.setColorSchemeColors(Color.rgb(47, 223, 189))
     setOnRefreshListener {

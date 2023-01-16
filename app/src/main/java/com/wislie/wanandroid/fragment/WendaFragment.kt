@@ -7,11 +7,11 @@ import androidx.lifecycle.lifecycleScope
 import com.wislie.common.base.*
 import com.wislie.common.ext.addFreshListener
 import com.wislie.wanandroid.R
-import com.wislie.wanandroid.adapter.FirstPageArticleAdapter
 import com.wislie.common.ext.findNav
 import com.wislie.common.ext.init
 import com.wislie.common.util.Utils
 import com.wislie.wanandroid.adapter.LoadStateFooterAdapter
+import com.wislie.wanandroid.adapter.WendaArticleAdapter
 import com.wislie.wanandroid.databinding.FragmentFirstPageBinding
 import com.wislie.wanandroid.viewmodel.ArticlesViewModel
 import kotlinx.android.synthetic.main.include_toolbar.*
@@ -26,7 +26,11 @@ class WendaFragment : BaseViewModelFragment<BaseViewModel, FragmentFirstPageBind
     private val articlesViewModel: ArticlesViewModel by viewModels()
 
     private val adapter by lazy {
-        FirstPageArticleAdapter { position, articleInfo ->
+        WendaArticleAdapter({ id-> //todo 这是假的
+            id?.run {
+                articlesViewModel.getWendaCommentList(this)
+            }
+        }, { position, articleInfo ->
             articleInfo?.run {
                  if (collect != null && collect) {
                      articlesViewModel.uncollect(articleInfo, position)
@@ -34,7 +38,7 @@ class WendaFragment : BaseViewModelFragment<BaseViewModel, FragmentFirstPageBind
                      articlesViewModel.collect(articleInfo, position)
                  }
             }
-        }
+        })
     }
 
     override fun getLayoutResId(): Int {

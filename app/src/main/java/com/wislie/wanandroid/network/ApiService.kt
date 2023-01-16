@@ -84,8 +84,21 @@ interface ApiService {
     ): ApiResponse<ApiPageResponse<ArticleInfo>?> //问答列表数据
 
 
+    @GET("wenda/comments/{id}/json")
+    suspend fun getWendaComment(
+        @Path("id") id: Int
+    ): ApiResponse<ApiPageResponse<ReplyComment>?> //问答评论
+
+
+
     @GET("lg/coin/userinfo/json")
     suspend fun getCoin(): ApiResponse<Coin?> //获取个人积分，需要登录后访问
+
+
+    @GET("coin/rank/{page}/json")
+    suspend fun getCoinRank(
+        @Path("page") pageNo: Long
+    ): ApiResponse<ApiPageResponse<CoinRankInfo>?> //积分排行榜
 
 
     @GET("lg/coin/list/{page}/json")

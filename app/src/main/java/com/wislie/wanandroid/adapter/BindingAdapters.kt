@@ -6,6 +6,7 @@ import android.graphics.PorterDuff
 import android.graphics.drawable.ColorDrawable
 import android.graphics.drawable.Drawable
 import android.text.TextUtils
+import android.util.Log
 import android.view.View
 import android.widget.ImageView
 import android.widget.TextView
@@ -90,4 +91,10 @@ fun bindDate(view: TextView, date: Long?) {
         val formatDate = SimpleDateFormat("yyyy-MM-dd HH:mm:ss")
         view.text = formatDate.format(date)
     }
+}
+
+@BindingAdapter("coinRankIndex")
+fun bindCoinRank(view: TextView, coinRankIndex: Int?) {
+    Log.i("wislieZhu","coinRankIndex=$coinRankIndex")
+    view.text = (coinRankIndex ?: 1).toString()
 }

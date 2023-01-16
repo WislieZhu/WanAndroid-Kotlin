@@ -17,3 +17,14 @@ fun BaseFragment<*>.startLogin() {
 fun View.startLogin() {
     findNav().navigate(R.id.fragment_login)
 }
+
+/**
+ * 跳转目标fragment
+ */
+fun BaseFragment<*>.startDestination(block: () -> Unit) {
+    if (Settings.isLogined) {
+        block.invoke()
+    } else {
+        startLogin()
+    }
+}

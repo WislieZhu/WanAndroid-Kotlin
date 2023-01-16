@@ -40,6 +40,16 @@
             app:destination="@id/fragment_web" />
     </fragment>
 
+
+    <fragment
+        android:id="@+id/fragment_coin_rank"
+        android:name="com.wislie.wanandroid.fragment.CoinRankListFragment"
+        tools:layout="@layout/fragment_coin_rank_list">
+        <action
+            android:id="@+id/action_fragment_coin_rank_to_fragment_my_coin"
+            app:destination="@id/fragment_my_coin" />
+    </fragment>
+
     <fragment
         android:id="@+id/fragment_my_coin"
         android:name="com.wislie.wanandroid.fragment.MyCoinListFragment"

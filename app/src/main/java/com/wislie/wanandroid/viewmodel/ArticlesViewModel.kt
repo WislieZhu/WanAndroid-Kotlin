@@ -14,6 +14,7 @@ import com.wislie.wanandroid.data.ProjectCategory
 import com.wislie.wanandroid.datasource.ArticleCategoryPagingSource
 import com.wislie.wanandroid.datasource.ArticlePagingSource
 import com.wislie.wanandroid.datasource.WendaArticlePagingSource
+import com.wislie.wanandroid.datasource.WendaCommentPagingSource
 import com.wislie.wanandroid.network.apiService
 
 
@@ -21,7 +22,7 @@ class ArticlesViewModel : BaseViewModel() {
 
     val articleList by lazy {
         Pager(
-            PagingConfig(PAGE_SIZE, enablePlaceholders = false),
+            PagingConfig(pageSize = PAGE_SIZE, enablePlaceholders = false),
             pagingSourceFactory = { ArticlePagingSource() })
             .flow
             .cachedIn(viewModelScope)
@@ -29,11 +30,21 @@ class ArticlesViewModel : BaseViewModel() {
 
     val wendaArticleList by lazy {
         Pager(
-            PagingConfig(pageSize = 1), //, enablePlaceholders = false
+            PagingConfig(pageSize = PAGE_SIZE, enablePlaceholders = false),
             pagingSourceFactory = { WendaArticlePagingSource() })
             .flow
             .cachedIn(viewModelScope)
     }
+
+    /**
+     * 问答评论列表
+     */
+    fun getWendaCommentList(id: Int) =
+        Pager(
+            PagingConfig(pageSize = PAGE_SIZE, enablePlaceholders = false),
+            pagingSourceFactory = { WendaCommentPagingSource(id) })
+            .flow
+            .cachedIn(viewModelScope)
 
 
     val bannerResultLiveData by lazy {
@@ -65,7 +76,7 @@ class ArticlesViewModel : BaseViewModel() {
      */
     fun getArticleListByCategory(cid: Int) =
         Pager(
-            PagingConfig(PAGE_SIZE, enablePlaceholders = false),
+            PagingConfig(pageSize = PAGE_SIZE, enablePlaceholders = false),
             pagingSourceFactory = { ArticleCategoryPagingSource(cid) })
             .flow
             .cachedIn(viewModelScope)

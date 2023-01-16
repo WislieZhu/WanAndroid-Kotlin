@@ -3,7 +3,7 @@ package com.wislie.wanandroid.data
 /**
  * 登录信息
  */
-data class  UserInfo(
+data class UserInfo(
     val admin: Boolean,
     val chapterTops: List<Int>,
     val coinCount: Int,
