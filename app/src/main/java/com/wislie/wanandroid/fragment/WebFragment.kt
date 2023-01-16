@@ -7,6 +7,7 @@ import android.webkit.WebResourceRequest
 import android.webkit.WebView
 import android.widget.LinearLayout
 import androidx.core.content.ContextCompat
+import androidx.fragment.app.viewModels
 import com.just.agentweb.AgentWeb
 import com.just.agentweb.DefaultWebClient
 import com.just.agentweb.WebChromeClient
@@ -24,23 +25,52 @@ import kotlinx.android.synthetic.main.include_toolbar.*
 /**
  * Web
  */
-class WebFragment:BaseViewModelFragment<ArticlesViewModel,FragmentWebBinding>() {
+class WebFragment : BaseViewModelFragment<ArticlesViewModel, FragmentWebBinding>() {
 
-    private lateinit var mAgentWeb:AgentWeb
-//    private val args: WebFragmentArgs by navArgs()
+    private val articlesViewModel: ArticlesViewModel by viewModels()
+    private lateinit var mAgentWeb: AgentWeb
 
     override fun init(root: View) {
         super.init(root)
+
+        val linkUrl = arguments?.getString("linkUrl")
+        val articleId = arguments?.getInt("id")
+        val collect = arguments?.getBoolean("collect", false)
+        Log.i(TAG, "link=$linkUrl articleId=$articleId")
+
         with(toolbar) {
             setNavigationIcon(R.mipmap.ic_back)
-            setBackgroundColor(ContextCompat.getColor(Utils.getApp(), R.color.purple_500))
+            setBackgroundColor(ContextCompat.getColor(hostActivity, R.color.purple_500))
             setNavigationOnClickListener {
                 findNav().navigateUp()
             }
+            inflateMenu(R.menu.web_menu)
+            setOnMenuItemClickListener {
+                when (it.itemId) {
+                    R.id.share -> {
+
+                    }
+                    R.id.collect -> {
+
+                    }
+                    R.id.uncollect -> {
+
+                    }
+                    R.id.open_withBrowser -> {
+
+                    }
+                }
+                true
+            }
         }
 
-        val linkUrl = arguments?.getString("linkUrl")
-        Log.i(TAG,"link=$linkUrl")
+        collect?.run {
+            toolbar.menu.findItem(R.id.collect).isVisible = !this
+            toolbar.menu.findItem(R.id.uncollect).isVisible = this
+        }
+
+
+
         mAgentWeb = AgentWeb.with(this)
             .setAgentWebParent(binding.llWebContent, LinearLayout.LayoutParams(-1, -1))
             .useDefaultIndicator()

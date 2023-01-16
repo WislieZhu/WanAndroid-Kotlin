@@ -24,6 +24,8 @@ class FirstPageArticleHolder(
 
             val bundle = Bundle()
             bundle.putString("linkUrl", binding.articleInfo?.link ?: "")
+            bundle.putBoolean("collect", binding.articleInfo?.collect?:false)
+            bundle.putInt("id", binding.articleInfo?.id?:0)
             v.findNav().navigate(R.id.fragment_web, bundle)
         }
 

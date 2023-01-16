@@ -102,6 +102,24 @@ class ArticlesViewModel : BaseViewModel() {
     }
 
     /**
+     * webFragment中收藏
+     */
+    val collectLiveData by lazy {
+        MutableLiveData<ResultState<Int>>()
+    }
+    fun collect(articleId: Int) {
+        request({
+            apiService.collect(articleId)
+        }, {
+            collectLiveData.value = ResultState.Success(articleId)
+        }, { exception, errorCode ->
+            collectLiveData.value = ResultState.Error(exception, errorCode, true)
+        }, { loadingMessage, isShowingDialog ->
+
+        })
+    }
+
+    /**
      * 取消收藏
      */
     val uncollectResultLiveData by lazy {
@@ -115,6 +133,24 @@ class ArticlesViewModel : BaseViewModel() {
             uncollectResultLiveData.value = ResultState.Success(articleInfo, position)
         }, { exception, errorCode ->
             uncollectResultLiveData.value = ResultState.Error(exception, errorCode, true)
+        }, { loadingMessage, isShowingDialog ->
+
+        })
+    }
+
+    /**
+     * webFragment中取消收藏
+     */
+    val uncollectLiveData by lazy {
+        MutableLiveData<ResultState<Int>>()
+    }
+    fun uncollect(articleId: Int) {
+        request({
+            apiService.uncollect(articleId)
+        }, {
+            uncollectLiveData.value = ResultState.Success(articleId)
+        }, { exception, errorCode ->
+            uncollectLiveData.value = ResultState.Error(exception, errorCode, true)
         }, { loadingMessage, isShowingDialog ->
 
         })

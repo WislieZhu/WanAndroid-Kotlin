@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+    <item
+        android:id="@+id/share"
+        android:checked="false"
+        android:title="分享"
+        app:showAsAction="never" />
+    <item
+        android:id="@+id/collect"
+        android:checked="false"
+        android:title="收藏"
+        app:showAsAction="never" />
+    <item
+        android:id="@+id/uncollect"
+        android:checked="false"
+        android:title="取消收藏"
+        app:showAsAction="never" />
+    <item
+        android:id="@+id/open_withBrowser"
+        android:checked="false"
+        android:title="用浏览器打开"
+        app:showAsAction="never" />
+</menu>
