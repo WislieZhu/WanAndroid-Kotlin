@@ -1,10 +1,8 @@
 package com.wislie.common.base
 
-import android.util.Log
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.wislie.common.util.LiveDataBusManager
 import com.wislie.common.wrapper.ApiResponse
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Dispatchers
@@ -27,7 +25,7 @@ fun <T> BaseViewModel.request(
 ) {
     viewModelScope.launch {  //main线程
         if (isShowDialog) {
-            Log.i("wislieZhu", "request postLoading isShowDialog=true")
+//            Log.i("wislieZhu", "request postLoading isShowDialog=true")
             liveData.value = ResultState.Loading(loadingMessage, true)
         }
         runCatching {
@@ -36,7 +34,7 @@ fun <T> BaseViewModel.request(
             }
         }.onSuccess { result ->
             if (isShowDialog) {
-                Log.i("wislieZhu", "request postLoading isShowDialog=false")
+//                Log.i("wislieZhu", "request postLoading isShowDialog=false")
                 liveData.value = ResultState.Loading(loadingMessage, false)
             }
             //处理成功的情况
@@ -47,7 +45,7 @@ fun <T> BaseViewModel.request(
             }
         }.onFailure { error ->
             if (isShowDialog) {
-                Log.i("wislieZhu", "request postLoading isShowDialog=false")
+//                Log.i("wislieZhu", "request postLoading isShowDialog=false")
                 liveData.value = ResultState.Loading(loadingMessage, false)
             }
             //处理失败的情况
@@ -68,7 +66,7 @@ fun <T> BaseViewModel.request(
 ) {
     viewModelScope.launch {  //main线程
         if (isShowDialog) {
-            Log.i("wislieZhu", "request postLoading isShowDialog=true")
+//            Log.i("wislieZhu", "request postLoading isShowDialog=true")
             onLoading(loadingMessage, true)
         }
         runCatching {
@@ -77,7 +75,7 @@ fun <T> BaseViewModel.request(
             }
         }.onSuccess { result ->
             if (isShowDialog) {
-                Log.i("wislieZhu", "request postLoading isShowDialog=false")
+//                Log.i("wislieZhu", "request postLoading isShowDialog=false")
                 onLoading(loadingMessage, false)
             }
             //处理成功的情况
@@ -87,7 +85,7 @@ fun <T> BaseViewModel.request(
             }
         }.onFailure { error ->
             if (isShowDialog) {
-                Log.i("wislieZhu", "request postLoading isShowDialog=false")
+//                Log.i("wislieZhu", "request postLoading isShowDialog=false")
                 onLoading(loadingMessage, false)
             }
             //处理失败的情况

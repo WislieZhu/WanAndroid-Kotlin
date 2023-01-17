@@ -132,6 +132,7 @@ class FirstPageFragment : BaseViewModelFragment<BaseViewModel, FragmentFirstPage
             })
         }
 
+        //这是针对于用户登录后的列表收藏更新
         App.instance()
             .appViewModel
             .userInfoLiveData
@@ -148,6 +149,23 @@ class FirstPageFragment : BaseViewModelFragment<BaseViewModel, FragmentFirstPage
                             list[i].collect = true
                             adapter.notifyItemChanged(i, Any())
                         }
+                    }
+                }
+            }
+
+        //这是针对于WebFragment收藏/取消收藏后的列表收藏更新
+        App.instance()
+            .appViewModel
+            .collectEventLiveData
+            .observe(viewLifecycleOwner){ collectEvent->
+                val collect = collectEvent.collect
+                val id = collectEvent.id
+
+                val list = adapter.snapshot().items
+                for (i in list.indices) {
+                    if (list[i].id == id && list[i].collect != collect) {
+                        list[i].collect = collect
+                        adapter.notifyItemChanged(i, Any())
                     }
                 }
             }

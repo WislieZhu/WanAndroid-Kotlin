@@ -43,9 +43,16 @@ class MineFragment : BaseViewModelFragment<MineStateViewModel, FragmentMineBindi
             }
         }
 
+        binding.btnCollect.setOnClickListener { //我的收藏
+            startDestination{
+                findNav().navigate(R.id.fragment_collect)
+            }
+        }
+
         binding.btnLogout.setOnClickListener { //退出登录
             logoutViewModel.logout()
         }
+
 
 
 

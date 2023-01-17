@@ -56,6 +56,30 @@ abstract class BaseFragment<VB : ViewDataBinding> : Fragment() {
 
 }
 
+fun <R> BaseFragment<*>.parseStatexxx(
+    resultState: ResultState<R>,
+    success: (R) -> Unit
+) {
+    when (resultState) {
+        is ResultState.Success -> {
+            success.invoke(resultState.data)
+        }
+        is ResultState.Error -> {
+//            error?.invoke(resultState.exception.message)
+            Toast.makeText(hostActivity, "${resultState.exception.message}", Toast.LENGTH_SHORT)
+                .show()
+        }
+        is ResultState.Loading -> {
+            if (resultState.isShownDialog) {
+                showLoading(resultState.loadingMessage)
+            } else {
+                dismissLoading()
+            }
+        }
+    }
+}
+
+
 fun <R> BaseFragment<*>.parseState(
     resultState: ResultState<R>,
     success: (R) -> Unit,
@@ -66,11 +90,11 @@ fun <R> BaseFragment<*>.parseState(
             success.invoke(resultState.data)
         }
         is ResultState.Error -> {
-            Toast.makeText(hostActivity, "${resultState.exception.message}", Toast.LENGTH_SHORT)
-                .show()
             if (resultState.errorCode == -1001) {
                 login?.invoke()
             }
+            Toast.makeText(hostActivity, "${resultState.exception.message}", Toast.LENGTH_SHORT)
+                .show()
         }
         is ResultState.Loading -> {
             if (resultState.isShownDialog) {

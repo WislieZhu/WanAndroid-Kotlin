@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <data>
+
+    </data>
+
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+        <include
+            layout="@layout/include_toolbar" />
+
+        <net.lucode.hackware.magicindicator.MagicIndicator
+            android:id="@+id/indicator_project"
+            android:layout_width="match_parent"
+            android:layout_height="?attr/actionBarSize"
+            android:layout_gravity="left"
+            android:background="@color/purple_500"
+            android:paddingLeft="8dp"
+            android:paddingRight="8dp" />
+
+        <androidx.viewpager2.widget.ViewPager2
+            android:id="@+id/vp_project"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
+
+    </LinearLayout>
+
+</layout>

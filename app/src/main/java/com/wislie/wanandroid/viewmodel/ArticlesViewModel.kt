@@ -10,11 +10,9 @@ import com.wislie.common.base.ResultState
 import com.wislie.common.base.request
 import com.wislie.wanandroid.data.ArticleInfo
 import com.wislie.wanandroid.data.Banner
+import com.wislie.wanandroid.data.CollectWebsiteInfo
 import com.wislie.wanandroid.data.ProjectCategory
-import com.wislie.wanandroid.datasource.ArticleCategoryPagingSource
-import com.wislie.wanandroid.datasource.ArticlePagingSource
-import com.wislie.wanandroid.datasource.WendaArticlePagingSource
-import com.wislie.wanandroid.datasource.WendaCommentPagingSource
+import com.wislie.wanandroid.datasource.*
 import com.wislie.wanandroid.network.apiService
 
 
@@ -32,6 +30,17 @@ class ArticlesViewModel : BaseViewModel() {
         Pager(
             PagingConfig(pageSize = PAGE_SIZE, enablePlaceholders = false),
             pagingSourceFactory = { WendaArticlePagingSource() })
+            .flow
+            .cachedIn(viewModelScope)
+    }
+
+    /**
+     * 收藏的文章列表
+     */
+    val collectArticleList by lazy {
+        Pager(
+            PagingConfig(pageSize = PAGE_SIZE, enablePlaceholders = false),
+            pagingSourceFactory = { CollectArticlePagingSource() })
             .flow
             .cachedIn(viewModelScope)
     }
@@ -82,8 +91,40 @@ class ArticlesViewModel : BaseViewModel() {
             .cachedIn(viewModelScope)
 
 
+    val collectWebsitesLiveData by lazy {
+        MutableLiveData<ResultState<List<CollectWebsiteInfo>?>>()
+    }
+
     /**
-     * 收藏
+     * 收藏的网址列表
+     */
+    fun getCollectWebsites(){
+        request({
+            apiService.getCollectWebsites()
+        },collectWebsitesLiveData)
+    }
+
+    /**
+     * 删除收藏网址
+     */
+    val delCollectWebsiteLiveData  by lazy {
+        MutableLiveData<ResultState<Int>>()
+    }
+
+    fun delCollectWebsite(id: Int){
+        request({
+            apiService.deleteCollectWebsite(id)
+        },{
+            delCollectWebsiteLiveData.value = ResultState.Success(id)
+        },{exception, errorCode ->
+            delCollectWebsiteLiveData.value = ResultState.Error(exception, errorCode)
+        },{ loadingMessage, isShowingDialog ->
+            delCollectWebsiteLiveData.value = ResultState.Loading(loadingMessage, isShowingDialog)
+        })
+    }
+
+    /**
+     * 列表收藏
      */
     val collectResultLiveData by lazy {
         MutableLiveData<ResultState<ArticleInfo>>()
@@ -97,7 +138,7 @@ class ArticlesViewModel : BaseViewModel() {
         }, { exception, errorCode ->
             collectResultLiveData.value = ResultState.Error(exception, errorCode, true)
         }, { loadingMessage, isShowingDialog ->
-
+            collectResultLiveData.value = ResultState.Loading(loadingMessage, isShowingDialog)
         })
     }
 
@@ -107,6 +148,7 @@ class ArticlesViewModel : BaseViewModel() {
     val collectLiveData by lazy {
         MutableLiveData<ResultState<Int>>()
     }
+
     fun collect(articleId: Int) {
         request({
             apiService.collect(articleId)
@@ -115,12 +157,12 @@ class ArticlesViewModel : BaseViewModel() {
         }, { exception, errorCode ->
             collectLiveData.value = ResultState.Error(exception, errorCode, true)
         }, { loadingMessage, isShowingDialog ->
-
-        })
+            collectLiveData.value = ResultState.Loading(loadingMessage, isShowingDialog)
+        }, isShowDialog = true)
     }
 
     /**
-     * 取消收藏
+     * 列表取消收藏
      */
     val uncollectResultLiveData by lazy {
         MutableLiveData<ResultState<ArticleInfo>>()
@@ -134,7 +176,7 @@ class ArticlesViewModel : BaseViewModel() {
         }, { exception, errorCode ->
             uncollectResultLiveData.value = ResultState.Error(exception, errorCode, true)
         }, { loadingMessage, isShowingDialog ->
-
+            uncollectResultLiveData.value = ResultState.Loading(loadingMessage, isShowingDialog)
         })
     }
 
@@ -144,6 +186,7 @@ class ArticlesViewModel : BaseViewModel() {
     val uncollectLiveData by lazy {
         MutableLiveData<ResultState<Int>>()
     }
+
     fun uncollect(articleId: Int) {
         request({
             apiService.uncollect(articleId)
@@ -152,8 +195,8 @@ class ArticlesViewModel : BaseViewModel() {
         }, { exception, errorCode ->
             uncollectLiveData.value = ResultState.Error(exception, errorCode, true)
         }, { loadingMessage, isShowingDialog ->
-
-        })
+            uncollectLiveData.value = ResultState.Loading(loadingMessage, isShowingDialog)
+        }, isShowDialog = true)
     }
 
 }

@@ -77,6 +77,18 @@ interface ApiService {
     @POST("lg/uncollect_originId/{id}/json")
     suspend fun uncollect(@Path("id") id: Int): ApiResponse<Any?> //取消收藏文章
 
+    @GET("lg/collect/list/{page}/json")
+    suspend fun getCollectArticles(@Path("page") pageNo: Long):
+            ApiResponse<ApiPageResponse<ArticleInfo>?> //收藏的文章列表
+
+    @GET("lg/collect/usertools/json")
+    suspend fun getCollectWebsites(): ApiResponse<List<CollectWebsiteInfo>?> //收藏的网址列表
+
+
+    @POST("lg/collect/deletetool/json")
+    @FormUrlEncoded
+    suspend fun deleteCollectWebsite(@Field("id") id: Int): ApiResponse<Any?> //删除网址收藏
+
 
     @GET("wenda/list/{page}/json")
     suspend fun getWendaArticles(
@@ -88,7 +100,6 @@ interface ApiService {
     suspend fun getWendaComment(
         @Path("id") id: Int
     ): ApiResponse<ApiPageResponse<ReplyComment>?> //问答评论
-
 
 
     @GET("lg/coin/userinfo/json")

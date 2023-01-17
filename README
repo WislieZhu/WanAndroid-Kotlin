@@ -429,6 +429,8 @@ LeakCanary的工作原理
 3.还有没有网络的提示
 4.navigation 传参
 5.没有网络的情况下加载列表, 有没有报错的提示
+6.网址列表错误的时候一直显示加载中
+7.网址列表其中一个取消收藏，刷新后原本应该3个item, 结果只展示2个item
 
 
 解决的问题有:
@@ -439,6 +441,8 @@ LeakCanary的工作原理
 
 
 
+自主看源码:
+1.TextView 跑马灯实现原理
 
 
 
@@ -461,6 +465,8 @@ https://mp.weixin.qq.com/s?__biz=MzA5MzI3NjE2MA==&mid=2650253490&idx=1&sn=2e8255
 解决办法：1.w+r, 切换到sdk下的platform-tools目录
         2.adb kill-server
         3.adb start-server
+
+
 
 
 asm地址 https://blog.51cto.com/lsieun/category2/p_4

@@ -60,6 +60,16 @@
         android:name="com.wislie.wanandroid.fragment.WendaFragment"
         tools:layout="@layout/fragment_first_page" />
 
+    <!-- 收藏 -->
+    <fragment
+        android:id="@+id/fragment_collect"
+        android:name="com.wislie.wanandroid.fragment.CollectFragment"
+        tools:layout="@layout/fragment_collect" >
+
+
+
+    </fragment>
+
     <fragment
         android:id="@+id/fragment_web"
         android:name="com.wislie.wanandroid.fragment.WebFragment"

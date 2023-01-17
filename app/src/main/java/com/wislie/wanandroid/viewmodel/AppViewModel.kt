@@ -3,6 +3,7 @@ package com.wislie.wanandroid.viewmodel
 import android.app.Application
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.MutableLiveData
+import com.wislie.wanandroid.data.CollectEvent
 import com.wislie.wanandroid.data.UserInfo
 
 /**
@@ -15,5 +16,8 @@ class AppViewModel(application: Application):AndroidViewModel(application) {
         MutableLiveData()
     }
 
-
+    //收藏
+    val collectEventLiveData:MutableLiveData<CollectEvent> by lazy {
+        MutableLiveData()
+    }
 }

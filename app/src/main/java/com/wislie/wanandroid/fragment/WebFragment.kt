@@ -1,11 +1,13 @@
 package com.wislie.wanandroid.fragment
 
+import android.content.Intent
 import android.graphics.Bitmap
-import android.util.Log
+import android.net.Uri
 import android.view.View
 import android.webkit.WebResourceRequest
 import android.webkit.WebView
 import android.widget.LinearLayout
+import android.widget.Toast
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.viewModels
 import com.just.agentweb.AgentWeb
@@ -13,11 +15,14 @@ import com.just.agentweb.DefaultWebClient
 import com.just.agentweb.WebChromeClient
 import com.just.agentweb.WebViewClient
 import com.wislie.common.base.BaseViewModelFragment
-import com.wislie.common.base.TAG
+import com.wislie.common.base.parseState
 import com.wislie.common.ext.findNav
-import com.wislie.common.util.Utils
+import com.wislie.common.ext.marquee
+import com.wislie.wanandroid.App
 import com.wislie.wanandroid.R
+import com.wislie.wanandroid.data.CollectEvent
 import com.wislie.wanandroid.databinding.FragmentWebBinding
+import com.wislie.wanandroid.util.startLogin
 import com.wislie.wanandroid.viewmodel.ArticlesViewModel
 import com.wislie.wanandroid.widget.WebLayout
 import kotlinx.android.synthetic.main.include_toolbar.*
@@ -36,7 +41,8 @@ class WebFragment : BaseViewModelFragment<ArticlesViewModel, FragmentWebBinding>
         val linkUrl = arguments?.getString("linkUrl")
         val articleId = arguments?.getInt("id")
         val collect = arguments?.getBoolean("collect", false)
-        Log.i(TAG, "link=$linkUrl articleId=$articleId")
+        val articleTitle = arguments?.getString("title")
+
 
         with(toolbar) {
             setNavigationIcon(R.mipmap.ic_back)
@@ -44,6 +50,7 @@ class WebFragment : BaseViewModelFragment<ArticlesViewModel, FragmentWebBinding>
             setNavigationOnClickListener {
                 findNav().navigateUp()
             }
+            title = articleTitle
             inflateMenu(R.menu.web_menu)
             setOnMenuItemClickListener {
                 when (it.itemId) {
@@ -51,26 +58,27 @@ class WebFragment : BaseViewModelFragment<ArticlesViewModel, FragmentWebBinding>
 
                     }
                     R.id.collect -> {
+                        articleId?.run {
+                            articlesViewModel.collect(this)
+                        }
 
                     }
                     R.id.uncollect -> {
-
+                        articleId?.run {
+                            articlesViewModel.uncollect(this)
+                        }
                     }
-                    R.id.open_withBrowser -> {
-
+                    R.id.open_withBrowser -> { //用浏览器打开 todo 使用手机浏览器
+                        val uri = Uri.parse(linkUrl)
+                        val intent = Intent(Intent.ACTION_VIEW, uri)
+                        startActivity(intent)
                     }
                 }
                 true
             }
+            marquee()
         }
-
-        collect?.run {
-            toolbar.menu.findItem(R.id.collect).isVisible = !this
-            toolbar.menu.findItem(R.id.uncollect).isVisible = this
-        }
-
-
-
+        setCollectStatus(collect)
         mAgentWeb = AgentWeb.with(this)
             .setAgentWebParent(binding.llWebContent, LinearLayout.LayoutParams(-1, -1))
             .useDefaultIndicator()
@@ -86,7 +94,6 @@ class WebFragment : BaseViewModelFragment<ArticlesViewModel, FragmentWebBinding>
             .go(linkUrl)
 
     }
-
 
     private val mWebViewClient: WebViewClient = object : WebViewClient() {
         override fun shouldOverrideUrlLoading(view: WebView, request: WebResourceRequest): Boolean {
@@ -105,6 +112,39 @@ class WebFragment : BaseViewModelFragment<ArticlesViewModel, FragmentWebBinding>
         }
     }
 
+    override fun observeData() {
+        super.observeData()
+        articlesViewModel.collectLiveData.observe(viewLifecycleOwner) { resultState ->
+            parseState(resultState, { id ->  //收藏成功
+                setCollectStatus(collect = true)
+                App.instance().appViewModel.collectEventLiveData.value =
+                    CollectEvent(collect = true, id)
+                Toast.makeText(hostActivity, "收藏成功", Toast.LENGTH_SHORT).show()
+            }, {
+                startLogin()
+            })
+        }
+        articlesViewModel.uncollectLiveData.observe(viewLifecycleOwner) { resultState ->
+            parseState(resultState, { id ->  //收藏成功
+                setCollectStatus(collect = false)
+                App.instance().appViewModel.collectEventLiveData.value =
+                    CollectEvent(collect = false, id)
+                Toast.makeText(hostActivity, "已取消收藏", Toast.LENGTH_SHORT).show()
+            }, {
+                startLogin()
+            })
+        }
+    }
+
+    /**
+     * 设置收藏状态
+     */
+    private fun setCollectStatus(collect: Boolean?) {
+        collect?.run {
+            toolbar.menu.findItem(R.id.collect).isVisible = !this
+            toolbar.menu.findItem(R.id.uncollect).isVisible = this
+        }
+    }
 
     override fun loadData() {
 
@@ -128,8 +168,4 @@ class WebFragment : BaseViewModelFragment<ArticlesViewModel, FragmentWebBinding>
     override fun getLayoutResId(): Int {
         return R.layout.fragment_web
     }
-
-
-    //onKeyDown 待会写
-
 }
