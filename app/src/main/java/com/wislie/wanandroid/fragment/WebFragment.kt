@@ -41,7 +41,6 @@ class WebFragment : BaseViewModelFragment<ArticlesViewModel, FragmentWebBinding>
         val linkUrl = arguments?.getString("linkUrl")
         val articleId = arguments?.getInt("id")
         val collect = arguments?.getBoolean("collect", false)
-        val articleTitle = arguments?.getString("title")
 
 
         with(toolbar) {
@@ -50,7 +49,6 @@ class WebFragment : BaseViewModelFragment<ArticlesViewModel, FragmentWebBinding>
             setNavigationOnClickListener {
                 findNav().navigateUp()
             }
-            title = articleTitle
             inflateMenu(R.menu.web_menu)
             setOnMenuItemClickListener {
                 when (it.itemId) {
@@ -76,7 +74,7 @@ class WebFragment : BaseViewModelFragment<ArticlesViewModel, FragmentWebBinding>
                 }
                 true
             }
-            marquee()
+
         }
         setCollectStatus(collect)
         mAgentWeb = AgentWeb.with(this)
@@ -109,6 +107,7 @@ class WebFragment : BaseViewModelFragment<ArticlesViewModel, FragmentWebBinding>
         override fun onReceivedTitle(view: WebView, t: String) {
             super.onReceivedTitle(view, t)
             toolbar.title = t
+            toolbar.marquee()
         }
     }
 

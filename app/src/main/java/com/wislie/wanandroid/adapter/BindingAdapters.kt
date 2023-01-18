@@ -7,16 +7,23 @@ import android.graphics.drawable.ColorDrawable
 import android.graphics.drawable.Drawable
 import android.text.TextUtils
 import android.util.Log
+import android.view.LayoutInflater
 import android.view.View
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.core.graphics.drawable.DrawableCompat
 import androidx.databinding.BindingAdapter
+import androidx.databinding.DataBindingUtil
 import com.bumptech.glide.Glide
 import com.wislie.common.ext.toHtml
 import com.wislie.wanandroid.R
 import com.wislie.wanandroid.data.ArticleInfo
+import com.wislie.wanandroid.data.Tag
+import com.wislie.wanandroid.databinding.ItemArticleTagBinding
 import com.wislie.wanandroid.util.AnimatorUtil
+import com.zhy.view.flowlayout.FlowLayout
+import com.zhy.view.flowlayout.TagAdapter
+import com.zhy.view.flowlayout.TagFlowLayout
 import java.text.SimpleDateFormat
 
 @BindingAdapter("author")
@@ -26,9 +33,31 @@ fun bindAuthor(view: TextView, articleInfo: ArticleInfo) { //首页的文章作�
     view.text = author
 }
 
+@BindingAdapter("type")
+fun bindType(view: TextView, type: Int?) { //首页的文章是否置顶
+    view.visibility = if (type != null && type == 1) View.VISIBLE else View.GONE
+}
+
+
 @BindingAdapter("fresh")
-fun bindFresh(view: TextView, fresh: Boolean) { //首页的文章是否置顶
-    view.visibility = if (fresh) View.VISIBLE else View.GONE
+fun bindFresh(view: TextView, fresh: Boolean?) { //是否是新的标签
+    view.visibility = if (fresh != null && fresh == true) View.VISIBLE else View.GONE
+}
+
+@BindingAdapter("tags")
+fun bindTags(view: TagFlowLayout, tags:List<Tag>?){
+    view.adapter = object : TagAdapter<Tag>(tags) {
+        override fun getView(parent: FlowLayout, position: Int, t: Tag): View {
+            val binding = DataBindingUtil.inflate<ItemArticleTagBinding>(
+                LayoutInflater.from(parent.context),
+                R.layout.item_article_tag,
+                parent,
+                false
+            )
+            binding.tag = t
+            return binding.root
+        }
+    }
 }
 
 @BindingAdapter("titles")
@@ -95,6 +124,6 @@ fun bindDate(view: TextView, date: Long?) {
 
 @BindingAdapter("coinRankIndex")
 fun bindCoinRank(view: TextView, coinRankIndex: Int?) {
-    Log.i("wislieZhu","coinRankIndex=$coinRankIndex")
+    Log.i("wislieZhu", "coinRankIndex=$coinRankIndex")
     view.text = (coinRankIndex ?: 1).toString()
 }

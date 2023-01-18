@@ -37,6 +37,7 @@
             <TextView
                 android:id="@+id/tv_is_top"
                 android:text="置顶"
+                app:type="@{articleInfo.type}"
                 android:padding="@dimen/dp_3"
                 android:textColor="@android:color/holo_red_light"
                 android:background="@drawable/shape_round_rect_red_dp_2"
@@ -63,7 +64,19 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"/>
 
-            <TextView
+            <com.zhy.view.flowlayout.TagFlowLayout
+                android:id="@+id/tag_flowlayout"
+                app:tags ="@{articleInfo.tags}"
+                app:layout_constraintTop_toTopOf="@id/tv_is_refresh"
+                app:layout_constraintBottom_toBottomOf="@id/tv_is_refresh"
+                app:layout_constraintLeft_toRightOf="@id/tv_is_refresh"
+                android:layout_marginTop="?attr/actionBarSize"
+                app:max_select="-1"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content">
+            </com.zhy.view.flowlayout.TagFlowLayout>
+
+            <!--<TextView
                 android:id="@+id/tv_is_release"
                 android:text="本站发布"
                 android:padding="@dimen/dp_3"
@@ -75,14 +88,14 @@
                 app:layout_constraintLeft_toRightOf="@id/tv_is_refresh"
                 android:textSize="11sp"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"/>
+                android:layout_height="wrap_content"/>-->
 
             <TextView
                 android:id="@+id/tv_release_date"
                 android:text="@{articleInfo.niceDate}"
                 android:textColor="@android:color/black"
-                app:layout_constraintTop_toTopOf="@id/tv_is_release"
-                app:layout_constraintBottom_toBottomOf="@id/tv_is_release"
+                app:layout_constraintTop_toTopOf="@id/tv_is_refresh"
+                app:layout_constraintBottom_toBottomOf="@id/tv_is_refresh"
                 app:layout_constraintRight_toRightOf="parent"
                 android:textSize="13sp"
                 android:layout_width="wrap_content"

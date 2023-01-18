@@ -6,8 +6,6 @@ import com.wislie.common.ext.findNav
 import com.wislie.wanandroid.R
 import com.wislie.wanandroid.data.ArticleInfo
 import com.wislie.wanandroid.databinding.ItemFirstPageArticleBinding
-//import com.wislie.wanandroid.fragment.SearchArticleFragmentDirections
-//import com.wislie.wanandroid.fragment.WebFragmentArgs
 import com.wislie.wanandroid.util.Settings
 import com.wislie.wanandroid.util.startLogin
 
@@ -26,7 +24,6 @@ class FirstPageArticleHolder(
             bundle.putString("linkUrl", binding.articleInfo?.link ?: "")
             bundle.putBoolean("collect", binding.articleInfo?.collect?:false)
             bundle.putInt("id", binding.articleInfo?.id?:0)
-            bundle.putString("title", binding.articleInfo?.title ?: "")
             v.findNav().navigate(R.id.fragment_web, bundle)
         }
 
