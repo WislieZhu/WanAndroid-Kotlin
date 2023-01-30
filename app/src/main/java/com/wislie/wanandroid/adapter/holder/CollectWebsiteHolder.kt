@@ -4,7 +4,7 @@ import com.wislie.common.base.BaseVHolder
 import com.wislie.wanandroid.data.CollectWebsiteInfo
 import com.wislie.wanandroid.databinding.ItemWebsiteBinding
 import com.wislie.wanandroid.util.Settings
-import com.wislie.wanandroid.util.startLogin
+import com.wislie.wanandroid.ext.startLogin
 
 class CollectWebsiteHolder(
     override val binding: ItemWebsiteBinding,

@@ -7,12 +7,14 @@ import androidx.lifecycle.lifecycleScope
 import com.wislie.common.base.BaseViewModel
 import com.wislie.common.base.BaseViewModelFragment
 import com.wislie.common.ext.addFreshListener
+import com.wislie.common.ext.addMoreListener
 import com.wislie.common.ext.findNav
 import com.wislie.common.ext.init
 import com.wislie.wanandroid.R
 import com.wislie.wanandroid.adapter.LoadStateFooterAdapter
 import com.wislie.wanandroid.adapter.MyCoinAdapter
 import com.wislie.wanandroid.databinding.FragmentMyCoinListBinding
+import com.wislie.wanandroid.ext.initFab
 import com.wislie.wanandroid.viewmodel.CoinViewModel
 import kotlinx.android.synthetic.main.include_toolbar.*
 import kotlinx.coroutines.flow.collectLatest
@@ -54,6 +56,8 @@ class MyCoinListFragment : BaseViewModelFragment<BaseViewModel, FragmentMyCoinLi
                     retry = { adapter.retry() })
             )
         adapter.addFreshListener(mBaseLoadService)
+        adapter.addMoreListener(binding.rvCoin)
+        binding.fab.initFab(binding.rvCoin)
     }
 
     override fun getLayoutResId(): Int {

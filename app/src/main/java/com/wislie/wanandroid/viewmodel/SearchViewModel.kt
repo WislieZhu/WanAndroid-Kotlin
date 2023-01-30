@@ -1,5 +1,6 @@
 package com.wislie.wanandroid.viewmodel
 
+import android.content.Context
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import androidx.paging.Pager
@@ -10,7 +11,12 @@ import com.wislie.common.base.ResultState
 import com.wislie.common.base.request
 import com.wislie.wanandroid.data.HotKey
 import com.wislie.wanandroid.datasource.ArticleSearchPagingSource
+import com.wislie.wanandroid.db.AppDatabase
+import com.wislie.wanandroid.db.SearchKey
 import com.wislie.wanandroid.network.apiService
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.MutableStateFlow
+import java.lang.Exception
 
 class SearchViewModel : BaseViewModel() {
 
@@ -33,10 +39,82 @@ class SearchViewModel : BaseViewModel() {
      */
     fun getArticleList(hotKey: String) =
         Pager(
-            PagingConfig(PAGE_SIZE, enablePlaceholders = false),
+            PagingConfig(pageSize = 1),
             pagingSourceFactory = { ArticleSearchPagingSource(hotKey) })
             .flow
-            .cachedIn(viewModelScope)
 
+    /**
+     * 所有的搜索记录
+     */
+    fun queryAllSearchKey(context: Context) =
+        Pager(
+            PagingConfig(pageSize = 1),
+            pagingSourceFactory = {
+                AppDatabase.getDatabaseSingleton(context).getSearchKeyDao().queryAllSearchKey()
+            })
+            .flow
+
+    /**
+     * PagingDataAdapter 删除item 摘自https://blog.csdn.net/haha223545/article/details/121040837
+     */
+    private val _removeSearchKeyFlow = MutableStateFlow(mutableListOf<Any>())
+    val removedSearchKeysFlow: Flow<MutableList<Any>> get() = _removeSearchKeyFlow
+
+    fun removeSearchKey(item: Any?) {
+        if (item == null) {
+            return
+        }
+
+        val removes = _removeSearchKeyFlow.value
+        val list = mutableListOf(item)
+        list.addAll(removes)
+        _removeSearchKeyFlow.value = list
+    }
+
+    fun removeAllSearchKeys() {
+        _removeSearchKeyFlow.value = mutableListOf()
+    }
+
+    val searchKeyLiveData by lazy {
+        MutableLiveData<ResultState<SearchKey>>()
+    }
+
+    /**
+     * 删除一条搜索记录
+     */
+    fun deleteSearchKeyByName(context: Context, searchKey: SearchKey) {
+        val searchKeyDao = AppDatabase.getDatabaseSingleton(context).getSearchKeyDao()
+        searchKey?.run {
+            val row = searchKeyDao.deleteSearchKeyByName(this.hotKey)
+            if (row > 0) {
+                searchKeyLiveData.value = ResultState.Success(searchKey)
+            } else {
+                searchKeyLiveData.value = ResultState.Error(Exception("删除出错了"))
+            }
+        }
+    }
+
+    val searchKeyDelLiveData by lazy {
+        MutableLiveData<ResultState<Boolean>>()
+    }
+
+    /**
+     * 删除所有的搜索记录
+     */
+    fun deleteSearchHistory(context: Context) {
+        val searchKeyDao = AppDatabase.getDatabaseSingleton(context).getSearchKeyDao()
+        val row = searchKeyDao.deleteAllSearchHistory()
+        if (row > 0) {
+            searchKeyDelLiveData.value = ResultState.Success(true)
+        }
+    }
+
+    /**
+     * 插入一条搜索记录
+     */
+    fun insertSearchKey(context: Context, name: String): Long {
+        val searchKeyDao = AppDatabase.getDatabaseSingleton(context).getSearchKeyDao()
+        return searchKeyDao.insertSearchKey(SearchKey(name, System.currentTimeMillis()))
+    }
 
 }

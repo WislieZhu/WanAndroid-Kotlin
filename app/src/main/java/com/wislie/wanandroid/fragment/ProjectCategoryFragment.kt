@@ -12,7 +12,7 @@ import com.wislie.wanandroid.App
 import com.wislie.wanandroid.R
 import com.wislie.wanandroid.adapter.FirstPageArticleAdapter
 import com.wislie.wanandroid.databinding.FragmentProjectArticleBinding
-import com.wislie.wanandroid.util.startLogin
+import com.wislie.wanandroid.ext.startLogin
 import com.wislie.wanandroid.viewmodel.ArticlesViewModel
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch

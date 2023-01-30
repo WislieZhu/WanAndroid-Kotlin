@@ -24,6 +24,7 @@ versions.permissionx = "1.7.1"
 versions.leakcanary = "2.10"
 versions.camerax = "1.0.0"
 versions.tkrefreshlayout = "1.0.7"
+versions.room = "2.4.3"
 
 def retrofit = [:]
 retrofit.runtime="com.squareup.retrofit2:retrofit:$versions.retrofit"
@@ -81,6 +82,12 @@ def agentweb=[:]
 agentweb.core="com.github.Justson.AgentWeb:agentweb-core:$versions.agentweb"
 agentweb.filechooser="com.github.Justson.AgentWeb:agentweb-filechooser:$versions.agentweb"
 deps.agentweb = agentweb
+
+def room = [:]
+room.runtime = "androidx.room:room-runtime:$versions.room"
+room.compiler = "androidx.room:room-compiler:$versions.room"
+room.paging = "androidx.room:room-paging:$versions.room"
+deps.room = room
 
 def downloader="com.github.Justson:Downloader:$versions.downloader"
 deps.downloader = downloader

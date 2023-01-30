@@ -48,7 +48,7 @@ class WendaFragment : BaseViewModelFragment<BaseViewModel, FragmentFirstPageBind
     override fun init(root: View) {
         super.init(root)
         with(toolbar) {
-            setBackgroundColor(ContextCompat.getColor(Utils.getApp(), R.color.purple_500))
+            setBackgroundColor(ContextCompat.getColor(hostActivity, R.color.purple_500))
             title = "问答"
             inflateMenu(R.menu.first_page_menu)
             setOnMenuItemClickListener {
@@ -69,11 +69,10 @@ class WendaFragment : BaseViewModelFragment<BaseViewModel, FragmentFirstPageBind
         }
 
         binding.swipeRefreshLayout.init(adapter)
-        //todo 感觉没什么效果
         binding.rvArticles.adapter =
-            adapter.withLoadStateFooter(footer = LoadStateFooterAdapter {
+            adapter.withLoadStateFooter(footer = LoadStateFooterAdapter(retry = {
                 adapter.retry()
-            })
+            }))
         adapter.addFreshListener(mBaseLoadService)
     }
 

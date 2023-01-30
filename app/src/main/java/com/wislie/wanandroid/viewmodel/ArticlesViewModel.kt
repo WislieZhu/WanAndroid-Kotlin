@@ -20,18 +20,18 @@ class ArticlesViewModel : BaseViewModel() {
 
     val articleList by lazy {
         Pager(
-            PagingConfig(pageSize = PAGE_SIZE, enablePlaceholders = false),
+            PagingConfig(pageSize = 1),
             pagingSourceFactory = { ArticlePagingSource() })
             .flow
-            .cachedIn(viewModelScope)
+//            .cachedIn(viewModelScope)
     }
 
     val wendaArticleList by lazy {
         Pager(
-            PagingConfig(pageSize = PAGE_SIZE, enablePlaceholders = false),
+            PagingConfig(pageSize = 1),
             pagingSourceFactory = { WendaArticlePagingSource() })
             .flow
-            .cachedIn(viewModelScope)
+//            .cachedIn(viewModelScope)
     }
 
     /**
@@ -39,10 +39,10 @@ class ArticlesViewModel : BaseViewModel() {
      */
     val collectArticleList by lazy {
         Pager(
-            PagingConfig(pageSize = PAGE_SIZE, enablePlaceholders = false),
+            PagingConfig(pageSize = 1),
             pagingSourceFactory = { CollectArticlePagingSource() })
             .flow
-            .cachedIn(viewModelScope)
+//            .cachedIn(viewModelScope)
     }
 
     /**
@@ -50,10 +50,10 @@ class ArticlesViewModel : BaseViewModel() {
      */
     fun getWendaCommentList(id: Int) =
         Pager(
-            PagingConfig(pageSize = PAGE_SIZE, enablePlaceholders = false),
+            PagingConfig(pageSize = 1),
             pagingSourceFactory = { WendaCommentPagingSource(id) })
             .flow
-            .cachedIn(viewModelScope)
+//            .cachedIn(viewModelScope)
 
 
     val bannerResultLiveData by lazy {
@@ -85,10 +85,10 @@ class ArticlesViewModel : BaseViewModel() {
      */
     fun getArticleListByCategory(cid: Int) =
         Pager(
-            PagingConfig(pageSize = PAGE_SIZE, enablePlaceholders = false),
+            PagingConfig(pageSize = 1),
             pagingSourceFactory = { ArticleCategoryPagingSource(cid) })
             .flow
-            .cachedIn(viewModelScope)
+//            .cachedIn(viewModelScope)
 
 
     val collectWebsitesLiveData by lazy {

@@ -1,10 +1,10 @@
-package com.wislie.wanandroid.util
+package com.wislie.wanandroid.ext
 
 import android.view.View
-import androidx.fragment.app.Fragment
 import com.wislie.common.base.BaseFragment
 import com.wislie.common.ext.findNav
 import com.wislie.wanandroid.R
+import com.wislie.wanandroid.util.Settings
 
 
 /**

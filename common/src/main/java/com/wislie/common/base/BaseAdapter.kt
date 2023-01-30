@@ -1,5 +1,6 @@
 package com.wislie.common.base
 
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
@@ -38,6 +39,7 @@ abstract class BaseAdapter<T : Any, Binding : ViewDataBinding, VH : BaseVHolder<
                 )
             }
             if (::mOnLoadMoreStateListener.isInitialized) {
+                Log.i("wislieZhu","isInitialized 加载更多..")
                 dispatchState(
                     it.append, //在加载更多的时候使用
                     it.source.append.endOfPaginationReached,

@@ -1,12 +1,8 @@
 package com.wislie.wanandroid.adapter
 
-import android.content.res.ColorStateList
 import android.graphics.Color
-import android.graphics.PorterDuff
-import android.graphics.drawable.ColorDrawable
 import android.graphics.drawable.Drawable
 import android.text.TextUtils
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.widget.ImageView
@@ -124,6 +120,5 @@ fun bindDate(view: TextView, date: Long?) {
 
 @BindingAdapter("coinRankIndex")
 fun bindCoinRank(view: TextView, coinRankIndex: Int?) {
-    Log.i("wislieZhu", "coinRankIndex=$coinRankIndex")
     view.text = (coinRankIndex ?: 1).toString()
 }

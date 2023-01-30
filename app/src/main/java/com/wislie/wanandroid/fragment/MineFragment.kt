@@ -10,7 +10,7 @@ import com.wislie.wanandroid.App
 import com.wislie.wanandroid.R
 import com.wislie.wanandroid.databinding.FragmentMineBinding
 import com.wislie.wanandroid.util.Settings
-import com.wislie.wanandroid.util.startDestination
+import com.wislie.wanandroid.ext.startDestination
 import com.wislie.wanandroid.viewmodel.CoinViewModel
 import com.wislie.wanandroid.viewmodel.LoginViewModel
 import com.wislie.wanandroid.viewmodel.MineStateViewModel

@@ -9,7 +9,7 @@ import com.wislie.wanandroid.R
 import com.wislie.wanandroid.adapter.ProjectCategoryPagerAdapter
 import com.wislie.wanandroid.data.ProjectCategory
 import com.wislie.wanandroid.databinding.FragmentProjectBinding
-import com.wislie.wanandroid.util.setNavigator
+import com.wislie.wanandroid.ext.setNavigator
 import com.wislie.wanandroid.viewmodel.ArticlesViewModel
 import net.lucode.hackware.magicindicator.buildins.commonnavigator.CommonNavigator
 
@@ -36,7 +36,6 @@ class ProjectFragment : BaseViewModelFragment<BaseViewModel, FragmentProjectBind
     }
 
     private fun createChildFrags(projectCategoryList: List<ProjectCategory>) {
-
         val fragments = mutableListOf<ProjectCategoryFragment>()
         addChildFragment(fragments, 0)
         val tabNameList = ArrayList<String>()

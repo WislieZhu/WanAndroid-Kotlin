@@ -1,4 +1,4 @@
-package com.wislie.wanandroid.util
+package com.wislie.wanandroid.ext
 
 import android.content.Context
 import android.view.View
@@ -20,7 +20,11 @@ import net.lucode.hackware.magicindicator.buildins.commonnavigator.indicators.Li
 import net.lucode.hackware.magicindicator.buildins.commonnavigator.titles.ColorTransitionPagerTitleView
 
 
-fun CommonNavigator.setNavigator( indicator:MagicIndicator, viewPager:ViewPager2, tabNameList: List<String>){
+fun CommonNavigator.setNavigator(
+    indicator: MagicIndicator,
+    viewPager: ViewPager2,
+    tabNameList: List<String>
+) {
 
 
     adapter = object : CommonNavigatorAdapter() {
@@ -36,10 +40,10 @@ fun CommonNavigator.setNavigator( indicator:MagicIndicator, viewPager:ViewPager2
             scaleTransitionPagerTitleView.textSize = 16f
             //未选中颜色
             scaleTransitionPagerTitleView.normalColor =
-                ContextCompat.getColor(context, R.color.teal_200)
+                ContextCompat.getColor(context, R.color.white)
             //选中颜色
             scaleTransitionPagerTitleView.selectedColor =
-                ContextCompat.getColor(context, R.color.teal_200)
+                ContextCompat.getColor(context, R.color.white)
             //点击事件
             scaleTransitionPagerTitleView.setOnClickListener { view: View? ->
                 viewPager.currentItem = index
@@ -51,14 +55,14 @@ fun CommonNavigator.setNavigator( indicator:MagicIndicator, viewPager:ViewPager2
             val linePagerIndicator = LinePagerIndicator(context)
             linePagerIndicator.mode = LinePagerIndicator.MODE_WRAP_CONTENT
             //线条的宽高度
-            linePagerIndicator.lineHeight = UIUtil.dip2px(Utils.getApp(), 2.0).toFloat()
-            linePagerIndicator.lineWidth = UIUtil.dip2px(Utils.getApp(), 30.0).toFloat()
+            linePagerIndicator.lineHeight = UIUtil.dip2px(context, 2.0).toFloat()
+            linePagerIndicator.lineWidth = UIUtil.dip2px(context, 30.0).toFloat()
             //线条的圆角
-            linePagerIndicator.roundRadius = UIUtil.dip2px(Utils.getApp(), 6.0).toFloat()
+            linePagerIndicator.roundRadius = UIUtil.dip2px(context, 6.0).toFloat()
             linePagerIndicator.startInterpolator = AccelerateInterpolator()
             linePagerIndicator.endInterpolator = DecelerateInterpolator(2.0f)
             //线条的颜色
-            linePagerIndicator.setColors(ContextCompat.getColor(context, R.color.teal_200))
+            linePagerIndicator.setColors(ContextCompat.getColor(context, R.color.white))
             return linePagerIndicator
         }
     }

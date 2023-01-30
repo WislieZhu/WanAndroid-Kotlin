@@ -6,31 +6,36 @@
 
     </data>
 
-    <RelativeLayout
+    <LinearLayout
+        android:orientation="vertical"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
+
+
+
+
+        <androidx.viewpager2.widget.ViewPager2
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:id="@+id/mainViewpager"
+            android:layout_above="@id/bottom_nav"
+            />
 
         <com.google.android.material.bottomnavigation.BottomNavigationView
             android:id="@+id/bottom_nav"
             android:layout_width="match_parent"
             android:layout_height="?attr/actionBarSize"
             android:background="@color/white"
-            app:itemIconTint="@drawable/im_select_color_state_menu"
-            app:itemTextColor="@drawable/im_select_color_state_menu"
+            app:itemIconTint="@color/im_select_color_state_menu"
+            app:itemTextColor="@color/im_select_color_state_menu"
             app:labelVisibilityMode="labeled"
             app:menu="@menu/menu_items"
+            app:elevation="0dp"
+            app:itemIconSize="20dp"
+            android:showAsAction="always|withText"
             android:layout_alignParentBottom="true"/>
 
 
-        <androidx.viewpager2.widget.ViewPager2
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:id="@+id/mainViewpager"
-            android:layout_above="@id/bottom_nav"
-            />
-
-
-
-
-    </RelativeLayout>
+    </LinearLayout>
 </layout>

@@ -12,7 +12,7 @@ import com.wislie.wanandroid.databinding.ItemWebsiteBinding
  */
 class CollectWebsiteAdapter(val collect: ( collectWebsiteInfo: CollectWebsiteInfo?) -> Unit) :
     BaseAdapter<CollectWebsiteInfo, ItemWebsiteBinding, CollectWebsiteHolder>(
-        CollectWebsiteCallback()
+        callback
     ) {
     override fun onCreateViewHolder(binding: ItemWebsiteBinding): CollectWebsiteHolder {
         return CollectWebsiteHolder(binding, collect)
@@ -21,17 +21,21 @@ class CollectWebsiteAdapter(val collect: ( collectWebsiteInfo: CollectWebsiteInf
     override fun getItemLayoutId(): Int {
         return R.layout.item_website
     }
-}
-class CollectWebsiteCallback: DiffUtil.ItemCallback<CollectWebsiteInfo>() {
 
-    override fun areItemsTheSame(oldItem: CollectWebsiteInfo, newItem: CollectWebsiteInfo): Boolean {
-        return oldItem.id == newItem.id
-    }
+    companion object{
+        val callback = object : DiffUtil.ItemCallback<CollectWebsiteInfo>() {
 
-    override fun areContentsTheSame(oldItem: CollectWebsiteInfo, newItem: CollectWebsiteInfo): Boolean {
-        return oldItem == newItem
+            override fun areItemsTheSame(oldItem: CollectWebsiteInfo, newItem: CollectWebsiteInfo): Boolean {
+                return oldItem.id == newItem.id
+            }
+
+            override fun areContentsTheSame(oldItem: CollectWebsiteInfo, newItem: CollectWebsiteInfo): Boolean {
+                return oldItem == newItem
+            }
+        }
     }
 }
+
 
 
 

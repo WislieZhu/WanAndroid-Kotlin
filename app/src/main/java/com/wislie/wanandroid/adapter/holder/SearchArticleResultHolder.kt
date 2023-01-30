@@ -6,9 +6,8 @@ import com.wislie.common.ext.findNav
 import com.wislie.wanandroid.R
 import com.wislie.wanandroid.data.ArticleInfo
 import com.wislie.wanandroid.databinding.ItemFirstPageArticleBinding
-import com.wislie.wanandroid.fragment.SearchArticleResultFragmentDirections
 import com.wislie.wanandroid.util.Settings
-import com.wislie.wanandroid.util.startLogin
+import com.wislie.wanandroid.ext.startLogin
 
 /**
  * 搜索的文章列表

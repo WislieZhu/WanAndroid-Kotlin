@@ -14,6 +14,4 @@ class ProjectCategoryPagerAdapter(private val childFrags: List<Fragment>, parent
     override fun createFragment(position: Int): Fragment {
         return childFrags[position]
     }
-
-
 }

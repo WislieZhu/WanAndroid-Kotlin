@@ -36,19 +36,18 @@ class CoinViewModel : BaseViewModel() {
     //我的积分列表
     val myCoinList by lazy {
         Pager(
-            PagingConfig(pageSize = PAGE_SIZE, enablePlaceholders = false),
+            PagingConfig(pageSize = 1),
             pagingSourceFactory = { MyCoinListPagingSource() })
             .flow
-            .cachedIn(viewModelScope)
     }
 
     //积分排行榜
     val coinRankList by lazy {
         Pager(
-            PagingConfig(pageSize = PAGE_SIZE, enablePlaceholders = false),
+            PagingConfig(pageSize = 1), //, enablePlaceholders = false
             pagingSourceFactory = { CoinRankPagingSource() })
             .flow
-            .cachedIn(viewModelScope)
+//            .cachedIn(viewModelScope)
     }
 
 }

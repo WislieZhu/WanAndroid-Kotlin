@@ -45,7 +45,7 @@ class SearchArticleResultFragment :
 
         with(toolbar) {
             setNavigationIcon(R.mipmap.ic_back)
-            setBackgroundColor(ContextCompat.getColor(Utils.getApp(), R.color.purple_500))
+            setBackgroundColor(ContextCompat.getColor(hostActivity, R.color.purple_500))
             title = args.hotKey
             setNavigationOnClickListener {
                 findNav().navigateUp()

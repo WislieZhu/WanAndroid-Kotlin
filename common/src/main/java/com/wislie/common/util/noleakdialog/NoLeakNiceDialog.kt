@@ -7,13 +7,13 @@ import androidx.annotation.LayoutRes
 import com.shehuan.nicedialog.ViewHolder
 
 
-class NoLeakNiceDialog : com.wislie.common.util.noleakdialog.BNiceDialog() {
+class NoLeakNiceDialog : BNiceDialog() {
 
     private var convertListener: NoLeakViewConvertListener? = null
 
 
     override fun intLayoutId() = this.layoutId
-     override fun convertView(holder: ViewHolder?, dialog: com.wislie.common.util.noleakdialog.BNiceDialog?) {
+     override fun convertView(holder: ViewHolder?, dialog: BNiceDialog?) {
          convertListener?.let {
              convertListener?.convertView(holder, dialog)
          }

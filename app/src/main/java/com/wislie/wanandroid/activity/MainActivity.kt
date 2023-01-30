@@ -10,10 +10,6 @@ import androidx.core.content.ContextCompat
 import com.wislie.common.base.BaseActivity
 import com.wislie.wanandroid.R
 import com.wislie.wanandroid.databinding.ActivityMainBinding
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.SupervisorJob
-import kotlin.coroutines.CoroutineContext
 
 
 class MainActivity : BaseActivity<ActivityMainBinding>() {

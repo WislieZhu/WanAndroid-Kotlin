@@ -4,7 +4,7 @@ import com.wislie.common.base.BaseVHolder
 import com.wislie.wanandroid.data.ArticleInfo
 import com.wislie.wanandroid.databinding.ItemFirstPageArticleBinding
 import com.wislie.wanandroid.util.Settings
-import com.wislie.wanandroid.util.startLogin
+import com.wislie.wanandroid.ext.startLogin
 
 class WendaArticleHolder(
     override val binding: ItemFirstPageArticleBinding,

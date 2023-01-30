@@ -1,9 +1,11 @@
 package com.wislie.wanandroid.fragment
 
+import android.util.Log
 import android.view.View
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
+import androidx.paging.LoadState
 import com.wislie.common.base.BaseViewModel
 import com.wislie.common.base.BaseViewModelFragment
 import com.wislie.common.ext.addFreshListener
@@ -13,10 +15,12 @@ import com.wislie.wanandroid.R
 import com.wislie.wanandroid.adapter.CoinRankAdapter
 import com.wislie.wanandroid.adapter.LoadStateFooterAdapter
 import com.wislie.wanandroid.databinding.FragmentCoinRankListBinding
+import com.wislie.wanandroid.ext.initFab
 import com.wislie.wanandroid.viewmodel.CoinViewModel
 import kotlinx.android.synthetic.main.include_toolbar.*
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
+import java.io.IOException
 
 /**
  *    author : Wislie
@@ -66,10 +70,32 @@ class CoinRankListFragment : BaseViewModelFragment<BaseViewModel, FragmentCoinRa
                     retry = { adapter.retry() })
             )
         adapter.addFreshListener(mBaseLoadService)
+        binding.fab.initFab(binding.rvCoinRank)
     }
 
-    override fun getLayoutResId(): Int {
-        return R.layout.fragment_coin_rank_list
+    override fun observeData() {
+        super.observeData()
+        adapter.addLoadStateListener {
+            when (it.refresh) {
+                is LoadState.NotLoading -> {
+                    Log.i("wislieZhu", "is NotLoading")
+                }
+                is LoadState.Loading -> {
+                    Log.i("wislieZhu", "is Loading")
+                }
+                is LoadState.Error -> {
+                    Log.i("wislieZhu", "is Error:")
+                    when ((it.refresh as LoadState.Error).error) {
+                        is IOException -> {
+                            Log.i("wislieZhu", "IOException")
+                        }
+                        else -> {
+                            Log.i("wislieZhu", "others exception")
+                        }
+                    }
+                }
+            }
+        }
     }
 
     override fun loadData() {
@@ -82,5 +108,9 @@ class CoinRankListFragment : BaseViewModelFragment<BaseViewModel, FragmentCoinRa
                     adapter.submitData(lifecycle, it)
                 }
         }
+    }
+
+    override fun getLayoutResId(): Int {
+        return R.layout.fragment_coin_rank_list
     }
 }

@@ -5,15 +5,13 @@ import com.wislie.common.base.BaseFragment
 import com.wislie.wanandroid.R
 import com.wislie.wanandroid.adapter.ProjectCategoryPagerAdapter
 import com.wislie.wanandroid.databinding.FragmentCollectBinding
-import com.wislie.wanandroid.util.setNavigator
+import com.wislie.wanandroid.ext.setNavigator
 import net.lucode.hackware.magicindicator.buildins.commonnavigator.CommonNavigator
 
 /**
  * 收藏
  */
 class CollectFragment:BaseFragment<FragmentCollectBinding>() {
-
-
 
     override fun getLayoutResId(): Int {
         return R.layout.fragment_collect

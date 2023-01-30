@@ -20,9 +20,11 @@ fun BaseAdapter<*, *, *>.addFreshListener(
     setOnRefreshStateListener {
         when (it) {
             is State.Loading -> {
+                Log.i("wislieZhu","Loading..")
                 loadService.showLoadCallback()
             }
             is State.Success -> {
+                Log.i("wislieZhu","Success..")
                 if (itemCount == 0) {
                     loadService.showEmptyCallback()
                 } else {
@@ -30,12 +32,38 @@ fun BaseAdapter<*, *, *>.addFreshListener(
                 }
             }
             is State.Error -> {
+                Log.i("wislieZhu","Error..")
                 loadService.showErrorCallback()
             }
         }
     }
 }
 
+
+fun BaseAdapter<*, *, *>.addMoreListener(
+   swipeRecyclerView:  SwipeRecyclerView
+) {
+    /*setOnLoadMoreStateListener {
+        when (it) {
+            is State.Loading -> {
+                Log.i("wislieZhu","addMoreListener Loading..")
+            }
+            is State.Success -> {
+
+                Log.i("wislieZhu","addMoreListener Success.. noMoreData=${it.noMoreData}")
+                if (it.noMoreData) {
+                    swipeRecyclerView.loadMoreFinish(true, false)
+                } else {
+
+                }
+            }
+            is State.Error -> {
+                Log.i("wislieZhu","addMoreListener Error..")
+
+            }
+        }
+    }*/
+}
 
 /**
  * 刷新

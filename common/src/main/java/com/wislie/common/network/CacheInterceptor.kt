@@ -16,13 +16,13 @@ import okhttp3.Response
 class CacheInterceptor(var day: Int = 7) : Interceptor {
     override fun intercept(chain: Interceptor.Chain): Response {
         var request = chain.request()
-        if (!com.wislie.common.util.NetworkUtil.isNetworkAvailable(com.wislie.common.util.Utils.getApp())) {
+        if (!NetworkUtil.isNetworkAvailable(Utils.getApp())) {
             request = request.newBuilder()
                 .cacheControl(CacheControl.FORCE_CACHE)
                 .build()
         }
         val response = chain.proceed(request)
-        if (!com.wislie.common.util.NetworkUtil.isNetworkAvailable(com.wislie.common.util.Utils.getApp())) {
+        if (!NetworkUtil.isNetworkAvailable(Utils.getApp())) {
             val maxAge = 60 * 60
             response.newBuilder()
                 .removeHeader("Pragma")

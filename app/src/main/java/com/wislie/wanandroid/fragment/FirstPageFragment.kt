@@ -10,6 +10,7 @@ import com.wislie.common.base.*
 import com.wislie.wanandroid.R
 import com.wislie.wanandroid.adapter.FirstPageArticleAdapter
 import com.wislie.common.ext.addFreshListener
+import com.wislie.common.ext.addMoreListener
 import com.wislie.common.ext.findNav
 import com.wislie.common.ext.init
 import com.wislie.common.util.Utils
@@ -20,7 +21,8 @@ import com.wislie.wanandroid.adapter.holder.BannerViewHolder
 import com.wislie.wanandroid.data.Banner
 import com.wislie.wanandroid.databinding.FragmentFirstPageBinding
 import com.wislie.wanandroid.databinding.ItemFirstPageHeaderBinding
-import com.wislie.wanandroid.util.startLogin
+import com.wislie.wanandroid.ext.initFab
+import com.wislie.wanandroid.ext.startLogin
 import com.wislie.wanandroid.viewmodel.ArticlesViewModel
 import com.zhpan.bannerview.BannerViewPager
 import com.zhpan.bannerview.constants.IndicatorGravity
@@ -56,7 +58,7 @@ class FirstPageFragment : BaseViewModelFragment<BaseViewModel, FragmentFirstPage
     override fun init(root: View) {
         super.init(root)
         with(toolbar) {
-            setBackgroundColor(ContextCompat.getColor(Utils.getApp(), R.color.purple_500))
+            setBackgroundColor(ContextCompat.getColor(hostActivity, R.color.purple_500))
             title = "玩Android"
             inflateMenu(R.menu.first_page_menu)
             setOnMenuItemClickListener {
@@ -71,29 +73,30 @@ class FirstPageFragment : BaseViewModelFragment<BaseViewModel, FragmentFirstPage
                 true
             }
         }
-
         registerLoadSir(binding.rvArticles) {
             adapter.refresh() //点击即刷新
         }
-
         binding.swipeRefreshLayout.init(adapter)
         binding.rvArticles.adapter =
-            adapter.withLoadStateFooter(footer = LoadStateFooterAdapter { adapter.retry() })
+            adapter.withLoadStateFooter(
+                footer = LoadStateFooterAdapter(
+                    retry = { adapter.retry() })
+            )
         adapter.addFreshListener(mBaseLoadService)
-
+        adapter.addMoreListener(binding.rvArticles)
         val header: ItemFirstPageHeaderBinding = DataBindingUtil.inflate(
             LayoutInflater.from(hostActivity),
             R.layout.item_first_page_header, binding.rvArticles, false
         )
         binding.rvArticles.addHeaderView(header.root)
-
+        binding.fab.initFab(binding.rvArticles)
     }
 
     override fun observeData() {
         articlesViewModel.bannerResultLiveData.observe(
             viewLifecycleOwner
         ) { resultState ->
-            parseState(resultState,{ banners ->
+            parseState(resultState, { banners ->
                 val header = binding.rvArticles.getChildAt(0)
                 if (header != null && header is BannerViewPager<*, *>) {
                     val bannerVp = header as BannerViewPager<Banner, BannerViewHolder>
@@ -157,7 +160,7 @@ class FirstPageFragment : BaseViewModelFragment<BaseViewModel, FragmentFirstPage
         App.instance()
             .appViewModel
             .collectEventLiveData
-            .observe(viewLifecycleOwner){ collectEvent->
+            .observe(viewLifecycleOwner) { collectEvent ->
                 val collect = collectEvent.collect
                 val id = collectEvent.id
 

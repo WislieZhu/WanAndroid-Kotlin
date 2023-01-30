@@ -12,7 +12,7 @@ import kotlinx.coroutines.withContext
 open class BaseViewModel : ViewModel() {
 
     companion object{
-        const val PAGE_SIZE = 15
+        const val PAGE_SIZE = 13
     }
 }
 

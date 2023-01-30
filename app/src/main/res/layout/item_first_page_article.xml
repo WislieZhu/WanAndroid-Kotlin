@@ -76,20 +76,6 @@
                 android:layout_height="wrap_content">
             </com.zhy.view.flowlayout.TagFlowLayout>
 
-            <!--<TextView
-                android:id="@+id/tv_is_release"
-                android:text="本站发布"
-                android:padding="@dimen/dp_3"
-                android:textColor="@android:color/holo_green_dark"
-                android:background="@drawable/shape_round_rect_green_dp_2"
-                android:layout_marginLeft="@dimen/dp_10"
-                app:layout_constraintTop_toTopOf="@id/tv_is_refresh"
-                app:layout_constraintBottom_toBottomOf="@id/tv_is_refresh"
-                app:layout_constraintLeft_toRightOf="@id/tv_is_refresh"
-                android:textSize="11sp"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"/>-->
-
             <TextView
                 android:id="@+id/tv_release_date"
                 android:text="@{articleInfo.niceDate}"

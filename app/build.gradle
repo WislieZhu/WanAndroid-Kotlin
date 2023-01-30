@@ -18,6 +18,15 @@ android {
         versionName "1.0"
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+
+        javaCompileOptions {
+            annotationProcessorOptions {
+                arguments += [
+                        "room.schemaLocation":"$projectDir/schemas".toString(),
+                        "room.incremental":"true",
+                        "room.expandProjection":"true"]
+            }
+        }
     }
 
     buildTypes {
@@ -58,9 +67,6 @@ dependencies {
     implementation deps.cookieJar.PersistentCookieJar
     implementation deps.okhttp_logging.interceptor
 
-
-
-
     implementation deps.bannerviewpager
 
     implementation deps.glide.runtime
@@ -82,4 +88,9 @@ dependencies {
     implementation deps.tkrefreshlayout
 
     debugImplementation deps.leakcanary
+
+    implementation deps.room.runtime
+    kapt deps.room.compiler
+    implementation deps.room.paging
+
 }
