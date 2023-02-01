@@ -25,16 +25,15 @@ fun <T> BaseViewModel.request(
 ) {
     viewModelScope.launch {  //main线程
         if (isShowDialog) {
-//            Log.i("wislieZhu", "request postLoading isShowDialog=true")
             liveData.value = ResultState.Loading(loadingMessage, true)
         }
+
         runCatching {
             withContext(defaultDispatcher) {
                 block()
             }
         }.onSuccess { result ->
             if (isShowDialog) {
-//                Log.i("wislieZhu", "request postLoading isShowDialog=false")
                 liveData.value = ResultState.Loading(loadingMessage, false)
             }
             //处理成功的情况
@@ -45,7 +44,6 @@ fun <T> BaseViewModel.request(
             }
         }.onFailure { error ->
             if (isShowDialog) {
-//                Log.i("wislieZhu", "request postLoading isShowDialog=false")
                 liveData.value = ResultState.Loading(loadingMessage, false)
             }
             //处理失败的情况
@@ -66,7 +64,6 @@ fun <T> BaseViewModel.request(
 ) {
     viewModelScope.launch {  //main线程
         if (isShowDialog) {
-//            Log.i("wislieZhu", "request postLoading isShowDialog=true")
             onLoading(loadingMessage, true)
         }
         runCatching {
@@ -75,7 +72,6 @@ fun <T> BaseViewModel.request(
             }
         }.onSuccess { result ->
             if (isShowDialog) {
-//                Log.i("wislieZhu", "request postLoading isShowDialog=false")
                 onLoading(loadingMessage, false)
             }
             //处理成功的情况
@@ -85,7 +81,6 @@ fun <T> BaseViewModel.request(
             }
         }.onFailure { error ->
             if (isShowDialog) {
-//                Log.i("wislieZhu", "request postLoading isShowDialog=false")
                 onLoading(loadingMessage, false)
             }
             //处理失败的情况

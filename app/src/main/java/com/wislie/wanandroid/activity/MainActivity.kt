@@ -10,6 +10,7 @@ import androidx.core.content.ContextCompat
 import com.wislie.common.base.BaseActivity
 import com.wislie.wanandroid.R
 import com.wislie.wanandroid.databinding.ActivityMainBinding
+import kotlinx.coroutines.GlobalScope
 
 
 class MainActivity : BaseActivity<ActivityMainBinding>() {
@@ -27,5 +28,7 @@ class MainActivity : BaseActivity<ActivityMainBinding>() {
 
 
     override fun getLayoutResId(): Int = R.layout.activity_main
+
+
 
 }

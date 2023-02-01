@@ -5,12 +5,15 @@ import android.graphics.drawable.Drawable
 import android.text.TextUtils
 import android.view.LayoutInflater
 import android.view.View
+import android.widget.EditText
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.core.graphics.drawable.DrawableCompat
 import androidx.databinding.BindingAdapter
 import androidx.databinding.DataBindingUtil
 import com.bumptech.glide.Glide
+import com.google.android.material.textfield.TextInputEditText
+import com.google.android.material.textfield.TextInputLayout
 import com.wislie.common.ext.toHtml
 import com.wislie.wanandroid.R
 import com.wislie.wanandroid.data.ArticleInfo
@@ -41,7 +44,7 @@ fun bindFresh(view: TextView, fresh: Boolean?) { //是否是新的标签
 }
 
 @BindingAdapter("tags")
-fun bindTags(view: TagFlowLayout, tags:List<Tag>?){
+fun bindTags(view: TagFlowLayout, tags: List<Tag>?) {
     view.adapter = object : TagAdapter<Tag>(tags) {
         override fun getView(parent: FlowLayout, position: Int, t: Tag): View {
             val binding = DataBindingUtil.inflate<ItemArticleTagBinding>(
@@ -74,10 +77,15 @@ fun bindCollect(view: ImageView, isCollect: Boolean) { //首页的文章标题
     view.setImageDrawable(tintDrawable)
 }
 
-@BindingAdapter("filePath")
-fun bindFilePath(view: ImageView, filePath: String) {
+/*<ImageView
+app:filePath="@{venue.imageUrl}"
+app:error="@{@drawable/venueError}" />*/
+
+@BindingAdapter(value = ["filePath", "error"])
+fun bindFilePath(view: ImageView, filePath: String, error: Drawable) {
     Glide.with(view.context)
         .load(filePath)
+        .error(error)
         .into(view)
 }
 
@@ -121,4 +129,16 @@ fun bindDate(view: TextView, date: Long?) {
 @BindingAdapter("coinRankIndex")
 fun bindCoinRank(view: TextView, coinRankIndex: Int?) {
     view.text = (coinRankIndex ?: 1).toString()
+}
+
+@BindingAdapter(value=["endIconTransformation"])
+fun bindEndIconTransformation(textInputLayout: TextInputLayout, accountValue:String?){
+    textInputLayout.isEndIconVisible = !accountValue.isNullOrEmpty()
+}
+
+@BindingAdapter(value=["focusEditText"])
+fun bindEditTextFocus(textInputEditText: TextInputEditText, action:()->Unit){
+    textInputEditText.setOnFocusChangeListener { _, hasFocus ->
+        action.invoke()
+    }
 }

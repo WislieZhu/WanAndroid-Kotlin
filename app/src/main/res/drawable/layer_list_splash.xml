@@ -6,10 +6,10 @@
         </shape>
     </item>
 
-    <item>
+    <!--<item>
         <bitmap
             android:gravity="fill"
             android:src="@mipmap/bg_splash" />
-    </item>
+    </item>-->
 
 </layer-list>

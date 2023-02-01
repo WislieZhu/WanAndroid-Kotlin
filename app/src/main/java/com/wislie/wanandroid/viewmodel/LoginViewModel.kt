@@ -34,7 +34,6 @@ class LoginViewModel : BaseViewModel() {
     }
 
     fun login(username: String, password: String) {
-        Log.i("wislieZhu", "login isShowDialog=true")
         request({
             apiService.login(username, password)
         }, loginInfoResultLiveData, isShowDialog = true)

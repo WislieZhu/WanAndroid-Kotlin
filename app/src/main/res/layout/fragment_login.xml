@@ -1,40 +1,134 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layout xmlns:android="http://schemas.android.com/apk/res/android">
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <data>
 
+        <variable
+            name="loginStateVm"
+            type="com.wislie.wanandroid.viewmodel.LoginStateViewModel" />
+
+        <variable
+            name="click"
+            type="com.wislie.wanandroid.fragment.LoginFragment.ProxyClick" />
     </data>
 
     <LinearLayout
-        android:background="@android:color/white"
-        android:orientation="vertical"
-        android:gravity="center"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:background="@android:color/white"
+        android:orientation="vertical">
+
+        <include layout="@layout/include_toolbar" />
 
 
-        <TextView
-            android:id="@+id/et_username"
-            android:layout_width="200dp"
-            android:textColor="@android:color/black"
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/input_layout_account"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="wislie"/>
+            android:layout_marginLeft="50dp"
+            android:layout_marginTop="150dp"
+            android:layout_marginRight="50dp"
+            app:hintAnimationEnabled="true"
+            app:hintEnabled="true"
+            app:boxBackgroundColor="@android:color/transparent"
+            android:background="@android:color/transparent"
+            app:startIconDrawable="@mipmap/account_icon"
+            app:endIconMode="custom"
+            app:endIconDrawable="@mipmap/ic_clear"
+            app:endIconTransformation="@{loginStateVm.account}">
 
-        <TextView
-            android:layout_marginTop="@dimen/dp_10"
-            android:id="@+id/et_pwd"
-            android:layout_width="200dp"
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/et_account"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@null"
+                android:gravity="center_vertical"
+                android:hint="请输入账号"
+                android:imeOptions="actionNext"
+                android:inputType="text"
+                android:maxLines="1"
+                android:singleLine="true"
+                android:textColor="@color/black"
+                android:textColorHint="@color/color_B6B6B6"
+                />
+            <!--app:focusEditText="@{}"-->
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/input_layout_pwd"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:textColor="@android:color/black"
-            android:text="123456"/>
+            android:layout_marginTop="10dp"
+            android:layout_marginLeft="50dp"
+            android:layout_marginRight="50dp"
+            app:boxBackgroundColor="@android:color/transparent"
+            android:background="@android:color/transparent"
+            app:hintAnimationEnabled="true"
+            app:hintEnabled="true"
+            app:passwordToggleEnabled="true"
+            app:startIconDrawable="@mipmap/pwd_icon"
+            app:passwordToggleDrawable="@mipmap/eyes_open">
 
-        <Button
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/et_password"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@null"
+                android:hint="请输入密码"
+                android:textColor="@color/black"
+                android:textColorHint="@color/color_B6B6B6"
+                android:maxLines="1"
+                android:singleLine="true"
+                android:imeOptions="actionDone"
+                android:inputType="textPassword" />
+        </com.google.android.material.textfield.TextInputLayout>
+
+
+        <!-- <TextView
+             android:id="@+id/et_username"
+             android:layout_width="200dp"
+             android:textColor="@android:color/black"
+             android:layout_height="wrap_content"
+             android:text="wislie"/>
+
+         <TextView
+             android:layout_marginTop="@dimen/dp_10"
+             android:id="@+id/et_pwd"
+             android:layout_width="200dp"
+             android:layout_height="wrap_content"
+             android:textColor="@android:color/black"
+             android:text="123456"/>-->
+
+        <com.google.android.material.button.MaterialButton
             android:id="@+id/btn_login"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginTop="25dp"
+            android:layout_marginLeft="50dp"
+            android:layout_marginRight="50dp"
+            android:background="@drawable/shape_round_rect_purple"
+            android:gravity="center"
             android:text="登录"
-            android:layout_marginTop="@dimen/dp_10"
-            android:background="@android:color/holo_blue_bright"
-            android:layout_width="200dp"
-            android:layout_height="wrap_content"/>
+            android:textSize="18sp"
+            android:textColor="@color/white"
+
+             />
+
+        <com.google.android.material.textview.MaterialTextView
+            android:layout_marginRight="50dp"
+            android:layout_marginTop="10dp"
+            android:paddingLeft="@dimen/dp_10"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="right"
+            android:text="注册"
+            android:textColor="@color/purple_500"
+            android:textSize="13sp" />
+
 
     </LinearLayout>
+
+
 </layout>

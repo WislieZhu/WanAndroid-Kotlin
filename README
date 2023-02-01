@@ -455,9 +455,7 @@ LeakCanary的工作原理
 PagingDataAdapter
 https://mp.weixin.qq.com/s?__biz=MzA5MzI3NjE2MA==&mid=2650253490&idx=1&sn=2e82553e9d835b6544591abb9dc855b5&chksm=886359ddbf14d0cb8d18bd053ade2f1131e76cac930e27068cef881d3cc4b689734a6a2ce22c&scene=27
 
-工作职责:
-工作情况:
-自主学习情况:
+
 
 
 
@@ -465,6 +463,49 @@ https://mp.weixin.qq.com/s?__biz=MzA5MzI3NjE2MA==&mid=2650253490&idx=1&sn=2e8255
 解决办法：1.w+r, 切换到sdk下的platform-tools目录
         2.adb kill-server
         3.adb start-server
+
+
+@BindingAdapter(value = ["checkChange"])
+fun checkChange(checkbox: CheckBox, listener: CompoundButton.OnCheckedChangeListener) {
+    checkbox.setOnCheckedChangeListener(listener)
+}
+xml中
+<CheckBox
+bind:checkChange="@{click.onCheckedChangeListener}"/>
+kotlin中
+inner class ProxyClick {
+    var onCheckedChangeListener =
+                CompoundButton.OnCheckedChangeListener { buttonView, isChecked ->
+                    mViewModel.isShowPwd.set(isChecked)
+                }
+}
+
+
+////////////////////
+
+@BindingAdapter(value = ["noRepeatClick"])
+@JvmStatic
+fun setOnClick(view: View, clickListener: () -> Unit) {
+    clickListener.invoke()
+}
+xml中
+<TextView
+    bind:noRepeatClick="@{()-> click.login()}"/>
+kotlin中
+inner class ProxyClick {
+    fun login() {
+
+    }
+}
+
+BindingAdapter的value的元素a
+xml标签中的bind:b
+a和b必须一致
+
+BindingAdapter的 clickListener: () -> Unit
+xml中的()-> click.login()
+两者也一致
+
 
 
 
@@ -506,6 +547,37 @@ Type
 
 
 
-
+1.设置密码显示与不显示
+2.背景
+3.设置前置图标
 
 https://www.cnblogs.com/mymy-android/p/14896898.html#tag5
+
+
+2月份计划
+1.协程和Flow
+2.Android适配方案
+3.线程
+ 其他: 如kotlin版玩Android, flutter基础，巩固ASM等
+
+
+
+3月份计划
+
+1.flutter版玩Android
+
+2.APT
+
+3.android开源库理解和手写
+
+其他:compose基础, 设计模式等
+
+
+
+4月份计划
+
+1.compose版玩Android
+
+2.Android知识点整体复习完
+
+3.算法了解

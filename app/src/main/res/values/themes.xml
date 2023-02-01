@@ -15,7 +15,8 @@
         <!-- Customize your theme here. -->
     </style>
 
-    <style name="AppTheme" parent="Theme.AppCompat.NoActionBar">
+    <!--原先Theme.AppCompat.NoActionBar-->
+    <style name="AppTheme" parent="Theme.MaterialComponents.Light.NoActionBar">
         <item name="android:statusBarColor">?attr/colorPrimaryVariant</item>
         <item name="colorPrimary">@color/purple_500</item>
         <item name="colorPrimaryDark">@color/purple_500</item>
@@ -50,6 +51,13 @@
 
     <style name="OverflowMenuStyle" parent="Widget.AppCompat.Light.PopupMenu.Overflow">
         <item name="overlapAnchor">false</item>  <!--把该属性改为false即可使menu位置位于toolbar之下-->
+    </style>
+
+
+    <!-- 设置TextInputEditText的输入下划线 -->
+    <style name="MyTextInputEditText" parent="Theme.MaterialComponents.Light.NoActionBar">
+        <item name="colorControlNormal">@android:color/darker_gray</item>
+        <item name="colorControlActivated">@android:color/darker_gray</item>
     </style>
 
 </resources>
