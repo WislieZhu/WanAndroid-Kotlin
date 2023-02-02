@@ -87,11 +87,41 @@
                 app:editTextChange="@{loginStateVm.onPasswordEditTextChangeListener}"/>
         </com.google.android.material.textfield.TextInputLayout>
 
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/input_layout_confirm_pwd"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:layout_marginLeft="50dp"
+            android:layout_marginRight="50dp"
+            app:boxBackgroundColor="@android:color/transparent"
+            android:background="@android:color/transparent"
+            app:hintAnimationEnabled="true"
+            app:hintEnabled="true"
+            app:passwordToggleEnabled="true"
+            app:startIconDrawable="@mipmap/pwd_icon"
+            app:passwordToggleDrawable="@mipmap/eyes_open"
+            app:endIconTransformation="@{loginStateVm.confirmPassword}">
 
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/et_confirm_password"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@null"
+                android:hint="请输入确认密码"
+                android:textColor="@color/black"
+                android:textColorHint="@color/color_B6B6B6"
+                android:maxLines="1"
+                android:singleLine="true"
+                android:imeOptions="actionDone"
+                android:inputType="textPassword"
+                app:focusEditText="@{loginStateVm.onFocusChangeListener}"
+                app:editTextChange="@{loginStateVm.onConfirmPasswordEditTextChangeListener}"/>
+        </com.google.android.material.textfield.TextInputLayout>
 
 
         <com.google.android.material.button.MaterialButton
-            android:id="@+id/btn_login"
+            android:id="@+id/btn_register"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
@@ -100,23 +130,12 @@
             android:layout_marginRight="50dp"
             android:background="@drawable/shape_round_rect_purple"
             android:gravity="center"
-            android:text="登录"
+            android:text="注册并登录"
             android:textSize="18sp"
             android:textColor="@color/white"
+            />
 
-             />
 
-        <com.google.android.material.textview.MaterialTextView
-            android:id="@+id/tv_register"
-            android:layout_marginRight="50dp"
-            android:layout_marginTop="10dp"
-            android:paddingLeft="@dimen/dp_10"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="right"
-            android:text="注册"
-            android:textColor="@color/purple_500"
-            android:textSize="13sp" />
 
 
     </LinearLayout>

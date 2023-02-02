@@ -6,9 +6,12 @@ import android.text.Editable
 import android.text.TextWatcher
 import android.text.method.HideReturnsTransformationMethod
 import android.text.method.PasswordTransformationMethod
+import android.view.View
+import android.view.ViewParent
 import android.widget.EditText
 import androidx.core.content.ContextCompat
 import com.google.android.material.internal.CheckableImageButton
+import com.google.android.material.textfield.TextInputEditText
 import com.google.android.material.textfield.TextInputLayout
 import com.wislie.wanandroid.R
 
@@ -63,6 +66,17 @@ fun EditText?.len():Boolean  {
     } ?: false
 }
 
+fun TextInputEditText.getInputLayout():TextInputLayout? {
+    var p = parent
+    while (p is View) {
+        if (p is TextInputLayout) {
+            return p
+        }
+        p = p.getParent()
+    }
+    return null
+}
+
 /**
  * 设置TextInputLayout的左侧图标颜色
  */
@@ -109,6 +123,9 @@ fun TextInputLayout.setPasswordTransformation() {
         }
     }
 }
+
+
+
 
 /**
  * 清空EditText中的内容

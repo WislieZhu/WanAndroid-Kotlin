@@ -507,6 +507,19 @@ xml中的()-> click.login()
 两者也一致
 
 
+navigation的fragment返回问题
+fragmentA->fragmentB->fragmentC->fragmentD
+当前处于fragmentD
+1.返回fragmentC
+findNav().navigateUp()
+2.返回fragmentB
+findNav().popBackStack(R.id.fragment_b, false)
+fragment_b 是 fragmentB在nav中的id
+2.返回fragmentA
+findNav().popBackStack(R.id.fragment_b, true)
+
+
+
 
 
 
@@ -547,9 +560,8 @@ Type
 
 
 
-1.设置密码显示与不显示
-2.背景
-3.设置前置图标
+1.有参数的高阶 BindingAdapter
+2.点击空白处 软键盘收缩
 
 https://www.cnblogs.com/mymy-android/p/14896898.html#tag5
 

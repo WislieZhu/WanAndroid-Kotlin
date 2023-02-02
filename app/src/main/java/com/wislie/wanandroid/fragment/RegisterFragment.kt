@@ -11,14 +11,14 @@ import com.wislie.common.base.parseState
 import com.wislie.common.ext.findNav
 import com.wislie.wanandroid.App
 import com.wislie.wanandroid.R
-import com.wislie.wanandroid.databinding.FragmentLoginBinding
+import com.wislie.wanandroid.databinding.FragmentRegisterBinding
 import com.wislie.wanandroid.ext.*
 import com.wislie.wanandroid.util.Settings
 import com.wislie.wanandroid.viewmodel.LoginStateViewModel
 import com.wislie.wanandroid.viewmodel.LoginViewModel
 import kotlinx.android.synthetic.main.include_toolbar.*
 
-class LoginFragment : BaseViewModelFragment<LoginStateViewModel, FragmentLoginBinding>() {
+class RegisterFragment : BaseViewModelFragment<LoginStateViewModel, FragmentRegisterBinding>() {
 
     private val loginViewModel: LoginViewModel by viewModels()
 
@@ -30,7 +30,7 @@ class LoginFragment : BaseViewModelFragment<LoginStateViewModel, FragmentLoginBi
             setNavigationIcon(R.mipmap.ic_back)
             setBackgroundColor(ContextCompat.getColor(hostActivity, R.color.purple_500))
             setTitleTextColor(Color.WHITE)
-            title = "登录"
+            title = "注册"
             setNavigationOnClickListener {
                 findNav().navigateUp()
             }
@@ -39,50 +39,58 @@ class LoginFragment : BaseViewModelFragment<LoginStateViewModel, FragmentLoginBi
         binding.inputLayoutAccount.clearEditText()
         binding.inputLayoutPwd.setPasswordTransformation()
 
-        binding.btnLogin.setOnClickListener { //登录
+        binding.btnRegister.setOnClickListener {
             when {
                 mViewModel?.account?.get()?.isEmpty() == true -> Toast.makeText(
-                    hostActivity, "请输入账号",
+                    hostActivity,
+                    "请输入账号",
                     Toast.LENGTH_SHORT
                 ).show()
                 mViewModel?.password?.get()?.isEmpty() == true -> Toast.makeText(
-                    hostActivity, "请输入密码",
+                    hostActivity,
+                    "请输入密码",
+                    Toast.LENGTH_SHORT
+                ).show()
+                mViewModel?.confirmPassword?.get()?.isEmpty() == true -> Toast.makeText(
+                    hostActivity,
+                    "请输入确认密码",
                     Toast.LENGTH_SHORT
                 ).show()
                 mViewModel?.password?.get()?.length ?: 0 < 6 -> Toast.makeText(
-                    hostActivity, "密码最少6位",
+                    hostActivity,
+                    "密码最少6位",
                     Toast.LENGTH_SHORT
                 ).show()
-                else -> loginViewModel.login(
+                mViewModel?.password?.get() == mViewModel?.confirmPassword?.get() -> Toast.makeText(
+                    hostActivity,
+                    "两次输入的密码不一致",
+                    Toast.LENGTH_SHORT
+                ).show()
+                else -> loginViewModel.register(
                     mViewModel?.account?.get()!!,
+                    mViewModel?.password?.get()!!,
                     mViewModel?.password?.get()!!
                 )
             }
         }
-        binding.tvRegister.setOnClickListener { //注册页面
-            val direction =
-                LoginFragmentDirections.actionFragmentLoginToFragmentRegister()
-            findNav().navigate(direction)
-        }
-
     }
 
     override fun observeData() {
         super.observeData()
-        loginViewModel.loginInfoResultLiveData
+        loginViewModel.registerResultLiveData
             .observe(viewLifecycleOwner) { resultState ->
                 parseState(resultState, { userInfo ->
                     userInfo?.run {
                         App.instance().appViewModel.userInfoLiveData.value = this
                     }
                     Settings.isLogined = true
-                    findNav().navigateUp()
+                    findNav().popBackStack(R.id.fragment_main, false)
                 })
             }
     }
 
     override fun getLayoutResId(): Int {
-        return R.layout.fragment_login
+        return R.layout.fragment_register
     }
 
     override fun loadData() {

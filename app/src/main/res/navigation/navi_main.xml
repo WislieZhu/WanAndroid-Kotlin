@@ -84,9 +84,16 @@
         android:id="@+id/fragment_login"
         android:name="com.wislie.wanandroid.fragment.LoginFragment"
         tools:layout="@layout/fragment_login">
-
+        <action
+            android:id="@+id/action_fragment_login_to_fragment_register"
+            app:destination="@id/fragment_register" />
     </fragment>
 
+    <fragment
+        android:id="@+id/fragment_register"
+        android:name="com.wislie.wanandroid.fragment.RegisterFragment"
+        tools:layout="@layout/fragment_register">
 
+    </fragment>
 
 </navigation>

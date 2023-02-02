@@ -2,10 +2,11 @@ package com.wislie.wanandroid.adapter
 
 import android.graphics.Color
 import android.graphics.drawable.Drawable
+import android.text.Editable
 import android.text.TextUtils
+import android.text.TextWatcher
 import android.view.LayoutInflater
 import android.view.View
-import android.widget.EditText
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.core.graphics.drawable.DrawableCompat
@@ -16,6 +17,7 @@ import com.google.android.material.textfield.TextInputEditText
 import com.google.android.material.textfield.TextInputLayout
 import com.wislie.common.ext.toHtml
 import com.wislie.wanandroid.R
+import com.wislie.wanandroid.adapter.callback.OnEditTextChangeListener
 import com.wislie.wanandroid.data.ArticleInfo
 import com.wislie.wanandroid.data.Tag
 import com.wislie.wanandroid.databinding.ItemArticleTagBinding
@@ -131,14 +133,39 @@ fun bindCoinRank(view: TextView, coinRankIndex: Int?) {
     view.text = (coinRankIndex ?: 1).toString()
 }
 
-@BindingAdapter(value=["endIconTransformation"])
-fun bindEndIconTransformation(textInputLayout: TextInputLayout, accountValue:String?){
+@BindingAdapter(value = ["endIconTransformation"])
+fun bindEndIconTransformation(textInputLayout: TextInputLayout, accountValue: String?) {
     textInputLayout.isEndIconVisible = !accountValue.isNullOrEmpty()
 }
 
-@BindingAdapter(value=["focusEditText"])
-fun bindEditTextFocus(textInputEditText: TextInputEditText, action:()->Unit){
-    textInputEditText.setOnFocusChangeListener { _, hasFocus ->
-        action.invoke()
-    }
+@BindingAdapter(value = ["focusEditText"])
+fun bindEditTextFocus(
+    textInputEditText: TextInputEditText,
+    l: View.OnFocusChangeListener
+) {
+    textInputEditText.onFocusChangeListener = l
+}
+
+
+@BindingAdapter(value = ["editTextChange"])
+fun TextInputEditText.bindEditTextChange(l: OnEditTextChangeListener) {
+    val textInputEditText = this
+    addTextChangedListener(object : TextWatcher {
+        override fun beforeTextChanged(
+            s: CharSequence?,
+            start: Int,
+            count: Int,
+            after: Int
+        ) {
+
+        }
+
+        override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
+
+        }
+
+        override fun afterTextChanged(s: Editable?) {
+            l.afterTextChanged(textInputEditText, s)
+        }
+    })
 }

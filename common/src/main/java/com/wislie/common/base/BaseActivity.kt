@@ -1,9 +1,11 @@
 package com.wislie.common.base
 
 import android.os.Bundle
+import android.view.MotionEvent
 import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
 import androidx.databinding.ViewDataBinding
+import com.wislie.common.util.KeyboardUtil
 import com.wislie.common.util.LiveDataBusManager
 import com.wislie.common.util.noleakdialog.NoLeakNiceDialog
 
@@ -26,6 +28,20 @@ abstract class BaseActivity<VB : ViewDataBinding> : AppCompatActivity() {
             //监听对话框显示与关闭
             observe(this@BaseActivity, LiveDataBusManager.LOADING, ResultState.Loading::class.java)
         }
+    }
+
+    override fun dispatchTouchEvent(ev: MotionEvent?): Boolean {
+
+        when (ev?.action) {
+            MotionEvent.ACTION_DOWN -> {
+                currentFocus?.run {
+                    if(KeyboardUtil.shouldHideInputMethod(this,ev)){
+                        KeyboardUtil.closeSoftKeyboard(this)
+                    }
+                }
+            }
+        }
+        return super.dispatchTouchEvent(ev)
     }
 
     abstract fun getLayoutResId(): Int
