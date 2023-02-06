@@ -31,6 +31,9 @@ interface ApiService {
     @GET("user/logout/json")
     suspend fun logout(): ApiResponse<Any?> //退出登录
 
+    @GET("friend/json")
+    suspend fun getVisitMostWeb(): ApiResponse<List<VisitMostWeb>?> //获取常用网站
+
 
     @GET("banner/json")
     suspend fun getBanner(): ApiResponse<List<Banner>?> //获取首页banner
@@ -88,6 +91,14 @@ interface ApiService {
     @POST("lg/collect/deletetool/json")
     @FormUrlEncoded
     suspend fun deleteCollectWebsite(@Field("id") id: Int): ApiResponse<Any?> //删除网址收藏
+
+
+    @POST("lg/collect/addtool/json")
+    @FormUrlEncoded
+    suspend fun addCollectWebsite(
+        @Field("name") name: String,
+        @Field("link") link: String
+    ): ApiResponse<CollectWebsiteInfo?> //添加网址收藏
 
 
     @GET("wenda/list/{page}/json")

@@ -11,8 +11,7 @@
         android:layout_height="match_parent"
         android:orientation="vertical">
 
-        <include
-            layout="@layout/include_toolbar" />
+        <include layout="@layout/include_toolbar" />
 
         <net.lucode.hackware.magicindicator.MagicIndicator
             android:id="@+id/indicator_project"

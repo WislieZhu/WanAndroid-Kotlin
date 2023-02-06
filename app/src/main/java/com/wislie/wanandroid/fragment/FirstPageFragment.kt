@@ -2,6 +2,7 @@ package com.wislie.wanandroid.fragment
 
 import android.view.LayoutInflater
 import android.view.View
+import androidx.appcompat.widget.Toolbar
 import androidx.core.content.ContextCompat
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.viewModels
@@ -10,10 +11,8 @@ import com.wislie.common.base.*
 import com.wislie.wanandroid.R
 import com.wislie.wanandroid.adapter.FirstPageArticleAdapter
 import com.wislie.common.ext.addFreshListener
-import com.wislie.common.ext.addMoreListener
 import com.wislie.common.ext.findNav
 import com.wislie.common.ext.init
-import com.wislie.common.util.Utils
 import com.wislie.wanandroid.App
 import com.wislie.wanandroid.adapter.BannerPager
 import com.wislie.wanandroid.adapter.LoadStateFooterAdapter
@@ -28,7 +27,6 @@ import com.zhpan.bannerview.BannerViewPager
 import com.zhpan.bannerview.constants.IndicatorGravity
 import com.zhpan.bannerview.utils.BannerUtils
 import com.zhpan.indicator.enums.IndicatorStyle
-import kotlinx.android.synthetic.main.include_toolbar.*
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 
@@ -57,7 +55,7 @@ class FirstPageFragment : BaseViewModelFragment<BaseViewModel, FragmentFirstPage
 
     override fun init(root: View) {
         super.init(root)
-        with(toolbar) {
+        root.findViewById<Toolbar>(R.id.toolbar).run {
             setBackgroundColor(ContextCompat.getColor(hostActivity, R.color.purple_500))
             title = "玩Android"
             inflateMenu(R.menu.first_page_menu)
@@ -83,7 +81,6 @@ class FirstPageFragment : BaseViewModelFragment<BaseViewModel, FragmentFirstPage
                     retry = { adapter.retry() })
             )
         adapter.addFreshListener(mBaseLoadService)
-        adapter.addMoreListener(binding.rvArticles)
         val header: ItemFirstPageHeaderBinding = DataBindingUtil.inflate(
             LayoutInflater.from(hostActivity),
             R.layout.item_first_page_header, binding.rvArticles, false

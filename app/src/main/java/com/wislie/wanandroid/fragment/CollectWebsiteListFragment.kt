@@ -50,8 +50,6 @@ class CollectWebsiteListFragment :
         binding.rvWebsite.adapter =
             adapter.withLoadStateFooter(footer = LoadStateFooterAdapter { adapter.retry() })
         adapter.addFreshListener(mBaseLoadService)
-
-
     }
 
     override fun observeData() {
@@ -65,7 +63,6 @@ class CollectWebsiteListFragment :
                     lifecycleScope.launch {
                         websiteInfoList?.run {
                             val pagingData = PagingData.from(this)
-                            Log.i("wislieZhu", "websiteInfoList size=${websiteInfoList?.size}")
                             adapter.submitData(lifecycle, pagingData)
                         }
                     }

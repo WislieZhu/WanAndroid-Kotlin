@@ -6,6 +6,7 @@ import com.wislie.common.ext.findNav
 import com.wislie.wanandroid.R
 import com.wislie.wanandroid.adapter.holder.BannerViewHolder
 import com.wislie.wanandroid.data.Banner
+import com.wislie.wanandroid.util.ArticleType
 import com.zhpan.bannerview.BaseBannerAdapter
 
 /**
@@ -26,6 +27,8 @@ class BannerPager : BaseBannerAdapter<Banner, BannerViewHolder>() {
         holder.itemView.setOnClickListener { v ->
             val bundle = Bundle()
             bundle.putString("linkUrl", data.url)
+            bundle.putInt("type", ArticleType.TYPE_BANNER)
+            bundle.putInt("id", data.id)
             v.findNav().navigate(R.id.fragment_web, bundle)
         }
     }

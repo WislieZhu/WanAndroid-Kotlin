@@ -1,14 +1,14 @@
 package com.wislie.wanandroid.data
 
 import android.os.Parcelable
-import kotlinx.android.parcel.Parcelize
-import kotlinx.android.parcel.RawValue
+//import kotlinx.android.parcel.Parcelize
+//import kotlinx.android.parcel.RawValue
 
-@Parcelize
+//@Parcelize
 data class ProjectCategory(
-    val articleList:  @RawValue List<Any>,
+    val articleList:   List<Any>,
     val author: String,
-    val children:  @RawValue List<Any>,
+    val children:   List<Any>,
     val courseId: Int,
     val cover: String,
     val desc: String,
@@ -21,4 +21,4 @@ data class ProjectCategory(
     val type: Int,
     val userControlSetTop: Boolean,
     val visible: Int
-): Parcelable
+)

@@ -8,10 +8,7 @@ import androidx.paging.cachedIn
 import com.wislie.common.base.BaseViewModel
 import com.wislie.common.base.ResultState
 import com.wislie.common.base.request
-import com.wislie.wanandroid.data.ArticleInfo
-import com.wislie.wanandroid.data.Banner
-import com.wislie.wanandroid.data.CollectWebsiteInfo
-import com.wislie.wanandroid.data.ProjectCategory
+import com.wislie.wanandroid.data.*
 import com.wislie.wanandroid.datasource.*
 import com.wislie.wanandroid.network.apiService
 
@@ -23,7 +20,6 @@ class ArticlesViewModel : BaseViewModel() {
             PagingConfig(pageSize = 1),
             pagingSourceFactory = { ArticlePagingSource() })
             .flow
-//            .cachedIn(viewModelScope)
     }
 
     val wendaArticleList by lazy {
@@ -31,7 +27,6 @@ class ArticlesViewModel : BaseViewModel() {
             PagingConfig(pageSize = 1),
             pagingSourceFactory = { WendaArticlePagingSource() })
             .flow
-//            .cachedIn(viewModelScope)
     }
 
     /**
@@ -42,7 +37,6 @@ class ArticlesViewModel : BaseViewModel() {
             PagingConfig(pageSize = 1),
             pagingSourceFactory = { CollectArticlePagingSource() })
             .flow
-//            .cachedIn(viewModelScope)
     }
 
     /**
@@ -53,7 +47,6 @@ class ArticlesViewModel : BaseViewModel() {
             PagingConfig(pageSize = 1),
             pagingSourceFactory = { WendaCommentPagingSource(id) })
             .flow
-//            .cachedIn(viewModelScope)
 
 
     val bannerResultLiveData by lazy {
@@ -88,8 +81,20 @@ class ArticlesViewModel : BaseViewModel() {
             PagingConfig(pageSize = 1),
             pagingSourceFactory = { ArticleCategoryPagingSource(cid) })
             .flow
-//            .cachedIn(viewModelScope)
 
+
+    val visitMostWebLiveData by lazy {
+        MutableLiveData<ResultState<List<VisitMostWeb>?>>()
+    }
+
+    /**
+     * 获取常用网站
+     */
+    fun getVisitMostWeb() {
+        request({
+            apiService.getVisitMostWeb()
+        }, visitMostWebLiveData)
+    }
 
     val collectWebsitesLiveData by lazy {
         MutableLiveData<ResultState<List<CollectWebsiteInfo>?>>()
@@ -102,6 +107,19 @@ class ArticlesViewModel : BaseViewModel() {
         request({
             apiService.getCollectWebsites()
         },collectWebsitesLiveData)
+    }
+
+    val addCollectWebsiteLiveData by lazy {
+        MutableLiveData<ResultState<CollectWebsiteInfo?>>()
+    }
+
+    /**
+     * 添加收藏网址
+     */
+    fun addCollectWebSite(name:String, link:String){
+        request({
+            apiService.addCollectWebsite(name, link)
+        },addCollectWebsiteLiveData)
     }
 
     /**

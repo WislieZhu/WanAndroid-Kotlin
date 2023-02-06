@@ -8,6 +8,7 @@ import android.webkit.WebResourceRequest
 import android.webkit.WebView
 import android.widget.LinearLayout
 import android.widget.Toast
+import androidx.appcompat.widget.Toolbar
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.viewModels
 import com.just.agentweb.AgentWeb
@@ -23,9 +24,9 @@ import com.wislie.wanandroid.R
 import com.wislie.wanandroid.data.CollectEvent
 import com.wislie.wanandroid.databinding.FragmentWebBinding
 import com.wislie.wanandroid.ext.startLogin
+import com.wislie.wanandroid.util.ArticleType
 import com.wislie.wanandroid.viewmodel.ArticlesViewModel
 import com.wislie.wanandroid.widget.WebLayout
-import kotlinx.android.synthetic.main.include_toolbar.*
 
 /**
  * Web
@@ -35,15 +36,25 @@ class WebFragment : BaseViewModelFragment<ArticlesViewModel, FragmentWebBinding>
     private val articlesViewModel: ArticlesViewModel by viewModels()
     private lateinit var mAgentWeb: AgentWeb
 
+    private lateinit var toolbar: Toolbar
+
+    private var articleType: Int? = null //文章类型
+    private var articleId: Int? = null //文章id
+    private var articleName: String? = null //文章名称
+    private var articleLink: String? = null //文章链接
+    private var articleCollect: Boolean? = null //文章是否收藏
+
+
     override fun init(root: View) {
         super.init(root)
+        articleType = arguments?.getInt("type")
+        articleId = arguments?.getInt("id")
+        articleName = arguments?.getString("name")
+        articleLink = arguments?.getString("linkUrl")
+        articleCollect = arguments?.getBoolean("collect", false)
 
-        val linkUrl = arguments?.getString("linkUrl")
-        val articleId = arguments?.getInt("id")
-        val collect = arguments?.getBoolean("collect", false)
-
-
-        with(toolbar) {
+        toolbar = root.findViewById(R.id.toolbar)
+        toolbar.run {
             setNavigationIcon(R.mipmap.ic_back)
             setBackgroundColor(ContextCompat.getColor(hostActivity, R.color.purple_500))
             setNavigationOnClickListener {
@@ -56,18 +67,13 @@ class WebFragment : BaseViewModelFragment<ArticlesViewModel, FragmentWebBinding>
 
                     }
                     R.id.collect -> {
-                        articleId?.run {
-                            articlesViewModel.collect(this)
-                        }
-
+                        collect()
                     }
                     R.id.uncollect -> {
-                        articleId?.run {
-                            articlesViewModel.uncollect(this)
-                        }
+                        uncollect()
                     }
                     R.id.open_withBrowser -> { //用浏览器打开 todo 使用手机浏览器
-                        val uri = Uri.parse(linkUrl)
+                        val uri = Uri.parse(articleLink)
                         val intent = Intent(Intent.ACTION_VIEW, uri)
                         startActivity(intent)
                     }
@@ -76,7 +82,9 @@ class WebFragment : BaseViewModelFragment<ArticlesViewModel, FragmentWebBinding>
             }
 
         }
-        setCollectStatus(collect)
+
+
+
         mAgentWeb = AgentWeb.with(this)
             .setAgentWebParent(binding.llWebContent, LinearLayout.LayoutParams(-1, -1))
             .useDefaultIndicator()
@@ -89,9 +97,54 @@ class WebFragment : BaseViewModelFragment<ArticlesViewModel, FragmentWebBinding>
             .interceptUnkownUrl() //拦截找不到相关页面的Scheme
             .createAgentWeb()
             .ready()
-            .go(linkUrl)
+            .go(articleLink)
 
     }
+
+    //收藏
+    private fun collect() {
+        articleType?.run {
+            when (articleType) {
+                ArticleType.TYPE_WEBSITE -> { //网址
+                    articleName?.run {
+                        val name = this
+                        articleLink?.run {
+                            articlesViewModel.addCollectWebSite(name, this)
+                        }
+                    }
+
+                }
+                ArticleType.TYPE_BANNER -> { //banner
+
+                }
+                else -> { //文章
+                    articleId?.run {
+                        articlesViewModel.collect(this)
+                    }
+                }
+            }
+        }
+    }
+
+    //取消收藏
+    private fun uncollect() {
+        articleType?.run {
+            when (articleType) {
+                ArticleType.TYPE_WEBSITE -> { //网址
+
+                }
+                ArticleType.TYPE_BANNER -> { //banner
+
+                }
+                else -> { //文章
+                    articleId?.run {
+                        articlesViewModel.uncollect(this)
+                    }
+                }
+            }
+        }
+    }
+
 
     private val mWebViewClient: WebViewClient = object : WebViewClient() {
         override fun shouldOverrideUrlLoading(view: WebView, request: WebResourceRequest): Boolean {
@@ -108,6 +161,23 @@ class WebFragment : BaseViewModelFragment<ArticlesViewModel, FragmentWebBinding>
             super.onReceivedTitle(view, t)
             toolbar.title = t
             toolbar.marquee()
+        }
+    }
+
+    override fun loadData() {
+        super.loadData()
+        articleType?.run {
+            when (articleType) {
+                ArticleType.TYPE_WEBSITE -> { //网址
+                    articlesViewModel.getCollectWebsites()
+                }
+                ArticleType.TYPE_BANNER -> { //banner
+
+                }
+                else -> {
+                    setCollectStatus(articleCollect)
+                }
+            }
         }
     }
 
@@ -133,6 +203,41 @@ class WebFragment : BaseViewModelFragment<ArticlesViewModel, FragmentWebBinding>
                 startLogin()
             })
         }
+
+        //收藏的网址列表
+        articlesViewModel.collectWebsitesLiveData
+            .observe(viewLifecycleOwner) { resultState ->
+                parseState(resultState, { dataList ->
+                    var isCollect = false
+                    dataList?.run {
+                        for (data in this) {
+                            if (data.id == articleId) {
+                                isCollect = true //如果当前的articleId 属于 收藏网址列表
+                                break
+                            }
+                        }
+                    }
+                    if (isCollect) {
+                        setCollectStatus(false)
+                    } else {
+                        setCollectStatus(true)
+                    }
+                }, {
+                    setCollectStatus(true)
+                })
+            }
+        //添加收藏网址
+        articlesViewModel.addCollectWebsiteLiveData
+            .observe(viewLifecycleOwner) { resultState ->
+                parseState(resultState, { webSiteInfo ->
+                    setCollectStatus(collect = true)
+                    webSiteInfo?.run {
+                        App.instance().appViewModel.collectEventLiveData.value =
+                            CollectEvent(collect = true, this.id)
+                    }
+                    Toast.makeText(hostActivity,"收藏成功",Toast.LENGTH_SHORT).show()
+                })
+            }
     }
 
     /**
@@ -140,13 +245,9 @@ class WebFragment : BaseViewModelFragment<ArticlesViewModel, FragmentWebBinding>
      */
     private fun setCollectStatus(collect: Boolean?) {
         collect?.run {
-            toolbar.menu.findItem(R.id.collect).isVisible = !this
-            toolbar.menu.findItem(R.id.uncollect).isVisible = this
+            toolbar.menu.findItem(R.id.collect).isVisible = !this //收藏
+            toolbar.menu.findItem(R.id.uncollect).isVisible = this //取消收藏
         }
-    }
-
-    override fun loadData() {
-
     }
 
     override fun onResume() {

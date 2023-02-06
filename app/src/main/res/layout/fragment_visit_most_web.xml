@@ -22,7 +22,7 @@
             android:layout_height="match_parent">
 
             <com.yanzhenjie.recyclerview.SwipeRecyclerView
-                android:id="@+id/rv_articles"
+                android:id="@+id/rv_web"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager" />
@@ -41,7 +41,7 @@
             app:elevation="5dp"
             app:fabSize="mini"
             android:src="@mipmap/fab_up" />
+
+
     </androidx.constraintlayout.widget.ConstraintLayout>
-
-
 </layout>

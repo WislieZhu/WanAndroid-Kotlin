@@ -1,6 +1,7 @@
 package com.wislie.wanandroid.fragment
 
 import android.view.View
+import androidx.appcompat.widget.Toolbar
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
@@ -9,13 +10,11 @@ import com.wislie.common.base.BaseViewModelFragment
 import com.wislie.common.ext.addFreshListener
 import com.wislie.common.ext.findNav
 import com.wislie.common.ext.init
-import com.wislie.common.util.Utils
 import com.wislie.wanandroid.R
 import com.wislie.wanandroid.adapter.SearchArticleResultAdapter
 import com.wislie.wanandroid.databinding.FragmentSearchArticleResultBinding
 import com.wislie.wanandroid.viewmodel.ArticlesViewModel
 import com.wislie.wanandroid.viewmodel.SearchViewModel
-import kotlinx.android.synthetic.main.include_toolbar.*
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 
@@ -43,7 +42,7 @@ class SearchArticleResultFragment :
     override fun init(root: View) {
         super.init(root)
 
-        with(toolbar) {
+        root.findViewById<Toolbar>(R.id.toolbar).run {
             setNavigationIcon(R.mipmap.ic_back)
             setBackgroundColor(ContextCompat.getColor(hostActivity, R.color.purple_500))
             title = args.hotKey

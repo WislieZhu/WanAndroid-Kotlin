@@ -2,7 +2,7 @@ plugins {
     id 'com.android.application'
     id 'org.jetbrains.kotlin.android'
     id 'kotlin-kapt'
-    id 'kotlin-android-extensions'
+//    id 'kotlin-android-extensions'
     id 'androidx.navigation.safeargs.kotlin'
 }
 
@@ -48,9 +48,9 @@ android {
     }
 
     /*序列化*/
-    androidExtensions {
+    /*androidExtensions {
         experimental = true
-    }
+    }*/
 }
 
 dependencies {

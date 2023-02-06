@@ -35,4 +35,8 @@ abstract class BaseViewModelFragment<VM : BaseViewModel, VB : ViewDataBinding> :
     }
 
     open fun observeData(){}
+
+    override fun loadData() {
+
+    }
 }

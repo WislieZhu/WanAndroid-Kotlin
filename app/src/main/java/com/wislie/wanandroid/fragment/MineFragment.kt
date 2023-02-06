@@ -49,6 +49,10 @@ class MineFragment : BaseViewModelFragment<MineStateViewModel, FragmentMineBindi
             }
         }
 
+        binding.btnUrls.setOnClickListener {  //常用网站
+            findNav().navigate(R.id.fragment_visit_most_web)
+        }
+
         binding.btnLogout.setOnClickListener { //退出登录
             logoutViewModel.logout()
         }

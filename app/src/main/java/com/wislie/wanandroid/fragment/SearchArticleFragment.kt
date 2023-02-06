@@ -5,6 +5,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.widget.EditText
 import android.widget.ImageView
+import androidx.appcompat.widget.Toolbar
 import androidx.core.content.ContextCompat
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.lifecycleScope
@@ -20,7 +21,6 @@ import com.wislie.wanandroid.databinding.ItemSearchBinding
 import com.wislie.wanandroid.viewmodel.SearchViewModel
 import com.zhy.view.flowlayout.FlowLayout
 import com.zhy.view.flowlayout.TagAdapter
-import kotlinx.android.synthetic.main.include_toolbar.*
 import com.wislie.common.ext.findNav
 import com.wislie.wanandroid.adapter.SearchHistoryAdapter
 import com.wislie.wanandroid.ext.addTextListener
@@ -50,7 +50,7 @@ class SearchArticleFragment : BaseViewModelFragment<BaseViewModel, FragmentSearc
 
     override fun init(root: View) {
         super.init(root)
-        with(toolbar) {
+        root.findViewById<Toolbar>(R.id.toolbar).run {
             setBackgroundColor(ContextCompat.getColor(hostActivity, R.color.purple_500))
             setNavigationIcon(R.mipmap.ic_back)
             setNavigationOnClickListener {

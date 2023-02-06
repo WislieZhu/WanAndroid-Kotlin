@@ -506,6 +506,18 @@ BindingAdapter的 clickListener: () -> Unit
 xml中的()-> click.login()
 两者也一致
 
+BindingAdapter不支持有形参的高阶函数
+TextInputEditText:
+
+TextInputLayout:
+1.改变startIcon的颜色
+setStartIconTintList(ColorStateList.valueOf(color))
+2.改变endIcon的颜色
+setEndIconTintList(ColorStateList.valueOf(color))
+3.控制endIcon是否可见
+textInputLayout.isEndIconVisible = true/false
+
+
 
 navigation的fragment返回问题
 fragmentA->fragmentB->fragmentC->fragmentD
@@ -519,58 +531,69 @@ fragment_b 是 fragmentB在nav中的id
 findNav().popBackStack(R.id.fragment_b, true)
 
 
+1.拍照预览画面没出来
+TextureView.setSurfaceTextureListener的onSurfaceTextureAvailable回调没走
+原因: 清单文件中当前Activity没加硬件加速
+2.前置摄像头和后置摄像头区别
+Surface.ROTATION_0 的值不一样
+CameraCharacteristics.LENS_FACING_BACK: 90
+CameraCharacteristics.LENS_FACING_FRONT:270
 
 
-
-
-asm地址 https://blog.51cto.com/lsieun/category2/p_4
-asm的要点回顾:
-.java文件经过Java编译器（javac）编译之后会生成一个.class文件;在.class文件中，存储的是字节码（ByteCode）数据
-ASM处理字节码的方式是“拆分－修改－合并”
-ASM能够做什么?
-父类：修改成一个新的父类
-接口：添加一个新的接口、删除已有的接口
-字段：添加一个新的字段、删除已有的字段
-方法：添加一个新的方法、删除已有的方法、修改已有的方法
-
-java8版本的lambda表达式是通过asm实现的
-ClassVisitor
-
-ClassWriter
-
-FieldVisitor
-
-FieldWriter
-
-MethodVisitor
-
-MethodWriter
-
-Label
-
-Opcodes
-
-ClassReader
-
-Type
-
-示例
-
-工具类
-
-
-
-1.有参数的高阶 BindingAdapter
-2.点击空白处 软键盘收缩
-
+LoadStateAdapter
 https://www.cnblogs.com/mymy-android/p/14896898.html#tag5
+
+
+
+
+
+1.android点击 弄成插件
+2.会到第一页的速度过慢
+
+
+
+
+2.体系数据 tree/json
+体系下的文章  article/list/0/json?cid=60
+按照作者昵称搜索文章 article/list/0/json?author=鸿洋
+3.导航数据 navi/json
+6.收藏文章列表 lg/collect/list/0/json
+收藏站内文章 lg/collect/1165/json
+收藏站外文章  lg/collect/add/json
+编辑收藏的文章，支持站内，站外  lg/collect/user_article/update/ 文章 id/json
+取消收藏 文章列表 lg/uncollect_originId/2333/json
+取消收藏 我的收藏页面 lg/uncollect/2805/json
+收藏网站列表 lg/collect/usertools/json
+收藏网址 lg/collect/addtool/json
+编辑收藏网站 lg/collect/updatetool/json
+删除收藏网站  lg/collect/deletetool/json
+7.搜索 article/query/0/json
+8.todo https://www.wanandroid.com/blog/show/2442
+10.广场列表数据  user_article/list/页码/json  页码从0开始
+分享人对应列表数据  2/share_articles/页码/json  用户id: 拼接在url上,页码拼接在url上从1开始 get请求
+自己的分享的文章列表 user/lg/private_articles/1/json
+删除自己分享的文章 lg/user_article/delete/9475/json
+分享文章 lg/user_article/add/json
+11.问答 wenda/list/1/json
+12.个人信息接口  user/lg/userinfo/json
+13.问答评论列表 wenda/comments/问答id/json
+14.未读消息数量 message/lg/count_unread/json
+ 已读消息列表 message/lg/readed_list/页码/json
+ 未读消息列表 message/lg/unread_list/页码/json
+15.获取公众号列表  wxarticle/chapters/json
+查看某个公众号历史数据 wxarticle/list/408/1/json  公众号 ID：拼接在 url 中; 公众号页码：拼接在url 中
+在某个公众号中搜索历史文章 wxarticle/list/405/1/json?k=Java
+17.工具列表 tools/list/json
+18.教程列表 chapter/547/sublist/json
+单个教程下所有文章列表 list/0/json?cid=549&order_type=1
+
 
 
 2月份计划
 1.协程和Flow
 2.Android适配方案
 3.线程
- 其他: 如kotlin版玩Android, flutter基础，巩固ASM等
+其他: 如kotlin版玩Android, flutter基础，巩固ASM等
 
 
 

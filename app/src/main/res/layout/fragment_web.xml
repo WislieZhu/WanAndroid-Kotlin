@@ -9,7 +9,8 @@
         android:orientation="vertical"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
-        <include layout="@layout/include_toolbar" />
+        <include
+            layout="@layout/include_toolbar" />
 
         <FrameLayout
             android:id="@+id/ll_web_content"

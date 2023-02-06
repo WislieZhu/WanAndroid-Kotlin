@@ -4,6 +4,7 @@ import android.annotation.SuppressLint
 import android.graphics.Color
 import android.view.View
 import android.widget.Toast
+import androidx.appcompat.widget.Toolbar
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.viewModels
 import com.wislie.common.base.BaseViewModelFragment
@@ -16,7 +17,6 @@ import com.wislie.wanandroid.ext.*
 import com.wislie.wanandroid.util.Settings
 import com.wislie.wanandroid.viewmodel.LoginStateViewModel
 import com.wislie.wanandroid.viewmodel.LoginViewModel
-import kotlinx.android.synthetic.main.include_toolbar.*
 
 class RegisterFragment : BaseViewModelFragment<LoginStateViewModel, FragmentRegisterBinding>() {
 
@@ -26,7 +26,7 @@ class RegisterFragment : BaseViewModelFragment<LoginStateViewModel, FragmentRegi
     override fun init(root: View) {
         super.init(root)
         binding.loginStateVm = mViewModel
-        with(toolbar) {
+        root.findViewById<Toolbar>(R.id.toolbar).run {
             setNavigationIcon(R.mipmap.ic_back)
             setBackgroundColor(ContextCompat.getColor(hostActivity, R.color.purple_500))
             setTitleTextColor(Color.WHITE)
@@ -92,11 +92,6 @@ class RegisterFragment : BaseViewModelFragment<LoginStateViewModel, FragmentRegi
     override fun getLayoutResId(): Int {
         return R.layout.fragment_register
     }
-
-    override fun loadData() {
-    }
-
-
 }
 
 

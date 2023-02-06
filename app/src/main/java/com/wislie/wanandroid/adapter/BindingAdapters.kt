@@ -139,11 +139,10 @@ fun bindEndIconTransformation(textInputLayout: TextInputLayout, accountValue: St
 }
 
 @BindingAdapter(value = ["focusEditText"])
-fun bindEditTextFocus(
-    textInputEditText: TextInputEditText,
+fun TextInputEditText.bindEditTextFocus(
     l: View.OnFocusChangeListener
 ) {
-    textInputEditText.onFocusChangeListener = l
+    onFocusChangeListener = l
 }
 
 
