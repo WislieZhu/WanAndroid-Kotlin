@@ -19,8 +19,9 @@ class MainFragment : BaseFragment<FragmentMainBinding>() {
         val map = mutableMapOf<Int, Fragment>(
             0 to FirstPageFragment(),
             1 to ProjectFragment(),
-            2 to PublicFragment(),
-            3 to MineFragment(),
+            2 to SystemFragment(),
+            3 to WxAccountFragment(),
+            4 to MineFragment(),
         )
         binding.mainViewpager.initMain(hostActivity, map)
         binding.bottomNav.bindViewPager2(binding.mainViewpager, R.id.action_first_page)

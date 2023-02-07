@@ -77,7 +77,10 @@ interface ApiService {
 
     @POST("lg/uncollect/{id}/json")
     @FormUrlEncoded
-    suspend fun uncollect(@Path("id") id: Int,@Field("originId") originId: Int): ApiResponse<Any?> //取消收藏文章   我的收藏页面
+    suspend fun uncollect(
+        @Path("id") id: Int,
+        @Field("originId") originId: Int
+    ): ApiResponse<Any?> //取消收藏文章   我的收藏页面
 
 
     @GET("lg/collect/list/{page}/json")
@@ -126,6 +129,21 @@ interface ApiService {
     suspend fun getMyCoinList(
         @Path("page") pageNo: Long
     ): ApiResponse<ApiPageResponse<CoinItem>?>  //获取个人积分获取列表，需要登录后访问
+
+
+    @GET("wxarticle/chapters/json")
+    suspend fun getWxAccountList(): ApiResponse<List<WxAccountInfo>?> //获取微信公众号列表
+
+
+    @GET("wxarticle/list/{id}/{page}/json")
+    suspend fun getWxHistoryArticleList(
+        @Path("id") id: Int, @Path("page") pageNo: Long, @Query("k") k: String?
+    ): ApiResponse<ApiPageResponse<ArticleInfo>?> //查看某个公众号历史数据, 输入k则在某个公众号中搜索历史文章
+
+
+    @GET("wxarticle/list{id}/{page}/json")
+    suspend fun searchWxHistoryArticleList(@Query("k") k: String
+    ): ApiResponse<ApiPageResponse<ArticleInfo>?> //在某个公众号中搜索历史文章
 
 
 }

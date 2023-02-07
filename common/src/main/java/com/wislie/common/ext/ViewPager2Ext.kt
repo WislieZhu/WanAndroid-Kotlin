@@ -23,7 +23,6 @@ fun ViewPager2.initMain(context: FragmentActivity, map:MutableMap<Int, Fragment>
         override fun createFragment(position: Int): Fragment {
             return map[position]!!
         }
-
     }
     isUserInputEnabled = false
     offscreenPageLimit = map.size

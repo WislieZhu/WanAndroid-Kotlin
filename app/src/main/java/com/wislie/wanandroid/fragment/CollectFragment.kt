@@ -5,7 +5,7 @@ import android.view.View
 import com.wislie.common.base.BaseFragment
 import com.wislie.common.ext.findNav
 import com.wislie.wanandroid.R
-import com.wislie.wanandroid.adapter.ProjectCategoryPagerAdapter
+import com.wislie.wanandroid.adapter.MultiCategoryPagerAdapter
 import com.wislie.wanandroid.databinding.FragmentCollectBinding
 import com.wislie.wanandroid.ext.setNavigator
 import net.lucode.hackware.magicindicator.buildins.commonnavigator.CommonNavigator
@@ -27,7 +27,7 @@ class CollectFragment:BaseFragment<FragmentCollectBinding>() {
         tabNameList.add("文章")
         tabNameList.add("网址")
 
-        val pagerAdapter = ProjectCategoryPagerAdapter(fragments, this)
+        val pagerAdapter = MultiCategoryPagerAdapter(fragments, this)
         binding.vpProject.adapter = pagerAdapter
         binding.vpProject.offscreenPageLimit = fragments.size
         CommonNavigator(hostActivity).setNavigator(

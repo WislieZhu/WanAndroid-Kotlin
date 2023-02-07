@@ -6,7 +6,7 @@ import com.wislie.common.base.BaseViewModel
 import com.wislie.common.base.BaseViewModelFragment
 import com.wislie.common.base.parseState
 import com.wislie.wanandroid.R
-import com.wislie.wanandroid.adapter.ProjectCategoryPagerAdapter
+import com.wislie.wanandroid.adapter.MultiCategoryPagerAdapter
 import com.wislie.wanandroid.data.ProjectCategory
 import com.wislie.wanandroid.databinding.FragmentProjectBinding
 import com.wislie.wanandroid.ext.setNavigator
@@ -44,7 +44,7 @@ class ProjectFragment : BaseViewModelFragment<BaseViewModel, FragmentProjectBind
             addChildFragment(fragments, projectCategoryList[i].id)
             tabNameList.add(projectCategoryList[i].name)
         }
-        val pagerAdapter = ProjectCategoryPagerAdapter(fragments, this)
+        val pagerAdapter = MultiCategoryPagerAdapter(fragments, this)
         binding.vpProject.adapter = pagerAdapter
         binding.vpProject.offscreenPageLimit = fragments.size
         CommonNavigator(hostActivity).setNavigator(

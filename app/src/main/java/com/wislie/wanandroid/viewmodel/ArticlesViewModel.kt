@@ -201,7 +201,7 @@ class ArticlesViewModel : BaseViewModel() {
      */
     fun unCollectPage(articleInfo: ArticleInfo, position: Int) {
         request({
-            apiService.uncollect(articleInfo.id, articleInfo.originId?:-1)
+            apiService.uncollect(articleInfo.id, articleInfo.originId ?: -1)
         }, {
             uncollectResultLiveData.value = ResultState.Success(articleInfo, position)
         }, { exception, errorCode ->
@@ -210,9 +210,6 @@ class ArticlesViewModel : BaseViewModel() {
             uncollectResultLiveData.value = ResultState.Loading(loadingMessage, isShowingDialog)
         })
     }
-
-
-
 
     /**
      * webFragment中取消收藏
@@ -232,5 +229,29 @@ class ArticlesViewModel : BaseViewModel() {
             uncollectLiveData.value = ResultState.Loading(loadingMessage, isShowingDialog)
         }, isShowDialog = true)
     }
+
+
+    /**
+     * 获取微信公众号列表
+     */
+    val wxAccountListLiveData by lazy {
+        MutableLiveData<ResultState<List<WxAccountInfo>?>>()
+    }
+
+    fun getWxAccountList() {
+        request({
+            apiService.getWxAccountList()
+        }, wxAccountListLiveData)
+    }
+
+    /**
+     * 公众号文章列表
+     */
+    fun getWxArticleList(id: Int, key: String? = null) =
+        Pager(
+            PagingConfig(pageSize = 1),
+            pagingSourceFactory = { WxArticlePagingSource(id, key) })
+            .flow
+
 
 }

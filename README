@@ -545,13 +545,43 @@ https://www.cnblogs.com/mymy-android/p/14896898.html#tag5
 
 
 
-
-
 1.android点击 弄成插件
 2.会到第一页的速度过慢
 
+kotlin
+Sequences 序列的原理:
+    Sequences 提升性能的关键在于多个操作共享同一个 Iterator 迭代器，只需要一次循环就可以完成数据操作
+扩展函数的原理：
+    扩展函数的语义是在不修改类 / 不继承类的情况下，向一个类添加新函数或者新属性。本质是静态函数，静态函数的第一个参数是接收者类型，调用扩展时不会创建适配对象或者任何运行时的额外消耗
+apply、with 的 lambda 参数是 T 的扩展函数，因此在 lambda 内使用 this 引用接收者对象，而 let 的 lambda 参数是参数为 T 的高阶函数
+委托机制的原理：
+    Kotlin 委托的语法关键字是 by，其本质上是面向编译器的语法糖，三种委托（类委托、对象委托和局部变量委托）在编译时都会转化为 “无糖语法”.
+    例如类委托：编译器会实现基础接口的所有方法，并直接委托给基础对象来处理。例如对象委托和局部变量委托：在编译时会生成辅助属性（prop$degelate），
+    而属性 / 变量的 getter() 和 setter() 方法只是简单地委托给辅助属性的 getValue() 和 setValue() 处理
+中缀函数： 声明 infix 关键字的函数是中缀函数，调用中缀函数时可以省略圆点以及圆括号等程序符号，让语句更自然
+Array 和 IntArray 的区别： Array 相当于引用类型数组 Integer[]，IntArray 相当于数值类型数组 int[]
+Byte、Short、Int、Long、Float、Double、Char 和 Boolean 大多数情况下，它们在编译后会变成基本数据类型，类型参数会被编译为引用类型
+Kotlin 不存在隐式类型转换，即时是低级类型也需要显式转换为高级类型
 
+init 函数执行顺序： 主构造函数 > init > 次级构造函数
+内部类： Kotlin 默认为静态内部类，如果想访问类中的成员方法和属性，需要添加 inner 关键字称为非静态内部类
+data 关键字原理： data 关键字用于定义数据类型，编译器会自动从主构造函数中提取属性并生成一系列函数：equals()/hashCode()、toString()、componentN()、copy()
+sealed 关键字原理： 密封类用来表示受限的类继承结构，密封类可以有子类，但是所有子类都必须内嵌在该密封类中
+object 与 companion object 的区别
+    object 有两层语义：静态匿名内部类 + 单例对象
+    companion object 是伴生对象，一个类只能有一个，代表了类的静态成员（函数 / 属性）
+lambda 表达式本质上是「可以作为值传递的代码块」
+lambda 表达式的种类
+    1、普通 Lambda 表达式：例如 ()->R
+    2、带接收者对象的 Lambda 表达式：例如 T.()->R
+inline 内联函数的原理
+    1.内联函数的参数如果是 lambda 表达式，则该参数默认也是 inline 的。lambda 表达式也会被固化的函数调用位置，
+    从而减少了为 lambda 表达式创建匿名内部类对象的开销。当 lambda 表达式被经常调用时，可以减少内存开销
+    2.减少入栈出栈过程（次要优点）： 内联函数的函数体被固化到函数调用位置，执行过程中减少了栈帧创建、入栈和出栈过程。
+    需要注意：如果函数体太大就不适合使用内联函数了，因为会大幅度增加字节码大小
 
+todo:
+kotlin中 ArrayList与MutableList
 
 2.体系数据 tree/json
 体系下的文章  article/list/0/json?cid=60

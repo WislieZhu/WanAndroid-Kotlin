@@ -15,10 +15,16 @@
         android:icon="@mipmap/menu_project"
         app:showAsAction="withText"/>
 
+    <item android:id="@+id/action_system"
+        android:title="@string/menu_system"
+        android:orderInCategory="2"
+        android:icon="@mipmap/menu_project"
+        app:showAsAction="withText"/>
+
     <item android:id="@+id/action_public"
         android:title="@string/wechat_accounts"
         android:icon="@mipmap/menu_public"
-        android:orderInCategory="2"
+        android:orderInCategory="3"
         app:showAsAction="withText"/>
 
     <item android:id="@+id/action_mine"

@@ -3,7 +3,7 @@ package com.wislie.wanandroid.adapter
 import androidx.fragment.app.Fragment
 import androidx.viewpager2.adapter.FragmentStateAdapter
 
-class ProjectCategoryPagerAdapter(private val childFrags: List<Fragment>, parentFrag: Fragment) :
+class MultiCategoryPagerAdapter(private val childFrags: List<Fragment>, parentFrag: Fragment) :
     FragmentStateAdapter(parentFrag) {
 
 

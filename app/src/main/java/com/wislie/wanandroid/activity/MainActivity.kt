@@ -24,6 +24,15 @@ class MainActivity : BaseActivity<ActivityMainBinding>() {
         }
 //        installSplashScreen()
         super.onCreate(savedInstanceState)
+
+        val list = ArrayList<String>()
+        list.add("a")
+        test1(list)
+
+//        val listA = mutableListOf<String>()
+//        test2(listA)
+
+
     }
 
 
@@ -31,4 +40,16 @@ class MainActivity : BaseActivity<ActivityMainBinding>() {
 
 
 
+
+    private fun test1(list:MutableList<String>){
+
+    }
+
+    private fun test2(list:ArrayList<String>){
+
+    }
+
+//    Arraylist -> MutableList
+
 }
+
