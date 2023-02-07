@@ -1,6 +1,5 @@
 package com.wislie.wanandroid.fragment
 
-import android.util.Log
 import android.view.View
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
@@ -11,6 +10,7 @@ import com.wislie.common.base.parseState
 import com.wislie.common.base.parseStatexxx
 import com.wislie.common.ext.addFreshListener
 import com.wislie.common.ext.init
+import com.wislie.wanandroid.App
 import com.wislie.wanandroid.R
 import com.wislie.wanandroid.adapter.CollectWebsiteAdapter
 import com.wislie.wanandroid.adapter.LoadStateFooterAdapter
@@ -54,6 +54,7 @@ class CollectWebsiteListFragment :
 
     override fun observeData() {
         super.observeData()
+        //收藏
         articleViewModel.collectWebsitesLiveData
             .observe(viewLifecycleOwner) { resultState ->
                 parseStatexxx(resultState) { websiteInfoList ->
@@ -68,6 +69,8 @@ class CollectWebsiteListFragment :
                     }
                 }
             }
+
+        //取消收藏
         articleViewModel.delCollectWebsiteLiveData
             .observe(viewLifecycleOwner) { resultState ->
                 parseState(resultState, { id -> //删除收藏成功
@@ -78,6 +81,18 @@ class CollectWebsiteListFragment :
                         }
                     }
                 })
+            }
+
+        App.instance().appViewModel.collectEventLiveData
+            .observe(viewLifecycleOwner) { collectEvent ->
+                val list = adapter.snapshot().items
+                for (i in list.indices) {
+                    if (list[i].id == collectEvent.id) { //取消收藏网址
+                        if (!collectEvent.collect) {
+                            adapter.notifyItemRemoved(i)
+                        }
+                    }
+                }
             }
     }
 

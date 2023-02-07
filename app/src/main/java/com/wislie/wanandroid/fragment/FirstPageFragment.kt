@@ -41,7 +41,7 @@ class FirstPageFragment : BaseViewModelFragment<BaseViewModel, FragmentFirstPage
         FirstPageArticleAdapter { position, articleInfo ->
             articleInfo?.run {
                 if (collect != null && collect) {
-                    articlesViewModel.uncollect(articleInfo, position)
+                    articlesViewModel.unCollect(articleInfo, position)
                 } else {
                     articlesViewModel.collect(articleInfo, position)
                 }

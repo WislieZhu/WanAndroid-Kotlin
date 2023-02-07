@@ -1,10 +1,14 @@
 package com.wislie.wanandroid.adapter.holder
 
+import android.os.Bundle
 import com.wislie.common.base.BaseVHolder
+import com.wislie.common.ext.findNav
+import com.wislie.wanandroid.R
 import com.wislie.wanandroid.data.CollectWebsiteInfo
 import com.wislie.wanandroid.databinding.ItemWebsiteBinding
 import com.wislie.wanandroid.util.Settings
 import com.wislie.wanandroid.ext.startLogin
+import com.wislie.wanandroid.util.ArticleType
 
 class CollectWebsiteHolder(
     override val binding: ItemWebsiteBinding,
@@ -14,9 +18,17 @@ class CollectWebsiteHolder(
 
 
     init {
+        //跳转到webFragment
         binding.root.setOnClickListener { v ->
-
-
+            val bundle = Bundle()
+            bundle.run {
+                putInt("type", ArticleType.TYPE_WEBSITE)
+                putInt("id", binding.websiteInfo?.id ?: 0)
+                putString("name", binding.websiteInfo?.name ?: "")
+                putString("linkUrl", binding.websiteInfo?.link ?: "")
+                putBoolean("collect", true)
+            }
+            v.findNav().navigate(R.id.fragment_web, bundle)
         }
 
         binding.ivUncollect.setOnClickListener { // 在onBindViewHolder中点击不合理
@@ -24,7 +36,7 @@ class CollectWebsiteHolder(
                 it.startLogin()
                 return@setOnClickListener
             }
-            uncollect.invoke( binding.websiteInfo)
+            uncollect.invoke(binding.websiteInfo)
         }
     }
 

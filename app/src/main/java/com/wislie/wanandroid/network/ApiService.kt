@@ -2,12 +2,7 @@ package com.wislie.wanandroid.network
 
 import com.wislie.common.wrapper.ApiPageResponse
 import com.wislie.common.wrapper.ApiResponse
-import com.wislie.common.wrapper.PagerApiResponse
 import com.wislie.wanandroid.data.*
-import okhttp3.Call
-import okhttp3.MultipartBody
-import okhttp3.RequestBody
-import okhttp3.ResponseBody
 import retrofit2.http.*
 
 interface ApiService {
@@ -32,7 +27,7 @@ interface ApiService {
     suspend fun logout(): ApiResponse<Any?> //退出登录
 
     @GET("friend/json")
-    suspend fun getVisitMostWeb(): ApiResponse<List<VisitMostWeb>?> //获取常用网站
+    suspend fun getUsualWebsite(): ApiResponse<List<UsualWebsite>?> //获取常用网站
 
 
     @GET("banner/json")
@@ -78,7 +73,12 @@ interface ApiService {
     suspend fun collect(@Path("id") id: Int): ApiResponse<Any?> //收藏文章
 
     @POST("lg/uncollect_originId/{id}/json")
-    suspend fun uncollect(@Path("id") id: Int): ApiResponse<Any?> //取消收藏文章
+    suspend fun uncollect(@Path("id") id: Int): ApiResponse<Any?> //取消收藏文章  列表
+
+    @POST("lg/uncollect/{id}/json")
+    @FormUrlEncoded
+    suspend fun uncollect(@Path("id") id: Int,@Field("originId") originId: Int): ApiResponse<Any?> //取消收藏文章   我的收藏页面
+
 
     @GET("lg/collect/list/{page}/json")
     suspend fun getCollectArticles(@Path("page") pageNo: Long):
@@ -86,7 +86,6 @@ interface ApiService {
 
     @GET("lg/collect/usertools/json")
     suspend fun getCollectWebsites(): ApiResponse<List<CollectWebsiteInfo>?> //收藏的网址列表
-
 
     @POST("lg/collect/deletetool/json")
     @FormUrlEncoded

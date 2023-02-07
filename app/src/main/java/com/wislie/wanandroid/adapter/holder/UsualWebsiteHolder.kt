@@ -4,12 +4,12 @@ import android.os.Bundle
 import com.wislie.common.base.BaseVHolder
 import com.wislie.common.ext.findNav
 import com.wislie.wanandroid.R
-import com.wislie.wanandroid.data.VisitMostWeb
-import com.wislie.wanandroid.databinding.ItemVisitMostWebBinding
+import com.wislie.wanandroid.data.UsualWebsite
+import com.wislie.wanandroid.databinding.ItemUsualWebsiteBinding
 import com.wislie.wanandroid.util.ArticleType
 
-class VisitMostWebHolder(override val binding: ItemVisitMostWebBinding)
-    :BaseVHolder<VisitMostWeb>(binding) {
+class UsualWebsiteHolder(override val binding: ItemUsualWebsiteBinding)
+    :BaseVHolder<UsualWebsite>(binding) {
 
 
     init {
@@ -25,7 +25,7 @@ class VisitMostWebHolder(override val binding: ItemVisitMostWebBinding)
 
     }
 
-    override fun bind(data: VisitMostWeb?, position: Int) {
+    override fun bind(data: UsualWebsite?, position: Int) {
         binding.webInfo = data
         binding.executePendingBindings()
     }

@@ -1,10 +1,8 @@
 package com.wislie.wanandroid.viewmodel
 
 import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.viewModelScope
 import androidx.paging.Pager
 import androidx.paging.PagingConfig
-import androidx.paging.cachedIn
 import com.wislie.common.base.BaseViewModel
 import com.wislie.common.base.ResultState
 import com.wislie.common.base.request
@@ -83,17 +81,17 @@ class ArticlesViewModel : BaseViewModel() {
             .flow
 
 
-    val visitMostWebLiveData by lazy {
-        MutableLiveData<ResultState<List<VisitMostWeb>?>>()
+    val usualWebsiteLiveData by lazy {
+        MutableLiveData<ResultState<List<UsualWebsite>?>>()
     }
 
     /**
-     * 获取常用网站
+     * 获取常用网站 todo 感觉都没啥用
      */
-    fun getVisitMostWeb() {
+    fun getUsualWebsite() {
         request({
-            apiService.getVisitMostWeb()
-        }, visitMostWebLiveData)
+            apiService.getUsualWebsite()
+        }, usualWebsiteLiveData)
     }
 
     val collectWebsitesLiveData by lazy {
@@ -103,10 +101,10 @@ class ArticlesViewModel : BaseViewModel() {
     /**
      * 收藏的网址列表
      */
-    fun getCollectWebsites(){
+    fun getCollectWebsites() {
         request({
             apiService.getCollectWebsites()
-        },collectWebsitesLiveData)
+        }, collectWebsitesLiveData)
     }
 
     val addCollectWebsiteLiveData by lazy {
@@ -116,27 +114,27 @@ class ArticlesViewModel : BaseViewModel() {
     /**
      * 添加收藏网址
      */
-    fun addCollectWebSite(name:String, link:String){
+    fun addCollectWebSite(name: String, link: String) {
         request({
             apiService.addCollectWebsite(name, link)
-        },addCollectWebsiteLiveData)
+        }, addCollectWebsiteLiveData)
     }
 
     /**
      * 删除收藏网址
      */
-    val delCollectWebsiteLiveData  by lazy {
+    val delCollectWebsiteLiveData by lazy {
         MutableLiveData<ResultState<Int>>()
     }
 
-    fun delCollectWebsite(id: Int){
+    fun delCollectWebsite(id: Int) {
         request({
             apiService.deleteCollectWebsite(id)
-        },{
+        }, {
             delCollectWebsiteLiveData.value = ResultState.Success(id)
-        },{exception, errorCode ->
+        }, { exception, errorCode ->
             delCollectWebsiteLiveData.value = ResultState.Error(exception, errorCode)
-        },{ loadingMessage, isShowingDialog ->
+        }, { loadingMessage, isShowingDialog ->
             delCollectWebsiteLiveData.value = ResultState.Loading(loadingMessage, isShowingDialog)
         })
     }
@@ -186,7 +184,7 @@ class ArticlesViewModel : BaseViewModel() {
         MutableLiveData<ResultState<ArticleInfo>>()
     }
 
-    fun uncollect(articleInfo: ArticleInfo, position: Int) {
+    fun unCollect(articleInfo: ArticleInfo, position: Int) {
         request({
             apiService.uncollect(articleInfo.id)
         }, {
@@ -199,13 +197,31 @@ class ArticlesViewModel : BaseViewModel() {
     }
 
     /**
+     * 我的收藏页面 取消收藏
+     */
+    fun unCollectPage(articleInfo: ArticleInfo, position: Int) {
+        request({
+            apiService.uncollect(articleInfo.id, articleInfo.originId?:-1)
+        }, {
+            uncollectResultLiveData.value = ResultState.Success(articleInfo, position)
+        }, { exception, errorCode ->
+            uncollectResultLiveData.value = ResultState.Error(exception, errorCode, true)
+        }, { loadingMessage, isShowingDialog ->
+            uncollectResultLiveData.value = ResultState.Loading(loadingMessage, isShowingDialog)
+        })
+    }
+
+
+
+
+    /**
      * webFragment中取消收藏
      */
     val uncollectLiveData by lazy {
         MutableLiveData<ResultState<Int>>()
     }
 
-    fun uncollect(articleId: Int) {
+    fun unCollect(articleId: Int) {
         request({
             apiService.uncollect(articleId)
         }, {

@@ -98,8 +98,8 @@
 
     <fragment
         android:id="@+id/fragment_visit_most_web"
-        android:name="com.wislie.wanandroid.fragment.VisitMostWebFragment"
-        tools:layout="@layout/fragment_visit_most_web">
+        android:name="com.wislie.wanandroid.fragment.UsualWebsiteFragment"
+        tools:layout="@layout/fragment_usual_website">
 
     </fragment>
 

@@ -12,20 +12,20 @@ import com.wislie.common.ext.findNav
 import com.wislie.common.ext.init
 import com.wislie.wanandroid.R
 import com.wislie.wanandroid.adapter.LoadStateFooterAdapter
-import com.wislie.wanandroid.adapter.VisitMostWebAdapter
-import com.wislie.wanandroid.databinding.FragmentVisitMostWebBinding
+import com.wislie.wanandroid.adapter.UsualWebsiteAdapter
+import com.wislie.wanandroid.databinding.FragmentUsualWebsiteBinding
 import com.wislie.wanandroid.viewmodel.ArticlesViewModel
 import kotlinx.coroutines.launch
 
 /**
- * 访问最多的网站
+ * 常用网站
  */
-class VisitMostWebFragment : BaseViewModelFragment<BaseViewModel, FragmentVisitMostWebBinding>() {
+class UsualWebsiteFragment : BaseViewModelFragment<BaseViewModel, FragmentUsualWebsiteBinding>() {
 
     private val articlesViewModel: ArticlesViewModel by viewModels()
 
     private val adapter by lazy {
-        VisitMostWebAdapter()
+        UsualWebsiteAdapter()
     }
 
     override fun init(root: View) {
@@ -57,7 +57,8 @@ class VisitMostWebFragment : BaseViewModelFragment<BaseViewModel, FragmentVisitM
 
     override fun observeData() {
         super.observeData()
-        articlesViewModel.visitMostWebLiveData
+        articlesViewModel
+            .usualWebsiteLiveData
             .observe(viewLifecycleOwner) { resultState ->
                 parseState(resultState, { dataList ->
                     if (binding.swipeRefreshLayout.isRefreshing) {
@@ -71,15 +72,31 @@ class VisitMostWebFragment : BaseViewModelFragment<BaseViewModel, FragmentVisitM
                     }
                 })
             }
+
+        //收藏/取消收藏 网址
+        /*App.instance()
+            .appViewModel
+            .collectEventLiveData
+            .observe(viewLifecycleOwner) { collectEvent ->
+                val collect = collectEvent.collect
+                val id = collectEvent.id
+
+                val list = adapter.snapshot().items
+                for (i in list.indices) {
+                    if (list[i].id == id && list[i].collect != collect) {
+                        list[i].collect = collect
+                        adapter.notifyItemChanged(i, Any())
+                    }
+                }
+            }*/
     }
 
     override fun loadData() {
         super.loadData()
-        articlesViewModel.getVisitMostWeb()
-
+        articlesViewModel.getUsualWebsite()
     }
 
     override fun getLayoutResId(): Int {
-        return R.layout.fragment_visit_most_web
+        return R.layout.fragment_usual_website
     }
 }

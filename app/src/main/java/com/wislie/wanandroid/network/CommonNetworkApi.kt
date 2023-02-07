@@ -31,7 +31,7 @@ class CommonNetworkApi : AbstractNetworkApi() {
     override fun setOkHttpClientBuilder(builder: okhttp3.OkHttpClient.Builder) {
 
         with(builder) {
-            cache(Cache(File(Utils.getApp().cacheDir, "xx_network_cache"), 10 * 1024 * 1024))
+            cache(Cache(File(Utils.getApp().cacheDir, "wanAndroid_network_cache"), 10 * 1024 * 1024))
             cookieJar(cookieJar)
             addInterceptor(CacheInterceptor())
             addInterceptor(CommonInterceptor())

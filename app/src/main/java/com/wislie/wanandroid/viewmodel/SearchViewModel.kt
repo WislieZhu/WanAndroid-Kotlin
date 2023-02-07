@@ -64,7 +64,6 @@ class SearchViewModel : BaseViewModel() {
         if (item == null) {
             return
         }
-
         val removes = _removeSearchKeyFlow.value
         val list = mutableListOf(item)
         list.addAll(removes)

@@ -47,11 +47,16 @@ class WebFragment : BaseViewModelFragment<ArticlesViewModel, FragmentWebBinding>
 
     override fun init(root: View) {
         super.init(root)
-        articleType = arguments?.getInt("type")
-        articleId = arguments?.getInt("id")
-        articleName = arguments?.getString("name")
-        articleLink = arguments?.getString("linkUrl")
-        articleCollect = arguments?.getBoolean("collect", false)
+
+
+        arguments?.run {
+            articleType = getInt("type")
+            articleId = getInt("id")
+            articleName = getString("name")
+            articleLink = getString("linkUrl")
+            articleCollect = getBoolean("collect")
+        }
+
 
         toolbar = root.findViewById(R.id.toolbar)
         toolbar.run {
@@ -80,11 +85,7 @@ class WebFragment : BaseViewModelFragment<ArticlesViewModel, FragmentWebBinding>
                 }
                 true
             }
-
         }
-
-
-
         mAgentWeb = AgentWeb.with(this)
             .setAgentWebParent(binding.llWebContent, LinearLayout.LayoutParams(-1, -1))
             .useDefaultIndicator()
@@ -98,7 +99,6 @@ class WebFragment : BaseViewModelFragment<ArticlesViewModel, FragmentWebBinding>
             .createAgentWeb()
             .ready()
             .go(articleLink)
-
     }
 
     //收藏
@@ -106,13 +106,7 @@ class WebFragment : BaseViewModelFragment<ArticlesViewModel, FragmentWebBinding>
         articleType?.run {
             when (articleType) {
                 ArticleType.TYPE_WEBSITE -> { //网址
-                    articleName?.run {
-                        val name = this
-                        articleLink?.run {
-                            articlesViewModel.addCollectWebSite(name, this)
-                        }
-                    }
-
+                    collectWebsite()
                 }
                 ArticleType.TYPE_BANNER -> { //banner
 
@@ -131,17 +125,31 @@ class WebFragment : BaseViewModelFragment<ArticlesViewModel, FragmentWebBinding>
         articleType?.run {
             when (articleType) {
                 ArticleType.TYPE_WEBSITE -> { //网址
-
+                    unCollectWebsite()
                 }
                 ArticleType.TYPE_BANNER -> { //banner
 
                 }
                 else -> { //文章
                     articleId?.run {
-                        articlesViewModel.uncollect(this)
+                        articlesViewModel.unCollect(this)
                     }
                 }
             }
+        }
+    }
+
+    //收藏网址
+    private fun collectWebsite() {
+        if (articleName != null && articleLink != null) {
+            articlesViewModel.addCollectWebSite(articleName!!, articleLink!!)
+        }
+    }
+
+    //取消收藏网址
+    private fun unCollectWebsite() {
+        articleId?.run {
+            articlesViewModel.delCollectWebsite(this)
         }
     }
 
@@ -166,19 +174,7 @@ class WebFragment : BaseViewModelFragment<ArticlesViewModel, FragmentWebBinding>
 
     override fun loadData() {
         super.loadData()
-        articleType?.run {
-            when (articleType) {
-                ArticleType.TYPE_WEBSITE -> { //网址
-                    articlesViewModel.getCollectWebsites()
-                }
-                ArticleType.TYPE_BANNER -> { //banner
-
-                }
-                else -> {
-                    setCollectStatus(articleCollect)
-                }
-            }
-        }
+        setCollectStatus(articleCollect)
     }
 
     override fun observeData() {
@@ -194,7 +190,7 @@ class WebFragment : BaseViewModelFragment<ArticlesViewModel, FragmentWebBinding>
             })
         }
         articlesViewModel.uncollectLiveData.observe(viewLifecycleOwner) { resultState ->
-            parseState(resultState, { id ->  //收藏成功
+            parseState(resultState, { id ->  //取消收藏成功
                 setCollectStatus(collect = false)
                 App.instance().appViewModel.collectEventLiveData.value =
                     CollectEvent(collect = false, id)
@@ -204,29 +200,7 @@ class WebFragment : BaseViewModelFragment<ArticlesViewModel, FragmentWebBinding>
             })
         }
 
-        //收藏的网址列表
-        articlesViewModel.collectWebsitesLiveData
-            .observe(viewLifecycleOwner) { resultState ->
-                parseState(resultState, { dataList ->
-                    var isCollect = false
-                    dataList?.run {
-                        for (data in this) {
-                            if (data.id == articleId) {
-                                isCollect = true //如果当前的articleId 属于 收藏网址列表
-                                break
-                            }
-                        }
-                    }
-                    if (isCollect) {
-                        setCollectStatus(false)
-                    } else {
-                        setCollectStatus(true)
-                    }
-                }, {
-                    setCollectStatus(true)
-                })
-            }
-        //添加收藏网址
+        //收藏网址
         articlesViewModel.addCollectWebsiteLiveData
             .observe(viewLifecycleOwner) { resultState ->
                 parseState(resultState, { webSiteInfo ->
@@ -235,7 +209,18 @@ class WebFragment : BaseViewModelFragment<ArticlesViewModel, FragmentWebBinding>
                         App.instance().appViewModel.collectEventLiveData.value =
                             CollectEvent(collect = true, this.id)
                     }
-                    Toast.makeText(hostActivity,"收藏成功",Toast.LENGTH_SHORT).show()
+                    Toast.makeText(hostActivity, "收藏成功", Toast.LENGTH_SHORT).show()
+                })
+            }
+
+        //取消收藏网址
+        articlesViewModel.delCollectWebsiteLiveData
+            .observe(viewLifecycleOwner) { resultState ->
+                parseState(resultState, { id ->
+                    setCollectStatus(collect = false)
+                    App.instance().appViewModel.collectEventLiveData.value =
+                        CollectEvent(collect = false, id)
+                    Toast.makeText(hostActivity, "已取消收藏", Toast.LENGTH_SHORT).show()
                 })
             }
     }

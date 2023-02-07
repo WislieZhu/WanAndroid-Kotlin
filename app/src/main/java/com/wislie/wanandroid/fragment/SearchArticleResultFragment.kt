@@ -31,7 +31,7 @@ class SearchArticleResultFragment :
         SearchArticleResultAdapter{ position, articleInfo ->
             articleInfo?.also {
                 if (it.collect != null && it.collect) {
-                    articlesViewModel.uncollect(articleInfo, position)
+                    articlesViewModel.unCollect(articleInfo, position)
                 } else {
                     articlesViewModel.collect(articleInfo, position)
                 }

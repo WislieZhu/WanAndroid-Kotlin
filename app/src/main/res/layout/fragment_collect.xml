@@ -11,16 +11,30 @@
         android:layout_height="match_parent"
         android:orientation="vertical">
 
-        <include layout="@layout/include_toolbar" />
-
-        <net.lucode.hackware.magicindicator.MagicIndicator
-            android:id="@+id/indicator_project"
-            android:layout_width="match_parent"
-            android:layout_height="?attr/actionBarSize"
-            android:layout_gravity="left"
+        <FrameLayout
             android:background="@color/purple_500"
-            android:paddingLeft="8dp"
-            android:paddingRight="8dp" />
+            android:layout_width="match_parent"
+            android:layout_height="?attr/actionBarSize">
+
+            <ImageView
+                android:id="@+id/iv_back"
+                android:paddingLeft="@dimen/dp_10"
+                android:layout_gravity="center_vertical"
+                android:src="@mipmap/ic_back"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"/>
+
+            <net.lucode.hackware.magicindicator.MagicIndicator
+                android:id="@+id/indicator_project"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_gravity="center_horizontal"
+                android:paddingLeft="8dp"
+                android:paddingRight="8dp" />
+
+        </FrameLayout>
+
+
 
         <androidx.viewpager2.widget.ViewPager2
             android:id="@+id/vp_project"

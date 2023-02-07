@@ -27,7 +27,7 @@ class ProjectCategoryFragment :
         FirstPageArticleAdapter { position, articleInfo ->
             articleInfo?.also {
                 if (it.collect != null && it.collect) {
-                    projectArticlesViewModel.uncollect(articleInfo, position)
+                    projectArticlesViewModel.unCollect(articleInfo, position)
                 } else {
                     projectArticlesViewModel.collect(articleInfo, position)
                 }
