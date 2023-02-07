@@ -31,7 +31,7 @@ import java.text.SimpleDateFormat
 fun bindAuthor(view: TextView, articleInfo: ArticleInfo) { //首页的文章作者
     val author =
         if (TextUtils.isEmpty(articleInfo.shareUser)) articleInfo.author else articleInfo.shareUser
-    view.text = author
+    view.text = if(!TextUtils.isEmpty(author)) author else "匿名用户"
 }
 
 @BindingAdapter("type")
@@ -90,6 +90,19 @@ fun bindFilePath(view: ImageView, filePath: String, error: Drawable) {
         .error(error)
         .into(view)
 }
+
+@BindingAdapter(value = ["envelopePic"])
+fun bindEnvelopePic(view: ImageView, envelopePic: String?) {
+    Glide.with(view.context)
+        .load(envelopePic)
+        .into(view)
+}
+
+@BindingAdapter(value = ["parameter"])
+fun bindViewVisible(view:View, parameter:String?){
+    view.visibility = if (TextUtils.isEmpty(parameter)) View.GONE else View.VISIBLE
+}
+
 
 @BindingAdapter("username")
 fun bindUserName(view: TextView, username: String?) {

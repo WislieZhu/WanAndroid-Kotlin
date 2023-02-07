@@ -9,6 +9,8 @@ import com.wislie.common.base.request
 import com.wislie.wanandroid.data.*
 import com.wislie.wanandroid.datasource.*
 import com.wislie.wanandroid.network.apiService
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.MutableStateFlow
 
 
 class ArticlesViewModel : BaseViewModel() {
@@ -137,6 +139,26 @@ class ArticlesViewModel : BaseViewModel() {
         }, { loadingMessage, isShowingDialog ->
             delCollectWebsiteLiveData.value = ResultState.Loading(loadingMessage, isShowingDialog)
         })
+    }
+
+    /**
+     * PagingDataAdapter 删除item 摘自https://blog.csdn.net/haha223545/article/details/121040837
+     */
+    private val _removeSearchKeyFlow = MutableStateFlow(mutableListOf<Any>())
+    val removedSearchKeysFlow: Flow<MutableList<Any>> get() = _removeSearchKeyFlow
+
+    fun removeSearchKey(item: Any?) {
+        if (item == null) {
+            return
+        }
+        val removes = _removeSearchKeyFlow.value
+        val list = mutableListOf(item)
+        list.addAll(removes)
+        _removeSearchKeyFlow.value = list
+    }
+
+    fun removeAllSearchKeys() {
+        _removeSearchKeyFlow.value = mutableListOf()
     }
 
     /**

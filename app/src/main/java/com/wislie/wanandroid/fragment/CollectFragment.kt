@@ -19,7 +19,6 @@ class CollectFragment:BaseFragment<FragmentCollectBinding>() {
         binding.ivBack.setOnClickListener {
             findNav().navigateUp()
         }
-
         val fragments = mutableListOf<BaseFragment<*>>()
         fragments.add(CollectArticleListFragment())
         fragments.add(CollectWebsiteListFragment())

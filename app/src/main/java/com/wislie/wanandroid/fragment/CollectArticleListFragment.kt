@@ -3,8 +3,11 @@ package com.wislie.wanandroid.fragment
 import android.view.View
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
+import androidx.paging.cachedIn
+import androidx.paging.filter
 import com.wislie.common.base.BaseViewModel
 import com.wislie.common.base.BaseViewModelFragment
+import com.wislie.common.base.parseState
 import com.wislie.common.ext.addFreshListener
 import com.wislie.common.ext.init
 import com.wislie.wanandroid.R
@@ -13,6 +16,7 @@ import com.wislie.wanandroid.adapter.LoadStateFooterAdapter
 import com.wislie.wanandroid.databinding.FragmentCollectArticleListBinding
 import com.wislie.wanandroid.viewmodel.ArticlesViewModel
 import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.launch
 
 /**
@@ -48,6 +52,12 @@ class CollectArticleListFragment :
         lifecycleScope.launch {
             articlesViewModel
                 .collectArticleList
+                .cachedIn(scope = lifecycleScope)
+                .combine(articlesViewModel.removedSearchKeysFlow) { pagingData, removed ->
+                    pagingData.filter {
+                        it !in removed
+                    }
+                }
                 .collectLatest {
                     if (binding.swipeRefreshLayout.isRefreshing) {
                         binding.swipeRefreshLayout.isRefreshing = false
@@ -59,7 +69,12 @@ class CollectArticleListFragment :
 
     override fun observeData() {
         super.observeData()
-
+        articlesViewModel.uncollectResultLiveData
+            .observe(viewLifecycleOwner){ resultState ->
+                parseState(resultState, { articleInfo ->
+                    articlesViewModel.removeSearchKey(articleInfo)
+                })
+            }
     }
 
     override fun getLayoutResId(): Int {
