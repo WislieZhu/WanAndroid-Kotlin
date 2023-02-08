@@ -56,7 +56,7 @@ abstract class BaseFragment<VB : ViewDataBinding> : Fragment() {
 
 }
 
-fun <R> BaseFragment<*>.parseStatexxx(
+fun <R> BaseFragment<*>.parseStateNoLogin(
     resultState: ResultState<R>,
     success: (R) -> Unit
 ) {
@@ -65,7 +65,6 @@ fun <R> BaseFragment<*>.parseStatexxx(
             success.invoke(resultState.data)
         }
         is ResultState.Error -> {
-//            error?.invoke(resultState.exception.message)
             Toast.makeText(hostActivity, "${resultState.exception.message}", Toast.LENGTH_SHORT)
                 .show()
         }

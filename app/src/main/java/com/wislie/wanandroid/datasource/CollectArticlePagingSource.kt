@@ -8,7 +8,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 
 /**
- * 收藏的文章列表分页
+ * 收藏的文章列表分页 TODO 收藏的网址 currentPage显示有问题
  */
 class CollectArticlePagingSource : PagingSource<Long, ArticleInfo>() {
 
@@ -24,7 +24,7 @@ class CollectArticlePagingSource : PagingSource<Long, ArticleInfo>() {
                 var nextPage: Long? = null
                 if (articleListResp != null && articleListResp.errorCode == 0) {
                     articleListResp?.data?.run {
-                        if (currentPage < this.pageCount) {
+                        if (currentPage < this.pageCount - 1) { //初始值 currentPage为0的情况
                             nextPage = currentPage + 1
                         }
                     }

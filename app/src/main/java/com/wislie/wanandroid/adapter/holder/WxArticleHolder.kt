@@ -25,10 +25,10 @@ class WxArticleHolder(
         binding.root.setOnClickListener { v ->
             val bundle = Bundle()
             bundle?.run {
-                putInt("type", ArticleType.TYPE_ARTICLE) //文章
+                putInt("type", ArticleType.TYPE_LIST_ARTICLE) //文章
                 putInt("id", binding.articleInfo?.id ?: 0)
                 putString("linkUrl", binding.articleInfo?.link ?: "")
-                putString("name", binding.articleInfo?.title ?: "")
+                putString("title", binding.articleInfo?.title ?: "")
                 putBoolean("collect", binding.articleInfo?.collect ?: false)
             }
             v.findNav().navigate(R.id.fragment_web, bundle)

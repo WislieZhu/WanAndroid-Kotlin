@@ -31,8 +31,8 @@ class WendaFragment : BaseViewModelFragment<BaseViewModel, FragmentFirstPageBind
             }
         }, { position, articleInfo ->
             articleInfo?.run {
-                 if (collect != null && collect) {
-                     articlesViewModel.unCollect(articleInfo, position)
+                 if (collect) {
+                     articlesViewModel.unCollect(id)
                  } else {
                      articlesViewModel.collect(articleInfo, position)
                  }

@@ -12,7 +12,7 @@ import com.wislie.wanandroid.util.ArticleType
 
 class CollectWebsiteHolder(
     override val binding: ItemWebsiteBinding,
-    val uncollect: (collectWebsiteInfo: CollectWebsiteInfo?) -> Unit
+    private val uncollect: (collectWebsiteInfo: CollectWebsiteInfo?) -> Unit
 ) :
     BaseVHolder<CollectWebsiteInfo>(binding) {
 
@@ -24,7 +24,7 @@ class CollectWebsiteHolder(
             bundle.run {
                 putInt("type", ArticleType.TYPE_WEBSITE)
                 putInt("id", binding.websiteInfo?.id ?: 0)
-                putString("name", binding.websiteInfo?.name ?: "")
+                putString("title", binding.websiteInfo?.name ?: "")
                 putString("linkUrl", binding.websiteInfo?.link ?: "")
                 putBoolean("collect", true)
             }

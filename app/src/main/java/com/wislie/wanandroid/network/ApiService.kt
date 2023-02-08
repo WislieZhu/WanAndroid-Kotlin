@@ -69,31 +69,37 @@ interface ApiService {
     ): ApiResponse<ApiPageResponse<ArticleInfo>?> //项目列表数据
 
 
+    @GET("lg/collect/list/{page}/json")
+    suspend fun getCollectArticles(
+        @Path("page") pageNo: Long
+    ): ApiResponse<ApiPageResponse<ArticleInfo>?> //收藏的文章列表
+
     @POST("lg/collect/{id}/json")
-    suspend fun collect(@Path("id") id: Int): ApiResponse<Any?> //收藏文章
+    suspend fun collect(
+        @Path("id") id: Int
+    ): ApiResponse<Any?> //收藏->文章列表
+
+    @POST("lg/collect/add/json")
+    @FormUrlEncoded
+    suspend fun collect(
+        @Field("title") title: String,
+        @Field("author") author: String?,
+        @Field("link") link: String
+    ): ApiResponse<ArticleInfo?> // 收藏->我的收藏页面
 
     @POST("lg/uncollect_originId/{id}/json")
-    suspend fun uncollect(@Path("id") id: Int): ApiResponse<Any?> //取消收藏文章  列表
+    suspend fun uncollect(@Path("id") id: Int): ApiResponse<Any?> //取消收藏->文章列表
 
     @POST("lg/uncollect/{id}/json")
     @FormUrlEncoded
     suspend fun uncollect(
         @Path("id") id: Int,
         @Field("originId") originId: Int
-    ): ApiResponse<Any?> //取消收藏文章   我的收藏页面
-
-
-    @GET("lg/collect/list/{page}/json")
-    suspend fun getCollectArticles(@Path("page") pageNo: Long):
-            ApiResponse<ApiPageResponse<ArticleInfo>?> //收藏的文章列表
+    ): ApiResponse<Any?> //取消收藏->我的收藏页面
 
     @GET("lg/collect/usertools/json")
-    suspend fun getCollectWebsites(): ApiResponse<List<CollectWebsiteInfo>?> //收藏的网址列表
-
-    @POST("lg/collect/deletetool/json")
-    @FormUrlEncoded
-    suspend fun deleteCollectWebsite(@Field("id") id: Int): ApiResponse<Any?> //删除网址收藏
-
+    suspend fun getCollectWebsiteList():
+            ApiResponse<List<CollectWebsiteInfo>?> //收藏的网址列表
 
     @POST("lg/collect/addtool/json")
     @FormUrlEncoded
@@ -102,6 +108,10 @@ interface ApiService {
         @Field("link") link: String
     ): ApiResponse<CollectWebsiteInfo?> //添加网址收藏
 
+    @POST("lg/collect/deletetool/json")
+    @FormUrlEncoded
+    suspend fun deleteCollectWebsite(@Field("id") id: Int):
+            ApiResponse<Any?> //删除网址收藏
 
     @GET("wenda/list/{page}/json")
     suspend fun getWendaArticles(
@@ -142,7 +152,8 @@ interface ApiService {
 
 
     @GET("wxarticle/list{id}/{page}/json")
-    suspend fun searchWxHistoryArticleList(@Query("k") k: String
+    suspend fun searchWxHistoryArticleList(
+        @Query("k") k: String
     ): ApiResponse<ApiPageResponse<ArticleInfo>?> //在某个公众号中搜索历史文章
 
 

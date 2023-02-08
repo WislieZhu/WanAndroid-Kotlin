@@ -105,7 +105,7 @@ class SearchArticleFragment : BaseViewModelFragment<BaseViewModel, FragmentSearc
         lifecycleScope.launch {
             searchViewModel.queryAllSearchKey(hostActivity)
                 .cachedIn(scope = lifecycleScope)
-                .combine(searchViewModel.removedSearchKeysFlow) { pagingData, removed ->
+                .combine(searchViewModel.mRemovedFlow) { pagingData, removed ->
                     pagingData.filter {
                         it !in removed
                     }
@@ -128,14 +128,14 @@ class SearchArticleFragment : BaseViewModelFragment<BaseViewModel, FragmentSearc
         searchViewModel.searchKeyLiveData
             .observe(viewLifecycleOwner) { resultState ->
                 parseState(resultState, { searchKey ->
-                    searchViewModel.removeSearchKey(searchKey)
+                    searchViewModel.removeFlowItem(searchKey)
                 })
             }
         searchViewModel.searchKeyDelLiveData
             .observe(viewLifecycleOwner) { resultState ->
                 parseState(resultState, { status ->
                     if (status) {
-                        searchViewModel.removeAllSearchKeys()
+                        searchViewModel.removeAllItems()
                     }
                 })
             }

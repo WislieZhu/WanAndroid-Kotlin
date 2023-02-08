@@ -29,9 +29,9 @@ class SearchArticleResultFragment :
     private val articlesViewModel: ArticlesViewModel by viewModels()
     private val adapter by lazy {
         SearchArticleResultAdapter{ position, articleInfo ->
-            articleInfo?.also {
-                if (it.collect != null && it.collect) {
-                    articlesViewModel.unCollect(articleInfo, position)
+            articleInfo?.run {
+                if (collect) {
+                    articlesViewModel.unCollect(id)
                 } else {
                     articlesViewModel.collect(articleInfo, position)
                 }

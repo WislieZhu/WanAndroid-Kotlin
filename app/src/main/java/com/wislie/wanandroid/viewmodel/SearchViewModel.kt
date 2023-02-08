@@ -2,10 +2,8 @@ package com.wislie.wanandroid.viewmodel
 
 import android.content.Context
 import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.viewModelScope
 import androidx.paging.Pager
 import androidx.paging.PagingConfig
-import androidx.paging.cachedIn
 import com.wislie.common.base.BaseViewModel
 import com.wislie.common.base.ResultState
 import com.wislie.common.base.request
@@ -14,8 +12,6 @@ import com.wislie.wanandroid.datasource.ArticleSearchPagingSource
 import com.wislie.wanandroid.db.AppDatabase
 import com.wislie.wanandroid.db.SearchKey
 import com.wislie.wanandroid.network.apiService
-import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.MutableStateFlow
 import java.lang.Exception
 
 class SearchViewModel : BaseViewModel() {
@@ -53,26 +49,6 @@ class SearchViewModel : BaseViewModel() {
                 AppDatabase.getDatabaseSingleton(context).getSearchKeyDao().queryAllSearchKey()
             })
             .flow
-
-    /**
-     * PagingDataAdapter 删除item 摘自https://blog.csdn.net/haha223545/article/details/121040837
-     */
-    private val _removeSearchKeyFlow = MutableStateFlow(mutableListOf<Any>())
-    val removedSearchKeysFlow: Flow<MutableList<Any>> get() = _removeSearchKeyFlow
-
-    fun removeSearchKey(item: Any?) {
-        if (item == null) {
-            return
-        }
-        val removes = _removeSearchKeyFlow.value
-        val list = mutableListOf(item)
-        list.addAll(removes)
-        _removeSearchKeyFlow.value = list
-    }
-
-    fun removeAllSearchKeys() {
-        _removeSearchKeyFlow.value = mutableListOf()
-    }
 
     val searchKeyLiveData by lazy {
         MutableLiveData<ResultState<SearchKey>>()

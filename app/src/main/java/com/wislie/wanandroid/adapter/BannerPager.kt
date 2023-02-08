@@ -25,10 +25,15 @@ class BannerPager : BaseBannerAdapter<Banner, BannerViewHolder>() {
     override fun onBind(holder: BannerViewHolder, data: Banner, position: Int, pageSize: Int) {
         holder.bindData(data, position, pageSize)
         holder.itemView.setOnClickListener { v ->
+
             val bundle = Bundle()
-            bundle.putString("linkUrl", data.url)
-            bundle.putInt("type", ArticleType.TYPE_BANNER)
-            bundle.putInt("id", data.id)
+            bundle?.run {
+                putInt("type", ArticleType.TYPE_WEBSITE)
+                putInt("id", data.id )
+                putString("title", data.title)
+                putString("linkUrl", data.url)
+            }
+
             v.findNav().navigate(R.id.fragment_web, bundle)
         }
     }

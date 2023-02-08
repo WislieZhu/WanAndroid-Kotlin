@@ -10,7 +10,8 @@ import kotlinx.coroutines.withContext
 /**
  * 微信文章分页
  */
-class WxArticlePagingSource(val accountId:Int, val k:String?="") : PagingSource<Long, ArticleInfo>() {
+class WxArticlePagingSource(private val accountId: Int, private val k: String? = "") :
+    PagingSource<Long, ArticleInfo>() {
 
     override fun getRefreshKey(state: PagingState<Long, ArticleInfo>): Long? = null
 
@@ -19,13 +20,13 @@ class WxArticlePagingSource(val accountId:Int, val k:String?="") : PagingSource<
         return withContext(Dispatchers.IO) {
             val currentPage = params.key ?: 1
             try {
-                val articleListResp = apiService.getWxHistoryArticleList(accountId, currentPage,k)
+                val articleListResp = apiService.getWxHistoryArticleList(accountId, currentPage, k)
 
                 //当前页码小于总页码页面加1
                 var nextPage: Long? = null
                 if (articleListResp != null && articleListResp.errorCode == 0) {
                     articleListResp?.data?.run {
-                        if (currentPage < this.pageCount) {
+                        if (currentPage < this.pageCount) { //初始值 currentPage为1的情况
                             nextPage = currentPage + 1
                         }
                     }

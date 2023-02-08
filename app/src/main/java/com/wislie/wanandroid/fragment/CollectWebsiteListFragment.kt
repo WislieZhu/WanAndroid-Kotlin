@@ -2,12 +2,14 @@ package com.wislie.wanandroid.fragment
 
 import android.view.View
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.Observer
 import androidx.lifecycle.lifecycleScope
 import androidx.paging.PagingData
+import androidx.paging.filter
 import com.wislie.common.base.BaseViewModel
 import com.wislie.common.base.BaseViewModelFragment
 import com.wislie.common.base.parseState
-import com.wislie.common.base.parseStatexxx
+import com.wislie.common.base.parseStateNoLogin
 import com.wislie.common.ext.addFreshListener
 import com.wislie.common.ext.init
 import com.wislie.wanandroid.App
@@ -16,6 +18,7 @@ import com.wislie.wanandroid.adapter.CollectWebsiteAdapter
 import com.wislie.wanandroid.adapter.LoadStateFooterAdapter
 import com.wislie.wanandroid.databinding.FragmentCollectWebsiteListBinding
 import com.wislie.wanandroid.viewmodel.ArticlesViewModel
+import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
 
 /**
@@ -25,12 +28,12 @@ class CollectWebsiteListFragment :
     BaseViewModelFragment<BaseViewModel, FragmentCollectWebsiteListBinding>() {
 
 
-    private val articleViewModel: ArticlesViewModel by viewModels()
+    private val articlesViewModel: ArticlesViewModel by viewModels()
 
     private val adapter: CollectWebsiteAdapter by lazy {
         CollectWebsiteAdapter { collectWebsiteInfo ->
             collectWebsiteInfo?.run {
-                articleViewModel.delCollectWebsite(this.id)
+                articlesViewModel.delCollectWebsite(collectWebsiteInfo.id)
             }
         }
     }
@@ -42,10 +45,10 @@ class CollectWebsiteListFragment :
     override fun init(root: View) {
         super.init(root)
         registerLoadSir(binding.rvWebsite) {
-            loadData()
+            adapter.refresh() //点击即刷新
         }
         binding.swipeRefreshLayout.init(adapter) {
-            loadData()
+            loadData() //点击即刷新
         }
         binding.rvWebsite.adapter =
             adapter.withLoadStateFooter(footer = LoadStateFooterAdapter { adapter.retry() })
@@ -55,48 +58,56 @@ class CollectWebsiteListFragment :
     override fun observeData() {
         super.observeData()
         //收藏
-        articleViewModel.collectWebsitesLiveData
+        articlesViewModel.collectWebsiteListLiveData
             .observe(viewLifecycleOwner) { resultState ->
-                parseStatexxx(resultState) { websiteInfoList ->
+                parseStateNoLogin(resultState) { websiteInfoList ->
                     if (binding.swipeRefreshLayout.isRefreshing) {
                         binding.swipeRefreshLayout.isRefreshing = false
                     }
                     lifecycleScope.launch {
                         websiteInfoList?.run {
-                            val pagingData = PagingData.from(this)
-                            adapter.submitData(lifecycle, pagingData)
+                            //list转换成 Flow, 方便删除
+                            val flow = MutableStateFlow(PagingData.from(this))
+                            flow.combine(articlesViewModel.mRemovedFlow) { pagingData, removedList ->
+                                pagingData.filter {
+                                    it !in removedList
+                                }
+                            }.collectLatest {
+                                adapter.submitData(lifecycle, it)
+                            }
                         }
                     }
                 }
             }
 
         //取消收藏
-        articleViewModel.delCollectWebsiteLiveData
+        articlesViewModel.delCollectWebsiteLiveData
             .observe(viewLifecycleOwner) { resultState ->
-                parseState(resultState, { id -> //删除收藏成功
+                parseState(resultState, { id ->
                     val list = adapter.snapshot().items
                     for (i in list.indices) {
                         if (list[i].id == id) {
-                            adapter.notifyItemRemoved(i)
+                            articlesViewModel.removeFlowItem(list[i])
                         }
                     }
                 })
             }
 
+        //全局性质的取消收藏
         App.instance().appViewModel.collectEventLiveData
-            .observe(viewLifecycleOwner) { collectEvent ->
+            .observe(viewLifecycleOwner, Observer { collectEvent ->
                 val list = adapter.snapshot().items
                 for (i in list.indices) {
-                    if (list[i].id == collectEvent.id) { //取消收藏网址
-                        if (!collectEvent.collect) {
-                            adapter.notifyItemRemoved(i)
-                        }
+                    if (list[i].id == collectEvent.id) {
+                        articlesViewModel.removeFlowItem(list[i])
+                        return@Observer
                     }
                 }
-            }
+                loadData()
+            })
     }
 
     override fun loadData() {
-        articleViewModel.getCollectWebsites()
+        articlesViewModel.getCollectWebsiteList()
     }
 }

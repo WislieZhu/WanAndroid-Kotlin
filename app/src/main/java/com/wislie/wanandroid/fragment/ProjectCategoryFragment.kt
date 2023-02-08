@@ -6,6 +6,7 @@ import androidx.lifecycle.lifecycleScope
 import com.wislie.common.base.BaseViewModel
 import com.wislie.common.base.BaseViewModelFragment
 import com.wislie.common.base.parseListState
+import com.wislie.common.base.parseState
 import com.wislie.common.ext.addFreshListener
 import com.wislie.common.ext.init
 import com.wislie.wanandroid.App
@@ -22,12 +23,13 @@ import kotlinx.coroutines.launch
  */
 class ProjectCategoryFragment :
     BaseViewModelFragment<BaseViewModel, FragmentProjectArticleBinding>() {
+
     private val projectArticlesViewModel: ArticlesViewModel by viewModels()
     private val adapter by lazy {
         FirstPageArticleAdapter { position, articleInfo ->
-            articleInfo?.also {
-                if (it.collect != null && it.collect) {
-                    projectArticlesViewModel.unCollect(articleInfo, position)
+            articleInfo?.run {
+                if (collect) {
+                    projectArticlesViewModel.unCollect(id)
                 } else {
                     projectArticlesViewModel.collect(articleInfo, position)
                 }
@@ -66,12 +68,18 @@ class ProjectCategoryFragment :
         }
 
         //取消收藏
-        projectArticlesViewModel.uncollectResultLiveData.observe(
+        projectArticlesViewModel.uncollectLiveData.observe(
             viewLifecycleOwner
         ) { resultState ->
-            parseListState(resultState, { articleInfo, position ->  //取消收藏成功
-                articleInfo.collect = false
-                adapter.notifyItemChanged(position, Any())
+            parseState(resultState, { id ->
+                val list = adapter.snapshot().items
+                for (i in list.indices) {
+                    if (id == list[i].id) {
+                        adapter.notifyItemChanged(i, Any())
+                        list[i].collect = false
+                        break
+                    }
+                }
             }, {
                 startLogin()
             })

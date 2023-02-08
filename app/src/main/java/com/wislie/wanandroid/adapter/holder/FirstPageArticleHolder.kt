@@ -8,6 +8,7 @@ import com.wislie.wanandroid.data.ArticleInfo
 import com.wislie.wanandroid.databinding.ItemFirstPageArticleBinding
 import com.wislie.wanandroid.util.Settings
 import com.wislie.wanandroid.ext.startLogin
+import com.wislie.wanandroid.util.ArticleType
 
 class FirstPageArticleHolder(
     override val binding: ItemFirstPageArticleBinding,
@@ -20,9 +21,14 @@ class FirstPageArticleHolder(
     init {
         binding.root.setOnClickListener { v ->
             val bundle = Bundle()
-            bundle.putString("linkUrl", binding.articleInfo?.link ?: "")
-            bundle.putBoolean("collect", binding.articleInfo?.collect?:false)
-            bundle.putInt("id", binding.articleInfo?.id?:0)
+            bundle?.run {
+                putInt("type", ArticleType.TYPE_LIST_ARTICLE)
+                putInt("id", binding.articleInfo?.id ?: 0)
+                putString("title", binding.articleInfo?.title )
+                putString("author", binding.articleInfo?.author)
+                putString("linkUrl", binding.articleInfo?.link )
+                putBoolean("collect", binding.articleInfo?.collect ?: false)
+            }
             v.findNav().navigate(R.id.fragment_web, bundle)
         }
 

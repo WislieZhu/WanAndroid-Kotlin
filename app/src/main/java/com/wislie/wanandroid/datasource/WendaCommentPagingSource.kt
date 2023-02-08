@@ -12,7 +12,7 @@ import kotlinx.coroutines.withContext
 /**
  * 问答评论
  */
-class WendaCommentPagingSource(private val wendaId:Int) : PagingSource<Long, ReplyComment>() {
+class WendaCommentPagingSource(private val wendaId: Int) : PagingSource<Long, ReplyComment>() {
 
     override val keyReuseSupported: Boolean
         get() = true //不重写会闪退
@@ -29,7 +29,7 @@ class WendaCommentPagingSource(private val wendaId:Int) : PagingSource<Long, Rep
                 var nextPage: Long? = null
                 if (wendaCommentResp != null && wendaCommentResp.errorCode == 0) {
                     wendaCommentResp.data?.run {
-                        if (currentPage  < this.pageCount) {
+                        if (currentPage < this.pageCount) { //初始值 currentPage为1的情况
                             nextPage = currentPage + 1
                         }
                     }

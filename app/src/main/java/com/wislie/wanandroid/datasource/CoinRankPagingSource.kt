@@ -28,7 +28,7 @@ class CoinRankPagingSource : PagingSource<Long, CoinRankInfo>() {
                 var nextPage: Long? = null
                 if (coinRankListResp != null && coinRankListResp.errorCode == 0) {
                     coinRankListResp.data?.run {
-                        if (currentPage  < this.pageCount) {
+                        if (currentPage < this.pageCount) { //初始值 currentPage为1的情况
                             nextPage = currentPage + 1
                         }
                     }

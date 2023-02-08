@@ -5,5 +5,8 @@ package com.wislie.wanandroid.data
  */
 data class CollectEvent(
     var collect: Boolean, //是否收藏
-    val id: Int
+    val id: Int,
+    var author: String? = null,
+    var title: String? = null,
+    var link: String? = null,
 )

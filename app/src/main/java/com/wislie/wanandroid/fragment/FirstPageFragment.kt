@@ -1,5 +1,7 @@
 package com.wislie.wanandroid.fragment
 
+import android.text.TextUtils
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import androidx.appcompat.widget.Toolbar
@@ -40,8 +42,8 @@ class FirstPageFragment : BaseViewModelFragment<BaseViewModel, FragmentFirstPage
     private val adapter by lazy {
         FirstPageArticleAdapter { position, articleInfo ->
             articleInfo?.run {
-                if (collect != null && collect) {
-                    articlesViewModel.unCollect(articleInfo, position)
+                if (collect) {
+                    articlesViewModel.unCollect(id)
                 } else {
                     articlesViewModel.collect(articleInfo, position)
                 }
@@ -121,12 +123,18 @@ class FirstPageFragment : BaseViewModelFragment<BaseViewModel, FragmentFirstPage
         }
 
         //取消收藏
-        articlesViewModel.uncollectResultLiveData.observe(
+        articlesViewModel.uncollectLiveData.observe(
             viewLifecycleOwner
         ) { resultState ->
-            parseListState(resultState, { articleInfo, position ->  //取消收藏成功
-                articleInfo.collect = false
-                adapter.notifyItemChanged(position, Any())
+            parseState(resultState, { id ->
+                val list = adapter.snapshot().items
+                for (i in list.indices) {
+                    if (id == list[i].id) {
+                        adapter.notifyItemChanged(i, Any())
+                        list[i].collect = false
+                        break
+                    }
+                }
             }, {
                 startLogin()
             })
@@ -160,10 +168,15 @@ class FirstPageFragment : BaseViewModelFragment<BaseViewModel, FragmentFirstPage
             .observe(viewLifecycleOwner) { collectEvent ->
                 val collect = collectEvent.collect
                 val id = collectEvent.id
-
                 val list = adapter.snapshot().items
-                for (i in list.indices) {
-                    if (list[i].id == id && list[i].collect != collect) {
+                for (i in list.indices) {    //收藏列表的id 与 首页列表的id 不是同一个
+                    if ((list[i].id == id || (TextUtils.equals(list[i].title, collectEvent.title) &&
+                                TextUtils.equals(list[i].link, collectEvent.link) &&
+                                TextUtils.equals(
+                                    list[i].author,
+                                    collectEvent.author
+                                ))) && list[i].collect != collect
+                    ) {
                         list[i].collect = collect
                         adapter.notifyItemChanged(i, Any())
                     }

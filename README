@@ -582,6 +582,11 @@ inline 内联函数的原理
 
 todo:
 kotlin中 ArrayList与MutableList
+1.webFragment收藏与不收藏 反复请求, 前一页的变化
+2.收藏页 取消收藏时, 首页的变化
+3.收藏的文章列表  取消收藏后展示不对
+
+
 
 2.体系数据 tree/json
 体系下的文章  article/list/0/json?cid=60

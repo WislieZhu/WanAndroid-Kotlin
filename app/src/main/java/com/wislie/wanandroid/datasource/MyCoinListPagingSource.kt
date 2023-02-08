@@ -27,7 +27,7 @@ class MyCoinListPagingSource : PagingSource<Long, CoinItem>() {
                 var nextPage: Long? = null
                 if (myCoinListResp != null && myCoinListResp.errorCode == 0) {
                     myCoinListResp.data?.run {
-                        if (currentPage  < this.pageCount) {
+                        if (currentPage < this.pageCount) { //初始值 currentPage为1的情况
                             nextPage = currentPage + 1
                         }
                     }

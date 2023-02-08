@@ -9,8 +9,6 @@ import com.wislie.common.base.request
 import com.wislie.wanandroid.data.*
 import com.wislie.wanandroid.datasource.*
 import com.wislie.wanandroid.network.apiService
-import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.MutableStateFlow
 
 
 class ArticlesViewModel : BaseViewModel() {
@@ -96,17 +94,17 @@ class ArticlesViewModel : BaseViewModel() {
         }, usualWebsiteLiveData)
     }
 
-    val collectWebsitesLiveData by lazy {
+    val collectWebsiteListLiveData by lazy {
         MutableLiveData<ResultState<List<CollectWebsiteInfo>?>>()
     }
 
     /**
      * 收藏的网址列表
      */
-    fun getCollectWebsites() {
+    fun getCollectWebsiteList() {
         request({
-            apiService.getCollectWebsites()
-        }, collectWebsitesLiveData)
+            apiService.getCollectWebsiteList()
+        }, collectWebsiteListLiveData)
     }
 
     val addCollectWebsiteLiveData by lazy {
@@ -141,25 +139,6 @@ class ArticlesViewModel : BaseViewModel() {
         })
     }
 
-    /**
-     * PagingDataAdapter 删除item 摘自https://blog.csdn.net/haha223545/article/details/121040837
-     */
-    private val _removeSearchKeyFlow = MutableStateFlow(mutableListOf<Any>())
-    val removedSearchKeysFlow: Flow<MutableList<Any>> get() = _removeSearchKeyFlow
-
-    fun removeSearchKey(item: Any?) {
-        if (item == null) {
-            return
-        }
-        val removes = _removeSearchKeyFlow.value
-        val list = mutableListOf(item)
-        list.addAll(removes)
-        _removeSearchKeyFlow.value = list
-    }
-
-    fun removeAllSearchKeys() {
-        _removeSearchKeyFlow.value = mutableListOf()
-    }
 
     /**
      * 列表收藏
@@ -181,7 +160,7 @@ class ArticlesViewModel : BaseViewModel() {
     }
 
     /**
-     * webFragment中收藏
+     * 列表->收藏
      */
     val collectLiveData by lazy {
         MutableLiveData<ResultState<Int>>()
@@ -200,46 +179,28 @@ class ArticlesViewModel : BaseViewModel() {
     }
 
     /**
-     * 列表取消收藏
+     * 收藏页->收藏
      */
-    val uncollectResultLiveData by lazy {
-        MutableLiveData<ResultState<ArticleInfo>>()
+    val collectPageLiveData by lazy {
+        MutableLiveData<ResultState<ArticleInfo?>>()
     }
 
-    fun unCollect(articleInfo: ArticleInfo, position: Int) {
+    fun collectPage(title: String, author: String?, link: String) {
         request({
-            apiService.uncollect(articleInfo.id)
-        }, {
-            uncollectResultLiveData.value = ResultState.Success(articleInfo, position)
-        }, { exception, errorCode ->
-            uncollectResultLiveData.value = ResultState.Error(exception, errorCode, true)
-        }, { loadingMessage, isShowingDialog ->
-            uncollectResultLiveData.value = ResultState.Loading(loadingMessage, isShowingDialog)
-        })
+            apiService.collect(title, author, link)
+        }, collectPageLiveData)
     }
 
     /**
-     * 我的收藏页面 取消收藏
-     */
-    fun unCollectPage(articleInfo: ArticleInfo, position: Int) {
-        request({
-            apiService.uncollect(articleInfo.id, articleInfo.originId ?: -1)
-        }, {
-            uncollectResultLiveData.value = ResultState.Success(articleInfo, position)
-        }, { exception, errorCode ->
-            uncollectResultLiveData.value = ResultState.Error(exception, errorCode, true)
-        }, { loadingMessage, isShowingDialog ->
-            uncollectResultLiveData.value = ResultState.Loading(loadingMessage, isShowingDialog)
-        })
-    }
-
-    /**
-     * webFragment中取消收藏
+     * 取消收藏
      */
     val uncollectLiveData by lazy {
         MutableLiveData<ResultState<Int>>()
     }
 
+    /**
+     * 列表->取消收藏
+     */
     fun unCollect(articleId: Int) {
         request({
             apiService.uncollect(articleId)
@@ -252,6 +213,20 @@ class ArticlesViewModel : BaseViewModel() {
         }, isShowDialog = true)
     }
 
+    /**
+     * 收藏页->取消收藏
+     */
+    fun unCollectPage(id: Int, originId: Int) {
+        request({
+            apiService.uncollect(id, originId)
+        }, {
+            uncollectLiveData.value = ResultState.Success(id)
+        }, { exception, errorCode ->
+            uncollectLiveData.value = ResultState.Error(exception, errorCode, true)
+        }, { loadingMessage, isShowingDialog ->
+            uncollectLiveData.value = ResultState.Loading(loadingMessage, isShowingDialog)
+        })
+    }
 
     /**
      * 获取微信公众号列表

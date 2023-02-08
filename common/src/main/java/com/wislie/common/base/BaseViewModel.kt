@@ -6,13 +6,37 @@ import androidx.lifecycle.viewModelScope
 import com.wislie.common.wrapper.ApiResponse
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
 open class BaseViewModel : ViewModel() {
 
-    companion object{
-        const val PAGE_SIZE = 13
+    /**
+     * PagingDataAdapter 删除item 摘自https://blog.csdn.net/haha223545/article/details/121040837
+     */
+    private val mTempRemoveFlow = MutableStateFlow(mutableListOf<Any>())
+    val mRemovedFlow: Flow<MutableList<Any>> get() = mTempRemoveFlow
+
+    /**
+     * 删除item
+     */
+    fun removeFlowItem(item: Any?) {
+        if (item == null) {
+            return
+        }
+        val tempRemoveFlow = mTempRemoveFlow.value
+        val removeItem = mutableListOf(item)
+        removeItem.addAll(tempRemoveFlow)
+        mTempRemoveFlow.value = removeItem
+    }
+
+    /**
+     * 删除所有item
+     */
+    fun removeAllItems(){
+        mTempRemoveFlow.value = mutableListOf()
     }
 }
 
@@ -57,7 +81,7 @@ fun <T> BaseViewModel.request(
     block: suspend () -> ApiResponse<T?>,
     success: (ApiResponse<T?>) -> Unit,
     failed: (Exception, Int) -> Unit,
-    onLoading:(String, Boolean) -> Unit,
+    onLoading: (String, Boolean) -> Unit,
     isShowDialog: Boolean = false,
     loadingMessage: String = "请求网络中...",
     defaultDispatcher: CoroutineDispatcher = Dispatchers.IO

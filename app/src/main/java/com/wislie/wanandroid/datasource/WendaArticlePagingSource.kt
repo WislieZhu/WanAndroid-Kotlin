@@ -24,7 +24,7 @@ class WendaArticlePagingSource : PagingSource<Long, ArticleInfo>() {
                 var nextPage: Long? = null
                 if (articleListResp != null && articleListResp.errorCode == 0) {
                     articleListResp?.data?.run {
-                        if (currentPage < this.pageCount) {
+                        if (currentPage < this.pageCount - 1) { //初始值 currentPage为0的情况
                             nextPage = currentPage + 1
                         }
                     }
