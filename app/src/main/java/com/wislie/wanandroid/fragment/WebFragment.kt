@@ -3,7 +3,6 @@ package com.wislie.wanandroid.fragment
 import android.content.Intent
 import android.graphics.Bitmap
 import android.net.Uri
-import android.util.Log
 import android.view.View
 import android.webkit.WebResourceRequest
 import android.webkit.WebView
@@ -51,8 +50,6 @@ class WebFragment : BaseViewModelFragment<ArticlesViewModel, FragmentWebBinding>
 
     override fun init(root: View) {
         super.init(root)
-
-
         arguments?.run {
             articleType = getInt("type")
             articleId = getInt("id")
@@ -124,9 +121,6 @@ class WebFragment : BaseViewModelFragment<ArticlesViewModel, FragmentWebBinding>
                         }
                     }
                 }
-                ArticleType.TYPE_BANNER -> { //banner
-
-                }
                 ArticleType.TYPE_COLLECT_ARTICLE -> { //收藏页
                     when {
                         articleTitle.isNullOrEmpty() -> return
@@ -140,11 +134,12 @@ class WebFragment : BaseViewModelFragment<ArticlesViewModel, FragmentWebBinding>
                         }
                     }
                 }
-                else -> { //文章
+                ArticleType.TYPE_LIST_ARTICLE -> { //列表
                     articleId?.run {
                         articlesViewModel.collect(this)
                     }
                 }
+                else -> {}
             }
         }
     }
@@ -162,19 +157,17 @@ class WebFragment : BaseViewModelFragment<ArticlesViewModel, FragmentWebBinding>
                         articlesViewModel.delCollectWebsite(this)
                     }
                 }
-                ArticleType.TYPE_BANNER -> { //banner
-
-                }
                 ArticleType.TYPE_COLLECT_ARTICLE -> { //收藏页
                     articleId?.run {
                         articlesViewModel.unCollectPage(this, articleOriginId)
                     }
                 }
-                else -> { //文章
+                ArticleType.TYPE_LIST_ARTICLE -> { //列表
                     articleId?.run {
                         articlesViewModel.unCollect(this)
                     }
                 }
+                else -> {}
             }
         }
     }
@@ -237,8 +230,10 @@ class WebFragment : BaseViewModelFragment<ArticlesViewModel, FragmentWebBinding>
             parseState(resultState, { id ->  //取消收藏成功
                 setCollectStatus(collect = false)
                 App.instance().appViewModel.collectEventLiveData.value =
-                    CollectEvent(collect = false, id, author = articleAuthor,
-                        link = articleLink, title = articleTitle)
+                    CollectEvent(
+                        collect = false, id, author = articleAuthor,
+                        link = articleLink, title = articleTitle
+                    )
                 Toast.makeText(hostActivity, "已取消收藏", Toast.LENGTH_SHORT).show()
             }, {
                 startLogin()

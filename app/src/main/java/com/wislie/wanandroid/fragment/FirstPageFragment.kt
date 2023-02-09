@@ -20,6 +20,7 @@ import com.wislie.wanandroid.adapter.BannerPager
 import com.wislie.wanandroid.adapter.LoadStateFooterAdapter
 import com.wislie.wanandroid.adapter.holder.BannerViewHolder
 import com.wislie.wanandroid.data.Banner
+import com.wislie.wanandroid.data.CollectEvent
 import com.wislie.wanandroid.databinding.FragmentFirstPageBinding
 import com.wislie.wanandroid.databinding.ItemFirstPageHeaderBinding
 import com.wislie.wanandroid.ext.initFab
@@ -40,12 +41,12 @@ class FirstPageFragment : BaseViewModelFragment<BaseViewModel, FragmentFirstPage
     private val articlesViewModel: ArticlesViewModel by viewModels()
 
     private val adapter by lazy {
-        FirstPageArticleAdapter { position, articleInfo ->
+        FirstPageArticleAdapter { articleInfo ->
             articleInfo?.run {
                 if (collect) {
                     articlesViewModel.unCollect(id)
                 } else {
-                    articlesViewModel.collect(articleInfo, position)
+                    articlesViewModel.collect(articleInfo)
                 }
             }
         }
@@ -114,9 +115,17 @@ class FirstPageFragment : BaseViewModelFragment<BaseViewModel, FragmentFirstPage
         articlesViewModel.collectResultLiveData.observe(
             viewLifecycleOwner
         ) { resultState ->
-            parseListState(resultState, { articleInfo, position ->  //收藏成功
-                articleInfo.collect = true
-                adapter.notifyItemChanged(position, Any())
+            parseState(resultState, { articleInfo ->  //收藏成功
+                val list = adapter.snapshot().items
+                for (i in list.indices) {
+                    if (list[i].id == articleInfo.id) {
+                        list[i].collect = true
+                        adapter.notifyItemChanged(i, Any())
+                        App.instance().appViewModel.collectEventLiveData.value =
+                            CollectEvent(collect = true, articleInfo.id)
+                        break
+                    }
+                }
             }, {
                 startLogin()
             })
@@ -132,6 +141,8 @@ class FirstPageFragment : BaseViewModelFragment<BaseViewModel, FragmentFirstPage
                     if (id == list[i].id) {
                         adapter.notifyItemChanged(i, Any())
                         list[i].collect = false
+                        App.instance().appViewModel.collectEventLiveData.value =
+                            CollectEvent(collect = false, id)
                         break
                     }
                 }

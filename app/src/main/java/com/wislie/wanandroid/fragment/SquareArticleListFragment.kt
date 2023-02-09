@@ -4,6 +4,7 @@ import android.text.TextUtils
 import android.view.View
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
+import com.wislie.common.base.BaseViewModel
 import com.wislie.common.base.BaseViewModelFragment
 import com.wislie.common.base.parseState
 import com.wislie.common.ext.addFreshListener
@@ -11,26 +12,24 @@ import com.wislie.common.ext.init
 import com.wislie.wanandroid.App
 import com.wislie.wanandroid.R
 import com.wislie.wanandroid.adapter.LoadStateFooterAdapter
-import com.wislie.wanandroid.adapter.WxArticleAdapter
-import com.wislie.wanandroid.databinding.FragmentWxArticleBinding
+import com.wislie.wanandroid.adapter.SquareArticleAdapter
+import com.wislie.wanandroid.data.CollectEvent
+import com.wislie.wanandroid.databinding.FragmentSquareArticleListBinding
 import com.wislie.wanandroid.ext.startLogin
 import com.wislie.wanandroid.viewmodel.ArticlesViewModel
-import com.wislie.wanandroid.viewmodel.WxArticleStateViewModel
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 
 /**
- * 微信公众号文章
+ * 广场列表
  */
-class WxArticleFragment :
-    BaseViewModelFragment<WxArticleStateViewModel, FragmentWxArticleBinding>() {
-
-    private var accountId: Int? = null
+class SquareArticleListFragment :
+    BaseViewModelFragment<BaseViewModel, FragmentSquareArticleListBinding>() {
 
     private val articlesViewModel: ArticlesViewModel by viewModels()
 
-    private val adapter: WxArticleAdapter by lazy {
-        WxArticleAdapter { articleInfo ->
+    private val adapter: SquareArticleAdapter by lazy {
+        SquareArticleAdapter { articleInfo ->
             articleInfo?.run {
                 if (collect) {
                     articlesViewModel.unCollect(id)
@@ -43,34 +42,30 @@ class WxArticleFragment :
 
     override fun init(root: View) {
         super.init(root)
-        binding.wxArticleStateVm = mViewModel
-        accountId = arguments?.getInt("accountId")
-        registerLoadSir(binding.rvWxArticles) {
+        registerLoadSir(binding.rvArticles) {
             adapter.refresh() //点击即刷新
         }
         binding.swipeRefreshLayout.init(adapter)
-        binding.rvWxArticles.adapter =
-            adapter.withLoadStateFooter(footer = LoadStateFooterAdapter { adapter.retry() })
+        binding.rvArticles.adapter =
+            adapter.withLoadStateFooter(
+                footer = LoadStateFooterAdapter(
+                    retry = { adapter.retry() })
+            )
         adapter.addFreshListener(mBaseLoadService)
 
-        binding.btnSearch.setOnClickListener {
-            loadData()
-        }
     }
 
     override fun loadData() {
         super.loadData()
-        accountId?.run {
-            val id = this
-            lifecycleScope.launch {
-                articlesViewModel.getWxArticleList(id, mViewModel?.inputContent?.get())
-                    .collectLatest {
-                        if (binding.swipeRefreshLayout.isRefreshing) {
-                            binding.swipeRefreshLayout.isRefreshing = false
-                        }
-                        adapter.submitData(lifecycle, it)
+        lifecycleScope.launch {
+            articlesViewModel
+                .squareArticleList
+                .collectLatest {
+                    if (binding.swipeRefreshLayout.isRefreshing) {
+                        binding.swipeRefreshLayout.isRefreshing = false
                     }
-            }
+                    adapter.submitData(lifecycle, it)
+                }
         }
     }
 
@@ -86,6 +81,8 @@ class WxArticleFragment :
                     if (list[i].id == articleInfo.id) {
                         list[i].collect = true
                         adapter.notifyItemChanged(i, Any())
+                        App.instance().appViewModel.collectEventLiveData.value =
+                            CollectEvent(collect = true, articleInfo.id)
                         break
                     }
                 }
@@ -104,6 +101,8 @@ class WxArticleFragment :
                     if (id == list[i].id) {
                         adapter.notifyItemChanged(i, Any())
                         list[i].collect = false
+                        App.instance().appViewModel.collectEventLiveData.value =
+                            CollectEvent(collect = false, id)
                         break
                     }
                 }
@@ -157,6 +156,6 @@ class WxArticleFragment :
     }
 
     override fun getLayoutResId(): Int {
-        return R.layout.fragment_wx_article
+        return R.layout.fragment_square_article_list
     }
 }

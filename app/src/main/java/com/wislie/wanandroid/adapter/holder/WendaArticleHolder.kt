@@ -9,11 +9,10 @@ import com.wislie.wanandroid.ext.startLogin
 class WendaArticleHolder(
     override val binding: ItemFirstPageArticleBinding,
     private val wenda:(Int?)->Unit,
-    val collect: (Int, articleInfo: ArticleInfo?) -> Unit
+    val collect: (articleInfo: ArticleInfo?) -> Unit
 ) :
     BaseVHolder<ArticleInfo>(binding) {
 
-    private var index = 0
 
     init {
         binding.root.setOnClickListener {
@@ -25,13 +24,12 @@ class WendaArticleHolder(
                 it.startLogin()
                 return@setOnClickListener
             }
-            collect.invoke(index, binding.articleInfo)
+            collect.invoke(binding.articleInfo)
         }
     }
 
 
     override fun bind(data: ArticleInfo?, position: Int) {
-        this.index = position
         binding.articleInfo = data
         binding.executePendingBindings()
     }

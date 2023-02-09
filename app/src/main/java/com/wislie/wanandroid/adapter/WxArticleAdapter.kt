@@ -7,7 +7,7 @@ import com.wislie.wanandroid.adapter.holder.WxArticleHolder
 import com.wislie.wanandroid.data.ArticleInfo
 import com.wislie.wanandroid.databinding.ItemWxArticleBinding
 
-class WxArticleAdapter(val collect: (Int, articleInfo: ArticleInfo?) -> Unit) :
+class WxArticleAdapter(val collect: (articleInfo: ArticleInfo?) -> Unit) :
     BaseAdapter<ArticleInfo, ItemWxArticleBinding, WxArticleHolder>(
         ArticleCallback()
     ) {
@@ -16,7 +16,7 @@ class WxArticleAdapter(val collect: (Int, articleInfo: ArticleInfo?) -> Unit) :
     }
 
     override fun getItemLayoutId(): Int {
-        return R.layout.item_collect_article
+        return R.layout.item_wx_article
     }
 }
 

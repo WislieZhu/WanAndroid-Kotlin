@@ -29,12 +29,12 @@ class WendaFragment : BaseViewModelFragment<BaseViewModel, FragmentFirstPageBind
             id?.run {
                 articlesViewModel.getWendaCommentList(this)
             }
-        }, { position, articleInfo ->
+        }, { articleInfo ->
             articleInfo?.run {
                  if (collect) {
                      articlesViewModel.unCollect(id)
                  } else {
-                     articlesViewModel.collect(articleInfo, position)
+                     articlesViewModel.collect(articleInfo)
                  }
             }
         })

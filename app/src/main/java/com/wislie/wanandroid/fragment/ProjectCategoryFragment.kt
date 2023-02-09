@@ -26,12 +26,12 @@ class ProjectCategoryFragment :
 
     private val projectArticlesViewModel: ArticlesViewModel by viewModels()
     private val adapter by lazy {
-        FirstPageArticleAdapter { position, articleInfo ->
+        FirstPageArticleAdapter { articleInfo ->
             articleInfo?.run {
                 if (collect) {
                     projectArticlesViewModel.unCollect(id)
                 } else {
-                    projectArticlesViewModel.collect(articleInfo, position)
+                    projectArticlesViewModel.collect(articleInfo)
                 }
             }
         }

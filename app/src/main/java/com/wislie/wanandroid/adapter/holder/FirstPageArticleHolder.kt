@@ -12,7 +12,7 @@ import com.wislie.wanandroid.util.ArticleType
 
 class FirstPageArticleHolder(
     override val binding: ItemFirstPageArticleBinding,
-    val collect: (Int, articleInfo: ArticleInfo?) -> Unit
+    val collect: (articleInfo: ArticleInfo?) -> Unit
 ) :
     BaseVHolder<ArticleInfo>(binding) {
 
@@ -21,12 +21,12 @@ class FirstPageArticleHolder(
     init {
         binding.root.setOnClickListener { v ->
             val bundle = Bundle()
-            bundle?.run {
+            bundle.run {
                 putInt("type", ArticleType.TYPE_LIST_ARTICLE)
                 putInt("id", binding.articleInfo?.id ?: 0)
-                putString("title", binding.articleInfo?.title )
+                putString("title", binding.articleInfo?.title)
                 putString("author", binding.articleInfo?.author)
-                putString("linkUrl", binding.articleInfo?.link )
+                putString("linkUrl", binding.articleInfo?.link)
                 putBoolean("collect", binding.articleInfo?.collect ?: false)
             }
             v.findNav().navigate(R.id.fragment_web, bundle)
@@ -37,7 +37,7 @@ class FirstPageArticleHolder(
                 it.startLogin()
                 return@setOnClickListener
             }
-            collect.invoke(index, binding.articleInfo)
+            collect.invoke(binding.articleInfo)
         }
     }
 

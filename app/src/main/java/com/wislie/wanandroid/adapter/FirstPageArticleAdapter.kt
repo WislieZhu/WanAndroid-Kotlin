@@ -7,7 +7,7 @@ import com.wislie.wanandroid.adapter.holder.FirstPageArticleHolder
 import com.wislie.wanandroid.data.ArticleInfo
 import com.wislie.wanandroid.databinding.ItemFirstPageArticleBinding
 
-class FirstPageArticleAdapter(val collect: (Int, articleInfo: ArticleInfo?) -> Unit) :
+class FirstPageArticleAdapter(val collect: (articleInfo: ArticleInfo?) -> Unit) :
     BaseAdapter<ArticleInfo, ItemFirstPageArticleBinding, FirstPageArticleHolder>(
         ArticleCallback()
     ) {

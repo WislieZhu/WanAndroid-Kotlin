@@ -582,29 +582,26 @@ inline 内联函数的原理
 
 todo:
 kotlin中 ArrayList与MutableList
+MutableList 默认是 ArrayList
 1.webFragment收藏与不收藏 反复请求, 前一页的变化
 2.收藏页 取消收藏时, 首页的变化
 3.收藏的文章列表  取消收藏后展示不对
+上述已搞定
 
+Paging 生命周期
+PagingSource->Pager->Flow<PagingData>->PagingDataAdapter
 
 
 2.体系数据 tree/json
 体系下的文章  article/list/0/json?cid=60
 按照作者昵称搜索文章 article/list/0/json?author=鸿洋
 3.导航数据 navi/json
-6.收藏文章列表 lg/collect/list/0/json
-收藏站内文章 lg/collect/1165/json
-收藏站外文章  lg/collect/add/json
+6.
 编辑收藏的文章，支持站内，站外  lg/collect/user_article/update/ 文章 id/json
-取消收藏 文章列表 lg/uncollect_originId/2333/json
-取消收藏 我的收藏页面 lg/uncollect/2805/json
-收藏网站列表 lg/collect/usertools/json
-收藏网址 lg/collect/addtool/json
 编辑收藏网站 lg/collect/updatetool/json
-删除收藏网站  lg/collect/deletetool/json
 7.搜索 article/query/0/json
 8.todo https://www.wanandroid.com/blog/show/2442
-10.广场列表数据  user_article/list/页码/json  页码从0开始
+10.
 分享人对应列表数据  2/share_articles/页码/json  用户id: 拼接在url上,页码拼接在url上从1开始 get请求
 自己的分享的文章列表 user/lg/private_articles/1/json
 删除自己分享的文章 lg/user_article/delete/9475/json
@@ -615,9 +612,6 @@ kotlin中 ArrayList与MutableList
 14.未读消息数量 message/lg/count_unread/json
  已读消息列表 message/lg/readed_list/页码/json
  未读消息列表 message/lg/unread_list/页码/json
-15.获取公众号列表  wxarticle/chapters/json
-查看某个公众号历史数据 wxarticle/list/408/1/json  公众号 ID：拼接在 url 中; 公众号页码：拼接在url 中
-在某个公众号中搜索历史文章 wxarticle/list/405/1/json?k=Java
 17.工具列表 tools/list/json
 18.教程列表 chapter/547/sublist/json
 单个教程下所有文章列表 list/0/json?cid=549&order_type=1

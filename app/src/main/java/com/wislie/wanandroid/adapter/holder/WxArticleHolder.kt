@@ -15,20 +15,20 @@ import com.wislie.wanandroid.util.ArticleType
  */
 class WxArticleHolder(
     override val binding: ItemWxArticleBinding,
-    val collect: (Int, articleInfo: ArticleInfo?) -> Unit
+    val collect: (articleInfo: ArticleInfo?) -> Unit
 ) :
     BaseVHolder<ArticleInfo>(binding) {
 
-    private var index = 0
 
     init {
         binding.root.setOnClickListener { v ->
             val bundle = Bundle()
-            bundle?.run {
-                putInt("type", ArticleType.TYPE_LIST_ARTICLE) //文章
+            bundle.run {
+                putInt("type", ArticleType.TYPE_LIST_ARTICLE)
                 putInt("id", binding.articleInfo?.id ?: 0)
-                putString("linkUrl", binding.articleInfo?.link ?: "")
-                putString("title", binding.articleInfo?.title ?: "")
+                putString("title", binding.articleInfo?.title )
+                putString("author", binding.articleInfo?.author)
+                putString("linkUrl", binding.articleInfo?.link)
                 putBoolean("collect", binding.articleInfo?.collect ?: false)
             }
             v.findNav().navigate(R.id.fragment_web, bundle)
@@ -39,13 +39,12 @@ class WxArticleHolder(
                 it.startLogin()
                 return@setOnClickListener
             }
-            collect.invoke(index, binding.articleInfo)
+            collect.invoke(binding.articleInfo)
         }
     }
 
 
     override fun bind(data: ArticleInfo?, position: Int) {
-        this.index = position
         binding.articleInfo = data
         binding.executePendingBindings()
     }

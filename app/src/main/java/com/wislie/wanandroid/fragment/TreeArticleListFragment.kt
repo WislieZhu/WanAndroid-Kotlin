@@ -1,6 +1,5 @@
 package com.wislie.wanandroid.fragment
 
-import android.util.Log
 import android.view.View
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
@@ -14,61 +13,69 @@ import com.wislie.common.ext.addFreshListener
 import com.wislie.common.ext.init
 import com.wislie.wanandroid.App
 import com.wislie.wanandroid.R
-import com.wislie.wanandroid.adapter.CollectArticleAdapter
 import com.wislie.wanandroid.adapter.LoadStateFooterAdapter
+import com.wislie.wanandroid.adapter.TreeArticleAdapter
 import com.wislie.wanandroid.data.CollectEvent
-import com.wislie.wanandroid.databinding.FragmentCollectArticleListBinding
+import com.wislie.wanandroid.databinding.FragmentTreeArticleListBinding
 import com.wislie.wanandroid.viewmodel.ArticlesViewModel
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.launch
 
 /**
- * 收藏的文章列表
+ * 体系的文章列表
  */
-class CollectArticleListFragment :
-    BaseViewModelFragment<BaseViewModel, FragmentCollectArticleListBinding>() {
+class TreeArticleListFragment :
+    BaseViewModelFragment<BaseViewModel, FragmentTreeArticleListBinding>() {
 
     private val articlesViewModel: ArticlesViewModel by viewModels()
-
-    private val adapter: CollectArticleAdapter by lazy {
-        CollectArticleAdapter { articleInfo ->
+    private var articleId: Int? = null
+    private val adapter: TreeArticleAdapter by lazy {
+        TreeArticleAdapter { articleInfo ->
             articleInfo?.run {
-                //取消收藏
-                articlesViewModel.unCollectPage(articleInfo.id, articleInfo.originId ?: -1)
+                if (collect) {
+                    articlesViewModel.unCollect(id)
+                } else {
+                    articlesViewModel.collect(articleInfo)
+                }
             }
         }
     }
 
     override fun init(root: View) {
         super.init(root)
-        registerLoadSir(binding.rvArticle) {
+        articleId = arguments?.getInt("cid")
+        registerLoadSir(binding.rvArticles) {
             adapter.refresh() //点击即刷新
         }
         binding.swipeRefreshLayout.init(adapter)
-        binding.rvArticle.adapter =
+        binding.rvArticles.adapter =
             adapter.withLoadStateFooter(footer = LoadStateFooterAdapter { adapter.retry() })
         adapter.addFreshListener(mBaseLoadService)
     }
 
     override fun loadData() {
         super.loadData()
-        lifecycleScope.launch {
-            articlesViewModel
-                .collectArticleList
-                .cachedIn(scope = lifecycleScope)
-                .combine(articlesViewModel.mRemovedFlow) { pagingData, removedList ->
-                    pagingData.filter {
-                        it !in removedList
+        articleId?.run {
+            val id = this
+            lifecycleScope.launch {
+                articlesViewModel
+                    .getTreeArticleList(id)
+                    .cachedIn(scope = lifecycleScope)
+                    .combine(articlesViewModel.mRemovedFlow) { pagingData, removedList ->
+                        pagingData.filter {
+                            it !in removedList
+                        }
                     }
-                }
-                .collectLatest {
-                    if (binding.swipeRefreshLayout.isRefreshing) {
-                        binding.swipeRefreshLayout.isRefreshing = false
+                    .collectLatest {
+                        if (binding.swipeRefreshLayout.isRefreshing) {
+                            binding.swipeRefreshLayout.isRefreshing = false
+                        }
+                        adapter.submitData(lifecycle, it)
                     }
-                    adapter.submitData(lifecycle, it)
-                }
+            }
         }
+
     }
 
     override fun observeData() {
@@ -109,6 +116,6 @@ class CollectArticleListFragment :
     }
 
     override fun getLayoutResId(): Int {
-        return R.layout.fragment_collect_article_list
+        return R.layout.fragment_tree_article_list
     }
 }

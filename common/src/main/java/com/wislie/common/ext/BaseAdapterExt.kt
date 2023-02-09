@@ -32,19 +32,6 @@ fun BaseAdapter<*, *, *>.addFreshListener(
     }
 }
 
-
-/*fun BaseAdapter<*, *, *>.addMoreListener(
-    swipeRecyclerView: SwipeRecyclerView
-) {
-    setOnLoadMoreStateListener {
-        if (it is State.Success) {
-            if (it.noMoreData) {
-                swipeRecyclerView.loadMoreFinish(true, false)
-            }
-        }
-    }
-}*/
-
 /**
  * 刷新
  */

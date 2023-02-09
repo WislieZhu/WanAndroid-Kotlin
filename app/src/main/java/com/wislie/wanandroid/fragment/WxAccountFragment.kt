@@ -27,8 +27,7 @@ class WxAccountFragment : BaseViewModelFragment<BaseViewModel, FragmentWxAccount
     override fun observeData() {
         super.observeData()
         articlesViewModel.wxAccountListLiveData
-            .observe(viewLifecycleOwner){
-                    resultState ->
+            .observe(viewLifecycleOwner) { resultState ->
                 parseState(resultState, { categories ->
                     categories?.also(::createChildFrags)
                 })

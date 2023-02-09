@@ -147,11 +147,11 @@ class ArticlesViewModel : BaseViewModel() {
         MutableLiveData<ResultState<ArticleInfo>>()
     }
 
-    fun collect(articleInfo: ArticleInfo, position: Int) {
+    fun collect(articleInfo: ArticleInfo) {
         request({
             apiService.collect(articleInfo.id)
         }, {
-            collectResultLiveData.value = ResultState.Success(articleInfo, position)
+            collectResultLiveData.value = ResultState.Success(articleInfo)
         }, { exception, errorCode ->
             collectResultLiveData.value = ResultState.Error(exception, errorCode, true)
         }, { loadingMessage, isShowingDialog ->
@@ -244,11 +244,42 @@ class ArticlesViewModel : BaseViewModel() {
     /**
      * 公众号文章列表
      */
-    fun getWxArticleList(id: Int, key: String? = null) =
+    fun getWxArticleList(id: Int, key: String?) =
         Pager(
             PagingConfig(pageSize = 1),
             pagingSourceFactory = { WxArticlePagingSource(id, key) })
             .flow
 
+    /**
+     * 广场文章列表
+     */
+    val squareArticleList by lazy {
+        Pager(
+            PagingConfig(pageSize = 1),
+            pagingSourceFactory = { SquareArticlePagingSource() })
+            .flow
+    }
+
+    /**
+     * 获取体系列表
+     */
+    val treeListLiveData by lazy {
+        MutableLiveData<ResultState<List<TreeInfo>?>>()
+    }
+
+    fun getTreeList() {
+        request({
+            apiService.getTreeList()
+        }, treeListLiveData)
+    }
+
+    /**
+     * 体系的文章列表
+     */
+    fun getTreeArticleList(id: Int) =
+        Pager(
+            PagingConfig(pageSize = 1),
+            pagingSourceFactory = { TreeArticlePagingSource(id) })
+            .flow
 
 }

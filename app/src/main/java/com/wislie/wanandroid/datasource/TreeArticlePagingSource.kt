@@ -8,28 +8,23 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 
 /**
- * 微信文章分页
+ * 体系的文章列表分页
  */
-class WxArticlePagingSource(private val accountId: Int,private val k: String?) :
-    PagingSource<Long, ArticleInfo>() {
+class TreeArticlePagingSource(val cid:Int) : PagingSource<Long, ArticleInfo>() {
 
     override fun getRefreshKey(state: PagingState<Long, ArticleInfo>): Long? = null
 
     override suspend fun load(params: LoadParams<Long>): LoadResult<Long, ArticleInfo> {
 
         return withContext(Dispatchers.IO) {
-            val currentPage = params.key ?: 1
+            val currentPage = params.key ?: 0
             try {
-                val articleListResp = if (k.isNullOrEmpty()) {
-                    apiService.getWxHistoryArticleList(accountId, currentPage)
-                } else {
-                    apiService.getWxHistoryArticleList(accountId, currentPage, k)
-                }
+                val articleListResp = apiService.getTreeArticleList(currentPage,cid)
                 //当前页码小于总页码页面加1
                 var nextPage: Long? = null
                 if (articleListResp != null && articleListResp.errorCode == 0) {
                     articleListResp?.data?.run {
-                        if (currentPage < this.pageCount) { //初始值 currentPage为1的情况
+                        if (currentPage < this.pageCount - 1) { //初始值 currentPage为0的情况
                             nextPage = currentPage + 1
                         }
                     }

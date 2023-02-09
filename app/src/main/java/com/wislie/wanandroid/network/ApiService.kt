@@ -147,14 +147,30 @@ interface ApiService {
 
     @GET("wxarticle/list/{id}/{page}/json")
     suspend fun getWxHistoryArticleList(
-        @Path("id") id: Int, @Path("page") pageNo: Long, @Query("k") k: String?
+        @Path("id") id: Int, @Path("page") pageNo: Long
     ): ApiResponse<ApiPageResponse<ArticleInfo>?> //查看某个公众号历史数据, 输入k则在某个公众号中搜索历史文章
 
 
-    @GET("wxarticle/list{id}/{page}/json")
-    suspend fun searchWxHistoryArticleList(
+    @GET("wxarticle/list/{id}/{page}/json")
+    suspend fun getWxHistoryArticleList(
+        @Path("id") id: Int, @Path("page") pageNo: Long,
         @Query("k") k: String
     ): ApiResponse<ApiPageResponse<ArticleInfo>?> //在某个公众号中搜索历史文章
+
+
+    @GET("user_article/list/{page}/json")
+    suspend fun getSquareArticleList(
+        @Path("page") pageNo: Long
+    ): ApiResponse<ApiPageResponse<ArticleInfo>?> //广场列表数据
+
+
+    @GET("tree/json")
+    suspend fun getTreeList(): ApiResponse<List<TreeInfo>?> //体系数据
+
+    @GET("article/list/{page}/json")
+    suspend fun getTreeArticleList(
+        @Path("page") pageNo: Long, @Query("cid") cid: Int
+    ): ApiResponse<ApiPageResponse<ArticleInfo>?> //知识体系下的文章
 
 
 }

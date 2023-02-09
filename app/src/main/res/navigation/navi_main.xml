@@ -97,9 +97,16 @@
     </fragment>
 
     <fragment
-        android:id="@+id/fragment_visit_most_web"
+        android:id="@+id/fragment_usual_website"
         android:name="com.wislie.wanandroid.fragment.UsualWebsiteFragment"
         tools:layout="@layout/fragment_usual_website">
+
+    </fragment>
+
+    <fragment
+        android:id="@+id/fragment_tree_article_list"
+        android:name="com.wislie.wanandroid.fragment.TreeArticleListFragment"
+        tools:layout="@layout/fragment_tree_article_list">
 
     </fragment>
 

@@ -7,6 +7,7 @@ import android.text.TextUtils
 import android.text.TextWatcher
 import android.view.LayoutInflater
 import android.view.View
+import android.widget.EditText
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.core.graphics.drawable.DrawableCompat
@@ -19,8 +20,10 @@ import com.wislie.common.ext.toHtml
 import com.wislie.wanandroid.R
 import com.wislie.wanandroid.adapter.callback.OnEditTextChangeListener
 import com.wislie.wanandroid.data.ArticleInfo
+import com.wislie.wanandroid.data.TreeInfo
 import com.wislie.wanandroid.data.Tag
 import com.wislie.wanandroid.databinding.ItemArticleTagBinding
+import com.wislie.wanandroid.databinding.ItemSystemTagBinding
 import com.wislie.wanandroid.util.AnimatorUtil
 import com.zhy.view.flowlayout.FlowLayout
 import com.zhy.view.flowlayout.TagAdapter
@@ -158,9 +161,8 @@ fun TextInputEditText.bindEditTextFocus(
     onFocusChangeListener = l
 }
 
-
 @BindingAdapter(value = ["editTextChange"])
-fun TextInputEditText.bindEditTextChange(l: OnEditTextChangeListener) {
+fun EditText.bindEditTextChange(l: OnEditTextChangeListener) {
     val textInputEditText = this
     addTextChangedListener(object : TextWatcher {
         override fun beforeTextChanged(
@@ -180,4 +182,20 @@ fun TextInputEditText.bindEditTextChange(l: OnEditTextChangeListener) {
             l.afterTextChanged(textInputEditText, s)
         }
     })
+}
+
+@BindingAdapter("systemTags")
+fun bindSystemTags(view: TagFlowLayout, tags: List<TreeInfo>?) {
+    view.adapter = object : TagAdapter<TreeInfo>(tags) {
+        override fun getView(parent: FlowLayout, position: Int, t: TreeInfo): View {
+            val binding = DataBindingUtil.inflate<ItemSystemTagBinding>(
+                LayoutInflater.from(parent.context),
+                R.layout.item_system_tag,
+                parent,
+                false
+            )
+            binding.systemInfo = t
+            return binding.root
+        }
+    }
 }

@@ -7,7 +7,7 @@ import com.wislie.wanandroid.adapter.holder.WendaArticleHolder
 import com.wislie.wanandroid.data.ArticleInfo
 import com.wislie.wanandroid.databinding.ItemFirstPageArticleBinding
 
-class WendaArticleAdapter(private val wenda:(Int?)->Unit, val collect: (Int, articleInfo: ArticleInfo?) -> Unit) :
+class WendaArticleAdapter(private val wenda:(Int?)->Unit, val collect: ( articleInfo: ArticleInfo?) -> Unit) :
     BaseAdapter<ArticleInfo, ItemFirstPageArticleBinding, WendaArticleHolder>(
         ArticleCallback()
     ) {

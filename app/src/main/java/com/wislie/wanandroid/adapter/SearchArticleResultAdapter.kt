@@ -10,7 +10,7 @@ import com.wislie.wanandroid.databinding.ItemFirstPageArticleBinding
 /**
  * 搜索的文章列表
  */
-class SearchArticleResultAdapter(val collect: (Int, articleInfo: ArticleInfo?) -> Unit)  :
+class SearchArticleResultAdapter(val collect: (articleInfo: ArticleInfo?) -> Unit)  :
     BaseAdapter<ArticleInfo, ItemFirstPageArticleBinding, SearchArticleResultHolder>(
         ArticleCallback()
     ) {
