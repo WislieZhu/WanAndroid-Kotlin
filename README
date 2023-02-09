@@ -592,8 +592,7 @@ Paging 生命周期
 PagingSource->Pager->Flow<PagingData>->PagingDataAdapter
 
 
-2.体系数据 tree/json
-体系下的文章  article/list/0/json?cid=60
+2.
 按照作者昵称搜索文章 article/list/0/json?author=鸿洋
 3.导航数据 navi/json
 6.
@@ -623,17 +622,15 @@ PagingSource->Pager->Flow<PagingData>->PagingDataAdapter
 2.Android适配方案
 3.线程
 其他: 如kotlin版玩Android, flutter基础，巩固ASM等
-
+内存抖动等知识
+https://juejin.cn/post/6844904099998089230#heading-71
 
 
 3月份计划
 
 1.flutter版玩Android
-
 2.APT
-
 3.android开源库理解和手写
-
 其他:compose基础, 设计模式等
 
 
