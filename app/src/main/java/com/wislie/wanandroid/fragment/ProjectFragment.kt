@@ -31,6 +31,7 @@ class ProjectFragment : BaseViewModelFragment<BaseViewModel, FragmentProjectBind
             .observe(viewLifecycleOwner) { resultState ->
                 parseState(resultState, { projectCategories ->
                     projectCategories?.also(::createChildFrags)
+                }, { errorMsg ->
                 })
             }
     }

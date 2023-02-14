@@ -108,6 +108,7 @@ class FirstPageFragment : BaseViewModelFragment<BaseViewModel, FragmentFirstPage
                         .setIndicatorSliderGap(BannerUtils.dp2px(2F)) /*指示器的间距*/
                         .create(banners)  /*设置数据*/   /*必须*/
                 }
+            }, { errorMsg ->
             })
         }
 
@@ -126,6 +127,7 @@ class FirstPageFragment : BaseViewModelFragment<BaseViewModel, FragmentFirstPage
                         break
                     }
                 }
+            }, { errorMsg ->
             }, {
                 startLogin()
             })
@@ -146,7 +148,8 @@ class FirstPageFragment : BaseViewModelFragment<BaseViewModel, FragmentFirstPage
                         break
                     }
                 }
-            }, {
+            } , { errorMsg ->
+            },{
                 startLogin()
             })
         }

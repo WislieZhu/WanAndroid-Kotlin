@@ -89,6 +89,7 @@ class WxArticleFragment :
                         break
                     }
                 }
+            }, { errorMsg ->
             }, {
                 startLogin()
             })
@@ -107,6 +108,7 @@ class WxArticleFragment :
                         break
                     }
                 }
+            }, { errorMsg ->
             }, {
                 startLogin()
             })

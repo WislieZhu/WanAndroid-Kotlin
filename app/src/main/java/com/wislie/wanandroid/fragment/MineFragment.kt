@@ -99,6 +99,7 @@ class MineFragment : BaseViewModelFragment<MineStateViewModel, FragmentMineBindi
                     coin?.run {
                         mViewModel?.coin?.set(this)
                     }
+                }, { errorMsg ->
                 })
             }
 
@@ -117,6 +118,7 @@ class MineFragment : BaseViewModelFragment<MineStateViewModel, FragmentMineBindi
                 Settings.isLogined = false
                 App.instance().appViewModel.userInfoLiveData.value = null
                 mViewModel?.coin?.set(null)
+            }, { errorMsg ->
             })
         }
 

@@ -123,12 +123,14 @@ class SearchArticleFragment : BaseViewModelFragment<BaseViewModel, FragmentSearc
             ) { resultState ->
                 parseState(resultState, { hotKeys ->
                     hotKeys?.also(::fillTags)
+                }, { errorMsg ->
                 })
             }
         searchViewModel.searchKeyLiveData
             .observe(viewLifecycleOwner) { resultState ->
                 parseState(resultState, { searchKey ->
                     searchViewModel.removeFlowItem(searchKey)
+                }, { errorMsg ->
                 })
             }
         searchViewModel.searchKeyDelLiveData
@@ -137,6 +139,7 @@ class SearchArticleFragment : BaseViewModelFragment<BaseViewModel, FragmentSearc
                     if (status) {
                         searchViewModel.removeAllItems()
                     }
+                }, { errorMsg ->
                 })
             }
     }

@@ -89,6 +89,8 @@ class CollectArticleListFragment :
                             break
                         }
                     }
+                },{ errorMsg->
+
                 })
             }
 

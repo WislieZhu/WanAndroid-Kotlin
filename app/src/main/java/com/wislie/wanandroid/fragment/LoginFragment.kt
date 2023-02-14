@@ -77,6 +77,7 @@ class LoginFragment : BaseViewModelFragment<LoginStateViewModel, FragmentLoginBi
                     }
                     Settings.isLogined = true
                     findNav().navigateUp()
+                }, { errorMsg ->
                 })
             }
     }

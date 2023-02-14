@@ -82,6 +82,7 @@ fun <R> BaseFragment<*>.parseStateNoLogin(
 fun <R> BaseFragment<*>.parseState(
     resultState: ResultState<R>,
     success: (R) -> Unit,
+    error:(String?)->Unit,
     login: (() -> Unit)? = null
 ) {
     when (resultState) {
@@ -89,11 +90,13 @@ fun <R> BaseFragment<*>.parseState(
             success.invoke(resultState.data)
         }
         is ResultState.Error -> {
-            if (resultState.errorCode == -1001) {
-                login?.invoke()
-            }
             Toast.makeText(hostActivity, "${resultState.exception.message}", Toast.LENGTH_SHORT)
                 .show()
+            if (resultState.errorCode == -1001) {
+                login?.invoke()
+                return
+            }
+            error.invoke(resultState.exception.message)
         }
         is ResultState.Loading -> {
             if (resultState.isShownDialog) {

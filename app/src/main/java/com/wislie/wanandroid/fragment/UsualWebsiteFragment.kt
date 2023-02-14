@@ -70,6 +70,7 @@ class UsualWebsiteFragment : BaseViewModelFragment<BaseViewModel, FragmentUsualW
                             adapter.submitData(pagingData)
                         }
                     }
+                }, { errorMsg ->
                 })
             }
 

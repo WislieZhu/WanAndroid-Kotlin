@@ -27,7 +27,7 @@ abstract class BaseViewModelFragment<VM : BaseViewModel, VB : ViewDataBinding> :
     }
 
     fun registerLoadSir(view: View, block: (view: View) -> Unit) {
-        mBaseLoadService = LoadSir.getDefault().register(view) { v -> block(v) }
+        mBaseLoadService = LoadSir.getDefault().register(view) { v -> block.invoke(v) }
     }
 
     override fun init(root: View) {

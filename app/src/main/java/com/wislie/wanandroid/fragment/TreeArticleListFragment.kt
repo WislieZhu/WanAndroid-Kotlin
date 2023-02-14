@@ -1,5 +1,6 @@
 package com.wislie.wanandroid.fragment
 
+import android.util.Log
 import android.view.View
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
@@ -22,6 +23,7 @@ import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.launch
 
+
 /**
  * 体系的文章列表
  */
@@ -30,6 +32,7 @@ class TreeArticleListFragment :
 
     private val articlesViewModel: ArticlesViewModel by viewModels()
     private var articleId: Int? = null
+
     private val adapter: TreeArticleAdapter by lazy {
         TreeArticleAdapter { articleInfo ->
             articleInfo?.run {
@@ -44,7 +47,9 @@ class TreeArticleListFragment :
 
     override fun init(root: View) {
         super.init(root)
-        articleId = arguments?.getInt("cid")
+        arguments?.run {
+            articleId = getInt("cid")
+        }
         registerLoadSir(binding.rvArticles) {
             adapter.refresh() //点击即刷新
         }
@@ -96,6 +101,7 @@ class TreeArticleListFragment :
                             break
                         }
                     }
+                }, { errorMsg ->
                 })
             }
 

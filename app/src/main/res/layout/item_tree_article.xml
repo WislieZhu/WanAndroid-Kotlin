@@ -114,6 +114,7 @@
                 android:layout_height="@dimen/dp_25"
                 android:src="@mipmap/ic_favorite"
                 app:tint="@android:color/holo_red_light"
+                app:isCollect="@{articleInfo.collect}"
                 />
 
         </androidx.constraintlayout.widget.ConstraintLayout>

@@ -1,6 +1,8 @@
 package com.wislie.wanandroid.adapter.holder
 
 import android.os.Bundle
+import android.util.Log
+import com.google.gson.Gson
 import com.wislie.common.base.BaseVHolder
 import com.wislie.common.ext.findNav
 import com.wislie.wanandroid.R
@@ -16,12 +18,23 @@ class TreeListHolder(
     BaseVHolder<TreeInfo>(binding) {
 
     init {
-        binding.flowlayoutSystem.setOnTagClickListener { v, position, parent ->
+        binding.flowlayoutSystem.setOnTagClickListener { v, position, _ ->
             val bundle = Bundle()
-            binding.systemInfo?.children?.get(position)?.run {
-                bundle.putInt("cid", id)
+
+            binding.systemInfo?.run {
+                val systemInfo = this
+
+                systemInfo.children?.get(position)?.run {
+                    bundle.putInt("cid", id)
+                    bundle.putString("title",systemInfo.name)
+                    val gson = Gson()
+                    val childrenStr = gson.toJson(systemInfo.children)
+                    //转换成字符串
+                    bundle.putString("treeInfo",childrenStr)
+                }
             }
-            v.findNav().navigate(R.id.fragment_tree_article_list, bundle)
+
+            v.findNav().navigate(R.id.fragment_tree_category, bundle)
             true
         }
     }

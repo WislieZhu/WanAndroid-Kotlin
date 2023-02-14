@@ -30,6 +30,7 @@ class WxAccountFragment : BaseViewModelFragment<BaseViewModel, FragmentWxAccount
             .observe(viewLifecycleOwner) { resultState ->
                 parseState(resultState, { categories ->
                     categories?.also(::createChildFrags)
+                }, { errorMsg ->
                 })
             }
     }

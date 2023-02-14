@@ -86,6 +86,7 @@ class SquareArticleListFragment :
                         break
                     }
                 }
+            }, { errorMsg ->
             }, {
                 startLogin()
             })
@@ -106,6 +107,7 @@ class SquareArticleListFragment :
                         break
                     }
                 }
+            }, { errorMsg ->
             }, {
                 startLogin()
             })

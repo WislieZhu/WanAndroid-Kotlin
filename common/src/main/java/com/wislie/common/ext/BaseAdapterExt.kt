@@ -1,6 +1,7 @@
 package com.wislie.common.ext
 
 import android.graphics.Color
+import android.util.Log
 import androidx.paging.PagingDataAdapter
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.kingja.loadsir.core.LoadService
@@ -13,12 +14,15 @@ import com.wislie.common.base.State
 fun BaseAdapter<*, *, *>.addFreshListener(
     loadService: LoadService<*>
 ) {
+    val adapter = this
     setOnRefreshStateListener {
         when (it) {
             is State.Loading -> {
+//                Log.i("wislieZhu","adapter loading -- ${adapter.javaClass.simpleName}")
                 loadService.showLoadCallback()
             }
             is State.Success -> {
+//                Log.i("wislieZhu","adapter success -- ${adapter.javaClass.simpleName}")
                 if (itemCount == 0) {
                     loadService.showEmptyCallback()
                 } else {
@@ -26,6 +30,7 @@ fun BaseAdapter<*, *, *>.addFreshListener(
                 }
             }
             is State.Error -> {
+//                Log.i("wislieZhu","adapter error -- ${adapter.javaClass.simpleName}")
                 loadService.showErrorCallback()
             }
         }

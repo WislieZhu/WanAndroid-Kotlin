@@ -90,6 +90,7 @@ class CollectWebsiteListFragment :
                             articlesViewModel.removeFlowItem(list[i])
                         }
                     }
+                }, { errorMsg ->
                 })
             }
 

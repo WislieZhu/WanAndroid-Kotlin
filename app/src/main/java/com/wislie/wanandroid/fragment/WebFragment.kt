@@ -204,6 +204,7 @@ class WebFragment : BaseViewModelFragment<ArticlesViewModel, FragmentWebBinding>
                 App.instance().appViewModel.collectEventLiveData.value =
                     CollectEvent(collect = true, id)
                 Toast.makeText(hostActivity, "收藏成功", Toast.LENGTH_SHORT).show()
+            }, { errorMsg ->
             }, {
                 startLogin()
             })
@@ -220,6 +221,7 @@ class WebFragment : BaseViewModelFragment<ArticlesViewModel, FragmentWebBinding>
                         CollectEvent(collect = true, this.id)
                 }
                 Toast.makeText(hostActivity, "收藏成功", Toast.LENGTH_SHORT).show()
+            }, { errorMsg ->
             }, {
                 startLogin()
             })
@@ -235,6 +237,7 @@ class WebFragment : BaseViewModelFragment<ArticlesViewModel, FragmentWebBinding>
                         link = articleLink, title = articleTitle
                     )
                 Toast.makeText(hostActivity, "已取消收藏", Toast.LENGTH_SHORT).show()
+            }, { errorMsg ->
             }, {
                 startLogin()
             })
@@ -250,6 +253,7 @@ class WebFragment : BaseViewModelFragment<ArticlesViewModel, FragmentWebBinding>
                             CollectEvent(collect = true, this.id)
                     }
                     Toast.makeText(hostActivity, "收藏成功", Toast.LENGTH_SHORT).show()
+                }, { errorMsg ->
                 })
             }
 
@@ -261,6 +265,7 @@ class WebFragment : BaseViewModelFragment<ArticlesViewModel, FragmentWebBinding>
                     App.instance().appViewModel.collectEventLiveData.value =
                         CollectEvent(collect = false, id)
                     Toast.makeText(hostActivity, "已取消收藏", Toast.LENGTH_SHORT).show()
+                }, { errorMsg ->
                 })
             }
     }

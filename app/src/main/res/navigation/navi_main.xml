@@ -104,9 +104,9 @@
     </fragment>
 
     <fragment
-        android:id="@+id/fragment_tree_article_list"
-        android:name="com.wislie.wanandroid.fragment.TreeArticleListFragment"
-        tools:layout="@layout/fragment_tree_article_list">
+        android:id="@+id/fragment_tree_category"
+        android:name="com.wislie.wanandroid.fragment.TreeArrFragment"
+        tools:layout="@layout/fragment_tree_arr">
 
     </fragment>
 

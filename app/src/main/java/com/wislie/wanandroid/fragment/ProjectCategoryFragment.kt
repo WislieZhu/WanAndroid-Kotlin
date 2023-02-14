@@ -80,6 +80,7 @@ class ProjectCategoryFragment :
                         break
                     }
                 }
+            }, { errorMsg ->
             }, {
                 startLogin()
             })

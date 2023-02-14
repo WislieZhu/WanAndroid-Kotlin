@@ -85,6 +85,7 @@ class RegisterFragment : BaseViewModelFragment<LoginStateViewModel, FragmentRegi
                     }
                     Settings.isLogined = true
                     findNav().popBackStack(R.id.fragment_main, false)
+                }, { errorMsg ->
                 })
             }
     }
