@@ -163,4 +163,9 @@ interface ApiService {
         @Path("id") id: Int
     ): ApiResponse<ApiPageResponse<ReplyComment>?> //问答评论
 
+    @GET("lg/todo/v2/list/{page}/json")
+    suspend fun getTodoList(
+        @Path("page") pageNo: Long
+    ): ApiResponse<ApiPageResponse<ToDoInfo>?> //todo列表数据
+
 }

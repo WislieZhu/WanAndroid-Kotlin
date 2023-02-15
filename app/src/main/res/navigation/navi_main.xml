@@ -117,4 +117,11 @@
 
     </fragment>
 
+    <fragment
+        android:id="@+id/fragment_todo_list"
+        android:name="com.wislie.wanandroid.fragment.TodoListFragment"
+        tools:layout="@layout/fragment_todo_list">
+
+    </fragment>
+
 </navigation>

@@ -53,6 +53,13 @@ class MineFragment : BaseViewModelFragment<MineStateViewModel, FragmentMineBindi
             findNav().navigate(R.id.fragment_usual_website)
         }
 
+        binding.btnTodo.setOnClickListener { //todo列表
+            startDestination{
+                findNav().navigate(R.id.fragment_todo_list)
+            }
+        }
+
+
         binding.btnLogout.setOnClickListener { //退出登录
             logoutViewModel.logout()
         }

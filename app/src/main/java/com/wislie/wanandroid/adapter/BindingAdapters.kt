@@ -10,6 +10,7 @@ import android.view.View
 import android.widget.EditText
 import android.widget.ImageView
 import android.widget.TextView
+import androidx.core.content.ContextCompat
 import androidx.core.graphics.drawable.DrawableCompat
 import androidx.databinding.BindingAdapter
 import androidx.databinding.DataBindingUtil
@@ -36,7 +37,7 @@ import java.text.SimpleDateFormat
 fun bindAuthor(view: TextView, articleInfo: ArticleInfo) { //首页的文章作者
     val author =
         if (TextUtils.isEmpty(articleInfo.shareUser)) articleInfo.author else articleInfo.shareUser
-    view.text = if(!TextUtils.isEmpty(author)) author else "匿名用户"
+    view.text = if (!TextUtils.isEmpty(author)) author else "匿名用户"
 }
 
 @BindingAdapter("type")
@@ -104,7 +105,7 @@ fun bindEnvelopePic(view: ImageView, envelopePic: String?) {
 }
 
 @BindingAdapter(value = ["parameter"])
-fun bindViewVisible(view:View, parameter:String?){
+fun bindViewVisible(view: View, parameter: String?) {
     view.visibility = if (TextUtils.isEmpty(parameter)) View.GONE else View.VISIBLE
 }
 
@@ -216,4 +217,29 @@ fun bindNaviTags(view: TagFlowLayout, tags: List<ArticleInfo>?) { //导航
             return binding.root
         }
     }
+}
+
+@BindingAdapter("todoStatus")
+fun bindTodoStatus(view: ImageView, status: Int?) {
+    status?.run {
+        if (status == 0) {
+            view.visibility = View.GONE
+        } else if (status == 1) {
+            view.visibility = View.VISIBLE
+        }
+    }
+}
+
+@BindingAdapter("todoStatusIcon")
+fun bindTodoStatusIcon(view: ImageView, status: Int?) { //首页的文章标题
+    //view 添加动画
+    val tintDrawable: Drawable = DrawableCompat.wrap(view.drawable).mutate()
+    status?.run {
+        if (status == 0) {
+            DrawableCompat.setTint(tintDrawable, ContextCompat.getColor(view.context,R.color.purple_500))
+        } else if (status == 1) {
+            DrawableCompat.setTint(tintDrawable, Color.RED)
+        }
+    }
+    view.setImageDrawable(tintDrawable)
 }

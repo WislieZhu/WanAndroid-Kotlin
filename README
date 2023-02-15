@@ -600,8 +600,7 @@ Paging 生命周期
 PagingSource->Pager->Flow<PagingData>->PagingDataAdapter
 
 
-2.
-按照作者昵称搜索文章 article/list/0/json?author=鸿洋
+
 6.
 编辑收藏的文章，支持站内，站外  lg/collect/user_article/update/ 文章 id/json
 编辑收藏网站 lg/collect/updatetool/json
