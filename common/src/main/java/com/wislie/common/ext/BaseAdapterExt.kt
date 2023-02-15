@@ -43,7 +43,6 @@ fun BaseAdapter<*, *, *>.addFreshListener(
 fun SwipeRefreshLayout.init(adapter: PagingDataAdapter<*, *>, doRefresh: (() -> Unit)? = null) {
     this.setColorSchemeColors(Color.rgb(47, 223, 189))
     setOnRefreshListener {
-        adapter.refresh()
         doRefresh?.invoke()
     }
 }

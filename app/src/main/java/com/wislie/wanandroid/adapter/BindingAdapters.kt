@@ -23,6 +23,8 @@ import com.wislie.wanandroid.data.ArticleInfo
 import com.wislie.wanandroid.data.TreeInfo
 import com.wislie.wanandroid.data.Tag
 import com.wislie.wanandroid.databinding.ItemArticleTagBinding
+import com.wislie.wanandroid.databinding.ItemNaviBinding
+import com.wislie.wanandroid.databinding.ItemNaviTagBinding
 import com.wislie.wanandroid.databinding.ItemSystemTagBinding
 import com.wislie.wanandroid.util.AnimatorUtil
 import com.zhy.view.flowlayout.FlowLayout
@@ -185,7 +187,7 @@ fun EditText.bindEditTextChange(l: OnEditTextChangeListener) {
 }
 
 @BindingAdapter("systemTags")
-fun bindSystemTags(view: TagFlowLayout, tags: List<TreeInfo>?) {
+fun bindSystemTags(view: TagFlowLayout, tags: List<TreeInfo>?) { //体系
     view.adapter = object : TagAdapter<TreeInfo>(tags) {
         override fun getView(parent: FlowLayout, position: Int, t: TreeInfo): View {
             val binding = DataBindingUtil.inflate<ItemSystemTagBinding>(
@@ -195,6 +197,22 @@ fun bindSystemTags(view: TagFlowLayout, tags: List<TreeInfo>?) {
                 false
             )
             binding.systemInfo = t
+            return binding.root
+        }
+    }
+}
+
+@BindingAdapter("naviTags")
+fun bindNaviTags(view: TagFlowLayout, tags: List<ArticleInfo>?) { //导航
+    view.adapter = object : TagAdapter<ArticleInfo>(tags) {
+        override fun getView(parent: FlowLayout, position: Int, t: ArticleInfo): View {
+            val binding = DataBindingUtil.inflate<ItemNaviTagBinding>(
+                LayoutInflater.from(parent.context),
+                R.layout.item_navi_tag,
+                parent,
+                false
+            )
+            binding.articleInfo = t
             return binding.root
         }
     }

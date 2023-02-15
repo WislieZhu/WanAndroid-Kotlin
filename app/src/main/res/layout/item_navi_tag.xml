@@ -4,12 +4,12 @@
 
     <data>
         <variable
-            name="systemInfo"
-            type="com.wislie.wanandroid.data.TreeInfo" />
+            name="articleInfo"
+            type="com.wislie.wanandroid.data.ArticleInfo" />
     </data>
 
     <TextView
-        android:text="@{systemInfo.name}"
+        android:text="@{articleInfo.title}"
         android:padding="@dimen/dp_5"
         android:textColor="@color/white"
         android:background="@drawable/shape_round_rect_purple"

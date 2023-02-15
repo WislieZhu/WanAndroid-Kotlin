@@ -11,6 +11,7 @@ import com.wislie.common.ext.addFreshListener
 import com.wislie.common.ext.findNav
 import com.wislie.common.ext.init
 import com.wislie.wanandroid.R
+import com.wislie.wanandroid.adapter.LoadStateFooterAdapter
 import com.wislie.wanandroid.adapter.SearchArticleResultAdapter
 import com.wislie.wanandroid.databinding.FragmentSearchArticleResultBinding
 import com.wislie.wanandroid.viewmodel.ArticlesViewModel
@@ -28,7 +29,7 @@ class SearchArticleResultFragment :
     private val searchViewModel: SearchViewModel by viewModels()
     private val articlesViewModel: ArticlesViewModel by viewModels()
     private val adapter by lazy {
-        SearchArticleResultAdapter{ articleInfo ->
+        SearchArticleResultAdapter { articleInfo ->
             articleInfo?.run {
                 if (collect) {
                     articlesViewModel.unCollect(id)
@@ -53,8 +54,13 @@ class SearchArticleResultFragment :
         registerLoadSir(binding.rvArticles) {
             adapter.refresh() //点击即刷新
         }
-        binding.swipeRefreshLayout.init(adapter)
-        binding.rvArticles.adapter = adapter
+        binding.swipeRefreshLayout.init(adapter){
+            adapter.refresh() //点击即刷新
+        }
+        binding.rvArticles.adapter = adapter.withLoadStateFooter(
+            footer = LoadStateFooterAdapter(
+                retry = { adapter.retry() })
+        )
         adapter.addFreshListener(mBaseLoadService)
     }
 

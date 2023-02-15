@@ -45,7 +45,9 @@ class CollectArticleListFragment :
         registerLoadSir(binding.rvArticle) {
             adapter.refresh() //点击即刷新
         }
-        binding.swipeRefreshLayout.init(adapter)
+        binding.swipeRefreshLayout.init(adapter){
+            adapter.refresh() //点击即刷新
+        }
         binding.rvArticle.adapter =
             adapter.withLoadStateFooter(footer = LoadStateFooterAdapter { adapter.retry() })
         adapter.addFreshListener(mBaseLoadService)

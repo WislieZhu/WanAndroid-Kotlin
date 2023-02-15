@@ -105,16 +105,6 @@ interface ApiService {
     suspend fun deleteCollectWebsite(@Field("id") id: Int):
             ApiResponse<Any?> //删除网址收藏
 
-    @GET("wenda/list/{page}/json")
-    suspend fun getWendaArticles(
-        @Path("page") pageNo: Long
-    ): ApiResponse<ApiPageResponse<ArticleInfo>?> //问答列表数据
-
-    @GET("wenda/comments/{id}/json")
-    suspend fun getWendaComment(
-        @Path("id") id: Int
-    ): ApiResponse<ApiPageResponse<ReplyComment>?> //问答评论
-
     @GET("lg/coin/userinfo/json")
     suspend fun getCoin(): ApiResponse<Coin?> //获取个人积分，需要登录后访问
 
@@ -155,5 +145,22 @@ interface ApiService {
         @Path("page") pageNo: Long, @Query("cid") cid: Int
     ): ApiResponse<ApiPageResponse<ArticleInfo>?> //知识体系下的文章
 
+    @GET("article/list/{page}/json")
+    suspend fun getTreeArticleList(
+        @Path("page") pageNo: Long, @Query("author") author: String
+    ): ApiResponse<ApiPageResponse<ArticleInfo>?> //体系-按照作者昵称搜索文章
+
+    @GET("navi/json")
+    suspend fun getNaviList(): ApiResponse<List<NaviInfo>?> //导航数据
+
+    @GET("wenda/list/{page}/json")
+    suspend fun getWendaArticles(
+        @Path("page") pageNo: Long
+    ): ApiResponse<ApiPageResponse<ArticleInfo>?> //问答列表数据
+
+    @GET("wenda/comments/{id}/json")
+    suspend fun getWendaComment(
+        @Path("id") id: Int
+    ): ApiResponse<ApiPageResponse<ReplyComment>?> //问答评论
 
 }

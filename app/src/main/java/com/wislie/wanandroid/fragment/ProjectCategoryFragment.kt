@@ -45,7 +45,9 @@ class ProjectCategoryFragment :
         registerLoadSir(binding.rvArticles) {
             adapter.refresh() //点击即刷新
         }
-        binding.swipeRefreshLayout.init(adapter)
+        binding.swipeRefreshLayout.init(adapter){
+            adapter.refresh() //点击即刷新
+        }
         binding.rvArticles.adapter = adapter
         adapter.addFreshListener(mBaseLoadService)
     }

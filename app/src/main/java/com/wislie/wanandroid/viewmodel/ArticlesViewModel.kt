@@ -282,4 +282,26 @@ class ArticlesViewModel : BaseViewModel() {
             pagingSourceFactory = { TreeArticlePagingSource(id) })
             .flow
 
+    /**
+     * 按照作者昵称搜索文章
+     */
+    fun getTreeArticleSearchList(author: String) =
+        Pager(
+            PagingConfig(pageSize = 1),
+            pagingSourceFactory = { TreeArticleSearchPagingSource(author) })
+            .flow
+
+    /**
+     * 获取导航列表
+     */
+    val naviListLiveData by lazy {
+        MutableLiveData<ResultState<List<NaviInfo>?>>()
+    }
+
+    fun getNaviList() {
+        request({
+            apiService.getNaviList()
+        }, naviListLiveData)
+    }
+
 }

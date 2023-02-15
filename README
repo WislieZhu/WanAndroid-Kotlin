@@ -587,6 +587,14 @@ MutableList 默认是 ArrayList
 2.收藏页 取消收藏时, 首页的变化
 3.收藏的文章列表  取消收藏后展示不对
 上述已搞定
+1.有些不需要没有更多，加载中这些,只需要加载 比如体系，导航列表
+2.每一个列表的item 对照改进
+3.asm onclick 拦截
+4.背景色改变
+5.换肤
+6.我的(有很多东西需要改进)
+
+
 
 Paging 生命周期
 PagingSource->Pager->Flow<PagingData>->PagingDataAdapter
@@ -594,7 +602,6 @@ PagingSource->Pager->Flow<PagingData>->PagingDataAdapter
 
 2.
 按照作者昵称搜索文章 article/list/0/json?author=鸿洋
-3.导航数据 navi/json
 6.
 编辑收藏的文章，支持站内，站外  lg/collect/user_article/update/ 文章 id/json
 编辑收藏网站 lg/collect/updatetool/json

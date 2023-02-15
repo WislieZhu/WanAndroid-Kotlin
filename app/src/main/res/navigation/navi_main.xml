@@ -110,4 +110,11 @@
 
     </fragment>
 
+    <fragment
+        android:id="@+id/fragment_search_article_by_author"
+        android:name="com.wislie.wanandroid.fragment.SearchArticleByAuthorFragment"
+        tools:layout="@layout/fragment_search_article_by_author">
+
+    </fragment>
+
 </navigation>

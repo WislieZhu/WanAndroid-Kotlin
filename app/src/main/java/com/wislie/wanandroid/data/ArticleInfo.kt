@@ -37,5 +37,6 @@ data class ArticleInfo(
     val userId: Int,
     val visible: Int,
     val zan: Int,
-    val originId: Int?
+    val originId: Int?,
+    val route:Boolean?
 )

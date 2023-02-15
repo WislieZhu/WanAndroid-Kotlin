@@ -20,8 +20,7 @@ class FirstPageArticleHolder(
 
     init {
         binding.root.setOnClickListener { v ->
-            val bundle = Bundle()
-            bundle.run {
+            val bundle = Bundle().apply {
                 putInt("type", ArticleType.TYPE_LIST_ARTICLE)
                 putInt("id", binding.articleInfo?.id ?: 0)
                 putString("title", binding.articleInfo?.title)
@@ -40,7 +39,6 @@ class FirstPageArticleHolder(
             collect.invoke(binding.articleInfo)
         }
     }
-
 
     override fun bind(data: ArticleInfo?, position: Int) {
         this.index = position

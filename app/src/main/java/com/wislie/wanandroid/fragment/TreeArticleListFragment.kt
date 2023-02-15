@@ -1,5 +1,6 @@
 package com.wislie.wanandroid.fragment
 
+import android.os.Bundle
 import android.util.Log
 import android.view.View
 import androidx.fragment.app.viewModels
@@ -53,7 +54,9 @@ class TreeArticleListFragment :
         registerLoadSir(binding.rvArticles) {
             adapter.refresh() //点击即刷新
         }
-        binding.swipeRefreshLayout.init(adapter)
+        binding.swipeRefreshLayout.init(adapter){
+            adapter.refresh() //点击即刷新
+        }
         binding.rvArticles.adapter =
             adapter.withLoadStateFooter(footer = LoadStateFooterAdapter { adapter.retry() })
         adapter.addFreshListener(mBaseLoadService)
@@ -123,5 +126,15 @@ class TreeArticleListFragment :
 
     override fun getLayoutResId(): Int {
         return R.layout.fragment_tree_article_list
+    }
+
+    companion object{
+        fun newInstance(cid:Int):TreeArticleListFragment{
+            return TreeArticleListFragment().apply {
+                arguments = Bundle().apply {
+                    putInt("cid",cid)
+                }
+            }
+        }
     }
 }

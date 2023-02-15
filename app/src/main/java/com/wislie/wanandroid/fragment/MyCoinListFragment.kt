@@ -48,7 +48,9 @@ class MyCoinListFragment : BaseViewModelFragment<BaseViewModel, FragmentMyCoinLi
         registerLoadSir(binding.rvCoin) {
             adapter.refresh() //点击即刷新
         }
-        binding.swipeRefreshLayout.init(adapter)
+        binding.swipeRefreshLayout.init(adapter){
+            adapter.refresh() //点击即刷新
+        }
         binding.rvCoin.adapter =
             adapter.withLoadStateFooter(
                 footer = LoadStateFooterAdapter(

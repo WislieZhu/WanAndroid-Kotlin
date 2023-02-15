@@ -62,7 +62,9 @@ class CoinRankListFragment : BaseViewModelFragment<BaseViewModel, FragmentCoinRa
         registerLoadSir(binding.rvCoinRank) {
             adapter.refresh() //点击即刷新
         }
-        binding.swipeRefreshLayout.init(adapter)
+        binding.swipeRefreshLayout.init(adapter){
+            adapter.refresh() //点击即刷新
+        }
         binding.rvCoinRank.adapter =
             adapter.withLoadStateFooter(
                 footer = LoadStateFooterAdapter(

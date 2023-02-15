@@ -1,6 +1,5 @@
 package com.wislie.wanandroid.fragment
 
-import android.util.Log
 import android.view.View
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
@@ -12,7 +11,6 @@ import com.wislie.common.ext.addFreshListener
 import com.wislie.common.ext.init
 import com.wislie.common.ext.showErrorCallback
 import com.wislie.wanandroid.R
-import com.wislie.wanandroid.adapter.LoadStateFooterAdapter
 import com.wislie.wanandroid.adapter.TreeListAdapter
 import com.wislie.wanandroid.databinding.FragmentTreeListBinding
 import com.wislie.wanandroid.viewmodel.ArticlesViewModel
@@ -20,6 +18,8 @@ import kotlinx.coroutines.launch
 
 /**
  * 体系列表
+ * 两种不同类型的数据
+ *
  */
 class TreeListFragment : BaseViewModelFragment<BaseViewModel, FragmentTreeListBinding>() {
 
@@ -32,16 +32,12 @@ class TreeListFragment : BaseViewModelFragment<BaseViewModel, FragmentTreeListBi
     override fun init(root: View) {
         super.init(root)
         registerLoadSir(binding.rvTree) {
-            loadData()
+            adapter.refresh() //点击即刷新
         }
         binding.swipeRefreshLayout.init(adapter) {
-            loadData()
+            adapter.refresh() //点击即刷新
         }
-        binding.rvTree.adapter =
-            adapter.withLoadStateFooter(
-                footer = LoadStateFooterAdapter(
-                    retry = { adapter.retry() })
-            )
+        binding.rvTree.adapter = adapter
         adapter.addFreshListener(mBaseLoadService)
     }
 

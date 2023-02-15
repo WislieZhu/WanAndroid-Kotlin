@@ -1,6 +1,5 @@
 package com.wislie.wanandroid.fragment
 
-import android.os.Bundle
 import android.view.View
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
@@ -31,11 +30,13 @@ class TreeArrFragment : BaseFragment<FragmentTreeArrBinding>() {
             treeInfoStr = getString("treeInfo")
         }
 
-
         binding.ivBack.setOnClickListener {
             findNav().navigateUp()
         }
         binding.tvTitle.text = title ?: ""
+        binding.ivSearch.setOnClickListener {  //搜索
+
+        }
 
         val fragments = mutableListOf<BaseFragment<*>>()
         val tabNameList = arrayListOf<String>()
@@ -44,11 +45,7 @@ class TreeArrFragment : BaseFragment<FragmentTreeArrBinding>() {
                 Gson().fromJson<List<TreeInfo>>(this, object : TypeToken<List<TreeInfo>>() {}.type)
             if (list.isNotEmpty() && articleId != null) {
                 for (index in list.indices) {
-                    val child = TreeArticleListFragment()
-                    val b = Bundle()
-                    b.putInt("cid", list[index].id)
-                    child.arguments = b
-                    fragments.add(child)
+                    fragments.add( TreeArticleListFragment.newInstance(list[index].id))
                     tabNameList.add(list[index].name)
                     if (list[index].id == articleId) {
                         selectedIndex = index

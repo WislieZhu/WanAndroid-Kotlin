@@ -5,8 +5,8 @@
     <data>
 
         <variable
-            name="systemInfo"
-            type="com.wislie.wanandroid.data.TreeInfo" />
+            name="naviInfo"
+            type="com.wislie.wanandroid.data.NaviInfo" />
 
     </data>
 
@@ -26,7 +26,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="@dimen/dp_20"
-                android:text="@{systemInfo.name}"
+                android:text="@{naviInfo.name}"
                 android:textColor="@color/purple_500"
                 android:textSize="15sp"
                 android:textStyle="bold"
@@ -34,7 +34,7 @@
                 app:layout_constraintTop_toTopOf="parent" />
 
             <com.zhy.view.flowlayout.TagFlowLayout
-                android:id="@+id/flowlayout_system"
+                android:id="@+id/flowlayout_navi"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:paddingLeft="20dp"
@@ -43,7 +43,7 @@
                 android:paddingBottom="10dp"
                 app:layout_constraintTop_toBottomOf="@id/tv_title"
                 app:max_select="-1"
-                app:systemTags="@{systemInfo.children}" />
+                app:naviTags="@{naviInfo.articles}" />
 
 
         </androidx.constraintlayout.widget.ConstraintLayout>

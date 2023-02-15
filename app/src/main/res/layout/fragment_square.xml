@@ -15,6 +15,8 @@
             android:layout_height="?attr/actionBarSize"
             android:background="@color/purple_500">
 
+            <include layout="@layout/include_toolbar" />
+
             <net.lucode.hackware.magicindicator.MagicIndicator
                 android:id="@+id/indicator_square"
                 android:layout_width="wrap_content"
@@ -23,13 +25,6 @@
                 android:paddingLeft="8dp"
                 android:paddingRight="8dp" />
 
-            <ImageView
-                android:id="@+id/iv_add_share"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="right|center_vertical"
-                android:paddingRight="@dimen/dp_20"
-                android:src="@mipmap/ic_clear" />
         </FrameLayout>
 
 

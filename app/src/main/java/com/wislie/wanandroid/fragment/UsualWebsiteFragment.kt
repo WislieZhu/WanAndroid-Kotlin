@@ -43,9 +43,7 @@ class UsualWebsiteFragment : BaseViewModelFragment<BaseViewModel, FragmentUsualW
             adapter.refresh() //点击即刷新
         }
         binding.swipeRefreshLayout.init(adapter){
-            if (binding.swipeRefreshLayout.isRefreshing) {
-                binding.swipeRefreshLayout.isRefreshing = false
-            }
+            adapter.refresh() //点击即刷新
         }
         binding.rvWeb.adapter =
             adapter.withLoadStateFooter(
@@ -73,23 +71,6 @@ class UsualWebsiteFragment : BaseViewModelFragment<BaseViewModel, FragmentUsualW
                 }, { errorMsg ->
                 })
             }
-
-        //收藏/取消收藏 网址
-        /*App.instance()
-            .appViewModel
-            .collectEventLiveData
-            .observe(viewLifecycleOwner) { collectEvent ->
-                val collect = collectEvent.collect
-                val id = collectEvent.id
-
-                val list = adapter.snapshot().items
-                for (i in list.indices) {
-                    if (list[i].id == id && list[i].collect != collect) {
-                        list[i].collect = collect
-                        adapter.notifyItemChanged(i, Any())
-                    }
-                }
-            }*/
     }
 
     override fun loadData() {

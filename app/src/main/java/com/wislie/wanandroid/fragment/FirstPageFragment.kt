@@ -77,7 +77,9 @@ class FirstPageFragment : BaseViewModelFragment<BaseViewModel, FragmentFirstPage
         registerLoadSir(binding.rvArticles) {
             adapter.refresh() //点击即刷新
         }
-        binding.swipeRefreshLayout.init(adapter)
+        binding.swipeRefreshLayout.init(adapter){
+            adapter.refresh() //点击即刷新
+        }
         binding.rvArticles.adapter =
             adapter.withLoadStateFooter(
                 footer = LoadStateFooterAdapter(

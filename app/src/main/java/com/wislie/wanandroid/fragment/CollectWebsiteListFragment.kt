@@ -48,7 +48,7 @@ class CollectWebsiteListFragment :
             adapter.refresh() //点击即刷新
         }
         binding.swipeRefreshLayout.init(adapter) {
-            loadData() //点击即刷新
+            adapter.refresh() //点击即刷新
         }
         binding.rvWebsite.adapter =
             adapter.withLoadStateFooter(footer = LoadStateFooterAdapter { adapter.retry() })
