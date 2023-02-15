@@ -5,18 +5,18 @@ import com.wislie.wanandroid.R
 import com.wislie.wanandroid.adapter.callback.ArticleCallback
 import com.wislie.wanandroid.adapter.holder.WendaArticleHolder
 import com.wislie.wanandroid.data.ArticleInfo
-import com.wislie.wanandroid.databinding.ItemFirstPageArticleBinding
+import com.wislie.wanandroid.databinding.ItemWendaArticleBinding
 
-class WendaArticleAdapter(private val wenda:(Int?)->Unit, val collect: ( articleInfo: ArticleInfo?) -> Unit) :
-    BaseAdapter<ArticleInfo, ItemFirstPageArticleBinding, WendaArticleHolder>(
+class WendaArticleAdapter(val collect: (articleInfo: ArticleInfo?) -> Unit) :
+    BaseAdapter<ArticleInfo, ItemWendaArticleBinding, WendaArticleHolder>(
         ArticleCallback()
     ) {
-    override fun onCreateViewHolder(binding: ItemFirstPageArticleBinding): WendaArticleHolder {
-        return WendaArticleHolder(binding,wenda, collect)
+    override fun onCreateViewHolder(binding: ItemWendaArticleBinding): WendaArticleHolder {
+        return WendaArticleHolder(binding, collect)
     }
 
     override fun getItemLayoutId(): Int {
-        return R.layout.item_first_page_article
+        return R.layout.item_wenda_article
     }
 }
 

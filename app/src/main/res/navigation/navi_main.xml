@@ -55,10 +55,6 @@
         android:name="com.wislie.wanandroid.fragment.MyCoinListFragment"
         tools:layout="@layout/fragment_my_coin_list"/>
 
-    <fragment
-        android:id="@+id/fragment_wenda"
-        android:name="com.wislie.wanandroid.fragment.WendaFragment"
-        tools:layout="@layout/fragment_first_page" />
 
     <!-- 收藏 -->
     <fragment

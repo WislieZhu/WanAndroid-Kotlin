@@ -40,10 +40,12 @@ class SquareFragment : BaseFragment<FragmentSquareBinding>() {
         fragments.add(SquareArticleListFragment())
         fragments.add(TreeListFragment())
         fragments.add(NaviListFragment())
+        fragments.add(WendaListFragment())
         val tabNameList = arrayListOf<String>()
         tabNameList.add("广场")
         tabNameList.add("体系")
         tabNameList.add("导航")
+        tabNameList.add("每日一问")
         val pagerAdapter = MultiCategoryPagerAdapter(fragments, this)
         binding.vpSquare.adapter = pagerAdapter
         binding.vpSquare.offscreenPageLimit = fragments.size

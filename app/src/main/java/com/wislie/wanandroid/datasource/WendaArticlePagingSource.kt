@@ -8,7 +8,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 
 /**
- * 问答文章分页
+ * 问答列表分页
  */
 class WendaArticlePagingSource : PagingSource<Long, ArticleInfo>() {
 
@@ -17,14 +17,14 @@ class WendaArticlePagingSource : PagingSource<Long, ArticleInfo>() {
     override suspend fun load(params: LoadParams<Long>): LoadResult<Long, ArticleInfo> {
 
         return withContext(Dispatchers.IO) {
-            val currentPage = params.key ?: 0
+            val currentPage = params.key ?: 1
             try {
                 val articleListResp = apiService.getWendaArticles(currentPage)
                 //当前页码小于总页码页面加1
                 var nextPage: Long? = null
                 if (articleListResp != null && articleListResp.errorCode == 0) {
                     articleListResp?.data?.run {
-                        if (currentPage < this.pageCount - 1) { //初始值 currentPage为0的情况
+                        if (currentPage < this.pageCount) { //初始值 currentPage为1的情况
                             nextPage = currentPage + 1
                         }
                     }

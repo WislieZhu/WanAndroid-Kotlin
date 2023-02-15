@@ -2,8 +2,6 @@ package com.wislie.wanandroid.datasource
 
 import androidx.paging.PagingSource
 import androidx.paging.PagingState
-import com.wislie.wanandroid.data.CoinItem
-import com.wislie.wanandroid.data.CoinRankInfo
 import com.wislie.wanandroid.data.ReplyComment
 import com.wislie.wanandroid.network.apiService
 import kotlinx.coroutines.Dispatchers

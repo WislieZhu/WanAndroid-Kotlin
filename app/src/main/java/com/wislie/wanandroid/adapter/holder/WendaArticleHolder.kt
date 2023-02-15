@@ -1,22 +1,30 @@
 package com.wislie.wanandroid.adapter.holder
 
+import android.os.Bundle
 import com.wislie.common.base.BaseVHolder
+import com.wislie.common.ext.findNav
+import com.wislie.wanandroid.R
 import com.wislie.wanandroid.data.ArticleInfo
-import com.wislie.wanandroid.databinding.ItemFirstPageArticleBinding
+import com.wislie.wanandroid.databinding.ItemWendaArticleBinding
 import com.wislie.wanandroid.util.Settings
 import com.wislie.wanandroid.ext.startLogin
+import com.wislie.wanandroid.util.ArticleType
 
 class WendaArticleHolder(
-    override val binding: ItemFirstPageArticleBinding,
-    private val wenda:(Int?)->Unit,
+    override val binding: ItemWendaArticleBinding,
     val collect: (articleInfo: ArticleInfo?) -> Unit
-) :
-    BaseVHolder<ArticleInfo>(binding) {
-
-
+) : BaseVHolder<ArticleInfo>(binding) {
     init {
-        binding.root.setOnClickListener {
-            wenda.invoke(binding.articleInfo?.id)
+        binding.root.setOnClickListener { v ->
+            val bundle = Bundle().apply {
+                putInt("type", ArticleType.TYPE_LIST_ARTICLE)
+                putInt("id", binding.articleInfo?.id ?: 0)
+                putString("title", binding.articleInfo?.title)
+                putString("author", binding.articleInfo?.author)
+                putString("linkUrl", binding.articleInfo?.link)
+                putBoolean("collect", binding.articleInfo?.collect ?: false)
+            }
+            v.findNav().navigate(R.id.fragment_web, bundle)
         }
 
         binding.ivCollect.setOnClickListener { // 在onBindViewHolder中点击不合理
