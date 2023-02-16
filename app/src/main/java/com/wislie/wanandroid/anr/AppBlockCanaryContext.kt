@@ -1,4 +1,4 @@
-package com.wislie.wanandroid
+/**package com.wislie.wanandroid
 
 import android.content.Context
 import com.github.moduth.blockcanary.BlockCanaryContext
@@ -154,4 +154,4 @@ class AppBlockCanaryContext : BlockCanaryContext() {
      * 阻塞拦截器, 我们可以指定发生阻塞时应该做的工作
      */
     override fun onBlock(context: Context?, blockInfo: BlockInfo?) {}
-}
+} **/

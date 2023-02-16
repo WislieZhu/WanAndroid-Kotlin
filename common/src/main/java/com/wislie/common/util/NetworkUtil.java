@@ -117,7 +117,7 @@ public class NetworkUtil {
      * @return
      */
     static private boolean connectionNetwork() {
-        boolean result = false;
+        boolean result;
         HttpURLConnection httpUrl = null;
         try {
             httpUrl = (HttpURLConnection) new URL(url)
@@ -126,11 +126,11 @@ public class NetworkUtil {
             httpUrl.connect();
             result = true;
         } catch (IOException e) {
+            result = false;
         } finally {
             if (null != httpUrl) {
                 httpUrl.disconnect();
             }
-            httpUrl = null;
         }
         return result;
     }

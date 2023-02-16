@@ -4,6 +4,11 @@ App的FPS平均值小于30，最小值小于24，即表明应用发生了卡顿
 卡顿产生原因:
 涉及到代码、内存、绘制、IO、CPU, 最终都会反映到CPU时间上
 
+卡顿的根本原因:
+1.绘制任务太重、绘制一帧内容耗时太长
+2.主线程太忙，导致VSync信号到来时还没有准备好数据从而导致丢帧
+
+
 1、CPU资源冗余使用
 重复遍历
 没有使用cache
@@ -24,6 +29,51 @@ CPU使用率大概为8%，说明我们系统的CPU是处于空闲状态的，如
 
 
 
+获取cpu 进程信息
+1.adb shell
+2.dumpsys cpuinfo
+
+卡顿优化工具
+1.cpu profiler
+2.Systrace
+3.StrictMode
+
+耗时任务分为两种，一种是IO耗时任务，另一种是CPU耗时任务。因此，自定义线程池的时候需要定义两种线程池，一种是用于执行IO耗时任务的IO线程池，
+一般采用CachedThreadPool实现即可。另一种是用于执行CPU耗时任务的线程池，而执行CPU耗时任务的线程池需要按照系统核心数去控制线程数，以最大化利用手机的CPU核心数
+io耗时有哪些，cpu耗时有哪些?
+
+ANR的几种常见的类型
+1、KeyDispatchTimeout：按键事件在5s的时间内没有处理完成。
+2、BroadcastTimeout：广播接收器在前台10s，后台60s的时间内没有响应完成。
+3、ServiceTimeout：服务在前台20s，后台200s的时间内没有处理完成。
+
+我们的应用发生了ANR，我们的进程就会接收到异常终止信息，并开始写入进程ANR信息，也就是当时应用的场景信息，它包含了应用所有的堆栈信息、CPU、IO等使用的情况
+/data/anr/traces.txt
+
+
+useful方式:
+1.使用watchDog 检测ANR
+watchDog适用于检测5秒及以上的主线程阻塞, 同时能够弥补我们在高版本中没有权限去读取traces.txt文件的问题
+2.AndroidPerformanceMonitor(BlockCanaryContext)
+
+
+高版本系统没有权限读取 /data/anr/traces.txt?
+
+
+主线程IPC其实是一个很耗时的操作
+什么是ipc?
+设备的DeviceId,AMS相关的信息
+// 1、首先，对IPC操作开始进行监控
+adb shell am trace-ipc start
+// 2、然后，结束IPC操作的监控，同时，将监控到的信息存放到指定的文件当中
+adb shell am trace-ipc stop --dump-file /data/local/tmp/ipc-trace.txt
+// 3、最后，将监控到的ipc-trace导出到电脑查看
+adb pull /data/local/tmp/ipc-trace.txt （模拟器上导出不了）
+
+/data/anr/traces.txt 日志导出
+1.adb shell ls /data/anr/
+
+
 x86_arm 这些都去看看
 HWMGA-H
 
@@ -33,4 +83,6 @@ Systrace 如何使用?
 
 BlockCanary 怎么使用
 
-怎么定位
+targetSdk
+compileSdk
+minSdk

@@ -2,9 +2,11 @@ package com.wislie.wanandroid.activity
 
 //import androidx.core.splashscreen.SplashScreen
 //import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
+import android.Manifest
 import android.os.Build
 import android.os.Bundle
 import android.view.WindowManager
+import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import com.wislie.common.base.BaseActivity
 import com.wislie.wanandroid.R
@@ -12,6 +14,13 @@ import com.wislie.wanandroid.databinding.ActivityMainBinding
 
 
 class MainActivity : BaseActivity<ActivityMainBinding>() {
+
+
+    val permissions =
+        arrayOf(
+            Manifest.permission.WRITE_EXTERNAL_STORAGE,
+            Manifest.permission.READ_EXTERNAL_STORAGE
+        )
 
     override fun onCreate(savedInstanceState: Bundle?) {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
@@ -23,7 +32,6 @@ class MainActivity : BaseActivity<ActivityMainBinding>() {
 //        installSplashScreen()
 
 
-
         super.onCreate(savedInstanceState)
 
         val list = ArrayList<String>()
@@ -33,18 +41,24 @@ class MainActivity : BaseActivity<ActivityMainBinding>() {
 //        val listA = mutableListOf<String>()
 //        test2(listA)
 
+
+
+        ActivityCompat.requestPermissions(
+            this, permissions,
+            100
+        )
+
     }
 
 
     override fun getLayoutResId(): Int = R.layout.activity_main
 
 
-
-    private fun test1(list:MutableList<String>){
+    private fun test1(list: MutableList<String>) {
 
     }
 
-    private fun test2(list:ArrayList<String>){
+    private fun test2(list: ArrayList<String>) {
 
     }
 

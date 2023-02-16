@@ -1,7 +1,10 @@
 package com.wislie.wanandroid.fragment
 
+import android.os.Environment
+import android.util.Log
 import android.view.View
 import androidx.fragment.app.viewModels
+//import com.github.moduth.blockcanary.BlockCanaryInternals
 
 import com.wislie.common.base.BaseViewModelFragment
 import com.wislie.common.base.parseState
@@ -36,23 +39,25 @@ class MineFragment : BaseViewModelFragment<MineStateViewModel, FragmentMineBindi
 
 
         binding.btnScore.setOnClickListener { //积分
-            startDestination{
+
+            startDestination {
                 findNav().navigate(R.id.fragment_coin_rank)
             }
         }
 
         binding.btnCollect.setOnClickListener { //我的收藏
-            startDestination{
+            startDestination {
                 findNav().navigate(R.id.fragment_collect)
             }
         }
 
         binding.btnUrls.setOnClickListener {  //常用网站
+            log()
             findNav().navigate(R.id.fragment_usual_website)
         }
 
         binding.btnTodo.setOnClickListener { //todo列表
-            startDestination{
+            startDestination {
                 findNav().navigate(R.id.fragment_todo_list)
             }
         }
@@ -61,8 +66,6 @@ class MineFragment : BaseViewModelFragment<MineStateViewModel, FragmentMineBindi
         binding.btnLogout.setOnClickListener { //退出登录
             logoutViewModel.logout()
         }
-
-
 
 
 //        binding.btnFaceRecognize.setOnClickListener { view ->//人脸识别 上传
@@ -79,12 +82,27 @@ class MineFragment : BaseViewModelFragment<MineStateViewModel, FragmentMineBindi
 //        }
 
 
+    }
 
 
+
+    private fun log() {
+        val path = Environment.getDataDirectory().absolutePath
+        Log.i("wislieZhu","path=$path")
+        try {
+            Thread.sleep(8000) //Application Not Responding for at least 5000 ms
+        } catch (e: InterruptedException) {
+            e.printStackTrace()
+        }
+        /*BlockCanaryInternals.getLogFiles()?.run {
+            this.forEach {
+                Log.i("wislieZhu", " BlockCanaryLogFiles=${it.name}")
+            }
+        }*/
     }
 
     override fun loadData() { //表示已登录
-        if(Settings.isLogined){
+        if (Settings.isLogined) {
             coinViewModel.getCoin()
         }
         //如果没有登录, 积分显示为--, 当前排名显示为--, 用户名显示为--

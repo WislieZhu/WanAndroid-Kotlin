@@ -29,10 +29,9 @@ abstract class AbstractNetworkApi {
 
     private val okHttpClient: OkHttpClient
         get() {
-            return with(OkHttpClient.Builder()) {
+            return OkHttpClient.Builder().apply {
                 setOkHttpClientBuilder(this)
-                build()
-            }
+            }.build()
         }
 
 

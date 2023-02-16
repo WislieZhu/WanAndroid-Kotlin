@@ -57,7 +57,6 @@ fun bindTags(view: TagFlowLayout, tags: List<Tag>?) {
     val tempTags = tags?.filter {
         "问答" != it.name
     }
-    Log.i("wislieZhu","tag size=${tempTags.toString()}")
     view.adapter = object : TagAdapter<Tag>(tempTags) {
         override fun getView(parent: FlowLayout, position: Int, t: Tag): View {
             val binding = DataBindingUtil.inflate<ItemArticleTagBinding>(
