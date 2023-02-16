@@ -26,6 +26,7 @@ versions.camerax = "1.0.0"
 versions.tkrefreshlayout = "1.0.7"
 versions.room = "2.4.3"
 
+
 def retrofit = [:]
 retrofit.runtime="com.squareup.retrofit2:retrofit:$versions.retrofit"
 retrofit.gson = "com.squareup.retrofit2:converter-gson:$versions.retrofit"

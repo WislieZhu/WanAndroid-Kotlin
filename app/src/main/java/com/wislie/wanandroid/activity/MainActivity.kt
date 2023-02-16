@@ -1,16 +1,14 @@
 package com.wislie.wanandroid.activity
 
-import android.os.Build
-import android.os.Bundle
-import android.view.View
-import android.view.WindowManager
-import androidx.core.content.ContextCompat
 //import androidx.core.splashscreen.SplashScreen
 //import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
+import android.os.Build
+import android.os.Bundle
+import android.view.WindowManager
+import androidx.core.content.ContextCompat
 import com.wislie.common.base.BaseActivity
 import com.wislie.wanandroid.R
 import com.wislie.wanandroid.databinding.ActivityMainBinding
-import kotlinx.coroutines.GlobalScope
 
 
 class MainActivity : BaseActivity<ActivityMainBinding>() {
@@ -23,6 +21,9 @@ class MainActivity : BaseActivity<ActivityMainBinding>() {
             window.statusBarColor = ContextCompat.getColor(this, R.color.purple_500)
         }
 //        installSplashScreen()
+
+
+
         super.onCreate(savedInstanceState)
 
         val list = ArrayList<String>()
@@ -32,12 +33,10 @@ class MainActivity : BaseActivity<ActivityMainBinding>() {
 //        val listA = mutableListOf<String>()
 //        test2(listA)
 
-
     }
 
 
     override fun getLayoutResId(): Int = R.layout.activity_main
-
 
 
 

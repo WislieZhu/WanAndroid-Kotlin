@@ -2,7 +2,7 @@ package com.wislie.wanandroid
 
 import android.app.Application
 import android.content.Context
-
+import com.github.moduth.blockcanary.BlockCanary
 import com.kingja.loadsir.core.LoadSir
 import com.tencent.mmkv.MMKV
 import com.wislie.common.callback.EmptyCallback
@@ -45,6 +45,8 @@ class App : Application() {
         TimeMonitorManager.instance?.getTimeMonitor(TimeMonitorConfig.TIME_MONITOR_ID_APPLICATION_START)
             ?.recordingTimeTag("Application-onCreate")
 
+        // 注意在主进程初始化调用
+        BlockCanary.install(this, AppBlockCanaryContext()).start()
     }
 
     //单例化的第三种方式：自定义一个非空且只能一次性赋值的委托属性

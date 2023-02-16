@@ -1,0 +1,19 @@
+
+定义卡顿:
+App的FPS平均值小于30，最小值小于24，即表明应用发生了卡顿
+卡顿产生原因:
+涉及到代码、内存、绘制、IO、CPU, 最终都会反映到CPU时间上
+
+1、CPU资源冗余使用
+重复遍历
+没有使用cache
+
+
+x86_arm 这些都去看看
+HWMGA-H
+
+CPU Profiler 运行时奔溃了, 如何处理?
+Systrace 如何使用?
+
+
+BlockCanary 怎么使用

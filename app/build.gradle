@@ -93,4 +93,9 @@ dependencies {
     kapt deps.room.compiler
     implementation deps.room.paging
 
+
+//    debugApi deps.blockcanary.android
+//    releaseApi deps.blockcanary.op
+    debugApi 'com.github.markzhai:blockcanary-android:1.5.0'
+    releaseApi 'com.github.markzhai:blockcanary-no-op:1.5.0'
 }
