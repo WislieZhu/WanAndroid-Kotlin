@@ -5,6 +5,7 @@ import android.graphics.drawable.Drawable
 import android.text.Editable
 import android.text.TextUtils
 import android.text.TextWatcher
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.widget.EditText
@@ -53,7 +54,11 @@ fun bindFresh(view: TextView, fresh: Boolean?) { //是否是新的标签
 
 @BindingAdapter("tags")
 fun bindTags(view: TagFlowLayout, tags: List<Tag>?) {
-    view.adapter = object : TagAdapter<Tag>(tags) {
+    val tempTags = tags?.filter {
+        "问答" != it.name
+    }
+    Log.i("wislieZhu","tag size=${tempTags.toString()}")
+    view.adapter = object : TagAdapter<Tag>(tempTags) {
         override fun getView(parent: FlowLayout, position: Int, t: Tag): View {
             val binding = DataBindingUtil.inflate<ItemArticleTagBinding>(
                 LayoutInflater.from(parent.context),

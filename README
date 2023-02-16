@@ -611,7 +611,6 @@ PagingSource->Pager->Flow<PagingData>->PagingDataAdapter
 自己的分享的文章列表 user/lg/private_articles/1/json
 删除自己分享的文章 lg/user_article/delete/9475/json
 分享文章 lg/user_article/add/json
-11.问答 wenda/list/1/json
 12.个人信息接口  user/lg/userinfo/json
 13.问答评论列表 wenda/comments/问答id/json
 14.未读消息数量 message/lg/count_unread/json

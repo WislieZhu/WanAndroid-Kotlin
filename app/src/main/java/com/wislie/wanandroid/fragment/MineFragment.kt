@@ -33,9 +33,7 @@ class MineFragment : BaseViewModelFragment<MineStateViewModel, FragmentMineBindi
         super.init(root)
         binding.mineViewModel = mViewModel
 
-        binding.btnWenda.setOnClickListener { //问答
-            findNav().navigate(R.id.fragment_wenda)
-        }
+
 
         binding.btnScore.setOnClickListener { //积分
             startDestination{
