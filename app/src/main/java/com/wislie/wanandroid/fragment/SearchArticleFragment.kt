@@ -34,18 +34,18 @@ import kotlinx.coroutines.launch
  */
 class SearchArticleFragment : BaseViewModelFragment<BaseViewModel, FragmentSearchArticleBinding>() {
 
+    private lateinit var searchInputEt: EditText
     private val searchViewModel by lazy {
         SearchViewModel()
     }
 
     private val adapter by lazy {
-        SearchHistoryAdapter { searchKey -> //其实应该有个对话框，是否删除
+        SearchHistoryAdapter({ searchKey -> //其实应该有个对话框，是否删除
             searchViewModel.deleteSearchKeyByName(hostActivity, searchKey)
-        }
-    }
-
-    override fun getLayoutResId(): Int {
-        return R.layout.fragment_search_article
+        }, { searchKey ->
+            searchInputEt.setText(searchKey.hotKey)
+            insertSearchKey(searchKey.hotKey)
+        })
     }
 
     override fun init(root: View) {
@@ -58,27 +58,22 @@ class SearchArticleFragment : BaseViewModelFragment<BaseViewModel, FragmentSearc
             }
             inflateMenu(R.menu.first_page_menu)
 
-            val inputEt = findViewById<EditText>(R.id.et_input_content)
+            searchInputEt = findViewById(R.id.et_input_content)
             val closeIv = findViewById<ImageView>(R.id.iv_close)
             setOnMenuItemClickListener {
                 when (it.itemId) {
                     R.id.home_search -> {
                         //输入的内容
-                        val inputSearchContent = inputEt.text.toString()
+                        val inputSearchContent = searchInputEt.text.toString()
                         if (!TextUtils.isEmpty(inputSearchContent)) {
                             //插入搜索的内容
-                            searchViewModel.insertSearchKey(hostActivity, inputSearchContent)
-                            val direction =
-                                SearchArticleFragmentDirections.actionFragmentSearchArticleToFragmentSearchArticleResult(
-                                    inputSearchContent
-                                )
-                            findNav().navigate(direction)
+                            insertSearchKey(inputSearchContent)
                         }
                     }
                 }
                 true
             }
-            inputEt.addTextListener(etAfterTextChanged = { editable ->
+            searchInputEt.addTextListener(etAfterTextChanged = { editable ->
                 editable?.run {
                     closeIv.visibility = if (this.isEmpty()) {
                         View.INVISIBLE
@@ -88,7 +83,7 @@ class SearchArticleFragment : BaseViewModelFragment<BaseViewModel, FragmentSearc
                 }
             })
             closeIv.setOnClickListener {
-                inputEt.setText("")
+                searchInputEt.setText("")
                 closeIv.visibility = View.INVISIBLE
             }
         }
@@ -159,14 +154,23 @@ class SearchArticleFragment : BaseViewModelFragment<BaseViewModel, FragmentSearc
         }
         binding.hotKeyFlowlayout.setOnTagClickListener { _, position, _ ->
             val hotKey = hotKeyList[position].name
-            //插入搜索的内容
-            searchViewModel.insertSearchKey(hostActivity, hotKey)
-            val direction =
-                SearchArticleFragmentDirections.actionFragmentSearchArticleToFragmentSearchArticleResult(
-                    hotKey
-                )
-            findNav().navigate(direction)
+            searchInputEt.setText(hotKey)
+            insertSearchKey(hotKey)
             true
         }
+    }
+
+    private fun insertSearchKey(hotKey: String) {
+        //插入搜索的内容
+        searchViewModel.insertSearchKey(hostActivity, hotKey)
+        val direction =
+            SearchArticleFragmentDirections.actionFragmentSearchArticleToFragmentSearchArticleResult(
+                hotKey
+            )
+        findNav().navigate(direction)
+    }
+
+    override fun getLayoutResId(): Int {
+        return R.layout.fragment_search_article
     }
 }

@@ -17,10 +17,8 @@ import net.lucode.hackware.magicindicator.buildins.commonnavigator.CommonNavigat
  * 项目
  */
 class ProjectFragment : BaseViewModelFragment<BaseViewModel, FragmentProjectBinding>() {
+
     private val projectViewModel: ArticlesViewModel by viewModels()
-    override fun getLayoutResId(): Int {
-        return R.layout.fragment_project
-    }
 
     override fun loadData() {
         projectViewModel.getProjectCategory()
@@ -63,4 +61,7 @@ class ProjectFragment : BaseViewModelFragment<BaseViewModel, FragmentProjectBind
         fragments.add(childFrag)
     }
 
+    override fun getLayoutResId(): Int {
+        return R.layout.fragment_project
+    }
 }

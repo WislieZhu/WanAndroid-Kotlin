@@ -111,8 +111,6 @@ class NaviListFragment : BaseViewModelFragment<BaseViewModel, FragmentNaviListBi
                             adapter.notifyItemChanged(i, Any())
                         }
                     }
-
-
                 }
             }
     }

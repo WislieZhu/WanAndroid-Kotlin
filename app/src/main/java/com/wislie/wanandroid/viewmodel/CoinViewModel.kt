@@ -44,10 +44,9 @@ class CoinViewModel : BaseViewModel() {
     //积分排行榜
     val coinRankList by lazy {
         Pager(
-            PagingConfig(pageSize = 1), //, enablePlaceholders = false
+            PagingConfig(pageSize = 1),
             pagingSourceFactory = { CoinRankPagingSource() })
             .flow
-//            .cachedIn(viewModelScope)
     }
 
 }

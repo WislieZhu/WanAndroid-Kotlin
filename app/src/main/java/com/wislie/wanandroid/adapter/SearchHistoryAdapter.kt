@@ -10,19 +10,22 @@ import com.wislie.wanandroid.db.SearchKey
 /**
  * 搜索历史
  */
-class SearchHistoryAdapter(private val clearMethod:(SearchKey)->Unit) :
+class SearchHistoryAdapter(
+    private val clearClick: (SearchKey) -> Unit,
+    private val itemClick: (SearchKey) -> Unit
+) :
     BaseAdapter<SearchKey, ItemSearchHistoryBinding, SearchHistoryHolder>(
-       callback
+        callback
     ) {
     override fun onCreateViewHolder(binding: ItemSearchHistoryBinding): SearchHistoryHolder {
-        return SearchHistoryHolder(binding, clearMethod)
+        return SearchHistoryHolder(binding, clearClick, itemClick)
     }
 
     override fun getItemLayoutId(): Int {
         return R.layout.item_search_history
     }
 
-    companion object{
+    companion object {
         val callback = object : DiffUtil.ItemCallback<SearchKey>() {
 
             override fun areItemsTheSame(oldItem: SearchKey, newItem: SearchKey): Boolean {

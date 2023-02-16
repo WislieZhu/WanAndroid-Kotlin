@@ -1,6 +1,7 @@
 package com.wislie.wanandroid.fragment
 
 import android.os.Bundle
+import android.text.TextUtils
 import android.util.Log
 import android.view.View
 import androidx.fragment.app.viewModels
@@ -108,20 +109,27 @@ class TreeArticleListFragment :
                 })
             }
 
-        //全局性质的取消收藏
-        App.instance().appViewModel.collectEventLiveData
-            .observe(viewLifecycleOwner, Observer { collectEvent ->
-                if (!collectEvent.collect) {
-                    val list = adapter.snapshot().items
-                    for (i in list.indices) {
-                        if (list[i].id == collectEvent.id) {
-                            articlesViewModel.removeFlowItem(list[i])
-                            return@Observer
-                        }
+        //这是针对于WebFragment收藏/取消收藏后的列表收藏更新
+        App.instance()
+            .appViewModel
+            .collectEventLiveData
+            .observe(viewLifecycleOwner) { collectEvent ->
+                val collect = collectEvent.collect
+                val id = collectEvent.id
+                val list = adapter.snapshot().items
+                for (i in list.indices) {    //收藏列表的id 与 首页列表的id 不是同一个
+                    if ((list[i].id == id || (TextUtils.equals(list[i].title, collectEvent.title) &&
+                                TextUtils.equals(list[i].link, collectEvent.link) &&
+                                TextUtils.equals(
+                                    list[i].author,
+                                    collectEvent.author
+                                ))) && list[i].collect != collect
+                    ) {
+                        list[i].collect = collect
+                        adapter.notifyItemChanged(i, Any())
                     }
                 }
-                loadData()
-            })
+            }
     }
 
     override fun getLayoutResId(): Int {

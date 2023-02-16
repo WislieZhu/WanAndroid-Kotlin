@@ -46,7 +46,7 @@ class App : Application() {
             ?.recordingTimeTag("Application-onCreate")
 
         // 注意在主进程初始化调用
-        BlockCanary.install(this, AppBlockCanaryContext()).start()
+//        BlockCanary.install(this, AppBlockCanaryContext()).start()
     }
 
     //单例化的第三种方式：自定义一个非空且只能一次性赋值的委托属性

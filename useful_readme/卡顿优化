@@ -9,6 +9,21 @@ App的FPS平均值小于30，最小值小于24，即表明应用发生了卡顿
 没有使用cache
 
 
+查看CPU的使用率：
+
+totalCPUTime = user + nice + system + idle + iowait + irq + softirq + stealstolen + guest
+cpu1 = 9931551 + 1082101 + 9002534 +  174463041 + 340947 + 1060438 + 1088978 + 0  + 0 + 0 = 196969590jiffies
+cpu2 = 9931673 + 1082113 + 9002679 +  174466561 + 340954 + 1060446 + 1088994 + 0 + 0 + 0 = 196973420jiffies
+totalCPUTime = CPU2 – CPU1 = 3830jiffies
+// 先计算得到CPU的空闲时间
+idleCPUTime = idle2 – idle1 = 3520jiffies
+// 最后得到系统CPU的使用率
+totalCPUUse = (totalCPUTime – idleCPUTime) / totalCPUTime = （3830 - 3520）/ 3830 = 8%
+CPU使用率大概为8%，说明我们系统的CPU是处于空闲状态的，如果CPU 使用率一直大于 60% ，则表示系统处于繁忙状态，
+此时就需要进一步分析用户时间和系统时间的比例，看看到底是系统占用了CPU还是应用进程占用了CPU
+
+
+
 x86_arm 这些都去看看
 HWMGA-H
 
@@ -17,3 +32,5 @@ Systrace 如何使用?
 
 
 BlockCanary 怎么使用
+
+怎么定位

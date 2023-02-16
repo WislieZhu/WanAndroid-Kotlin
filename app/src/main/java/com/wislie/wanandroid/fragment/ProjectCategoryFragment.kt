@@ -1,5 +1,6 @@
 package com.wislie.wanandroid.fragment
 
+import android.text.TextUtils
 import android.view.View
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
@@ -106,10 +107,33 @@ class ProjectCategoryFragment :
                     }
                 }
             }
+
+        //这是针对于WebFragment收藏/取消收藏后的列表收藏更新
+        App.instance()
+            .appViewModel
+            .collectEventLiveData
+            .observe(viewLifecycleOwner) { collectEvent ->
+                val collect = collectEvent.collect
+                val id = collectEvent.id
+                val list = adapter.snapshot().items
+                for (i in list.indices) {    //收藏列表的id 与 首页列表的id 不是同一个
+                    if ((list[i].id == id || (TextUtils.equals(list[i].title, collectEvent.title) &&
+                                TextUtils.equals(list[i].link, collectEvent.link) &&
+                                TextUtils.equals(
+                                    list[i].author,
+                                    collectEvent.author
+                                ))) && list[i].collect != collect
+                    ) {
+                        list[i].collect = collect
+                        adapter.notifyItemChanged(i, Any())
+                    }
+                }
+            }
     }
 
     override fun loadData() {
-        cid?.also { id ->
+        cid?.run {
+            val id = this
             lifecycleScope.launch {
                 projectArticlesViewModel.getArticleListByCategory(id)
                     .collectLatest {
