@@ -31,6 +31,6 @@
         android:title="@string/mine"
         android:icon="@mipmap/menu_me"
         android:orderInCategory="4"
-        app:showAsAction="always"/>
+        app:showAsAction="ifRoom"/>
 </menu>
 

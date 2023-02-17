@@ -12,7 +12,7 @@ import com.wislie.wanandroid.App
 import com.wislie.wanandroid.adapter.LoadStateFooterAdapter
 import com.wislie.wanandroid.adapter.WendaArticleAdapter
 import com.wislie.wanandroid.data.CollectEvent
-import com.wislie.wanandroid.databinding.FragmentWendaListBinding
+import com.wislie.wanandroid.databinding.FragmentToolbarListBinding
 import com.wislie.wanandroid.ext.startLogin
 import com.wislie.wanandroid.viewmodel.ArticlesViewModel
 import kotlinx.coroutines.flow.collectLatest
@@ -21,7 +21,7 @@ import kotlinx.coroutines.launch
 /**
  * 问答
  */
-class WendaListFragment : BaseViewModelFragment<BaseViewModel, FragmentWendaListBinding>() {
+class WendaListFragment : BaseViewModelFragment<BaseViewModel, FragmentToolbarListBinding>() {
 
     private val articlesViewModel: ArticlesViewModel by viewModels()
 
@@ -37,16 +37,13 @@ class WendaListFragment : BaseViewModelFragment<BaseViewModel, FragmentWendaList
         }
     }
 
-    override fun getLayoutResId(): Int {
-        return R.layout.fragment_wenda_list
-    }
 
     override fun init(root: View) {
         super.init(root)
         registerLoadSir(binding.list.swipeRv) {
             adapter.refresh() //点击即刷新
         }
-        binding.list.swipeRefreshLayout.init(adapter){
+        binding.list.swipeRefreshLayout.init(adapter) {
             adapter.refresh() //点击即刷新
         }
         binding.list.swipeRv.adapter =
@@ -93,8 +90,8 @@ class WendaListFragment : BaseViewModelFragment<BaseViewModel, FragmentWendaList
                         break
                     }
                 }
-            } , { errorMsg ->
-            },{
+            }, { errorMsg ->
+            }, {
                 startLogin()
             })
         }
@@ -154,6 +151,10 @@ class WendaListFragment : BaseViewModelFragment<BaseViewModel, FragmentWendaList
                     adapter.submitData(lifecycle, it)
                 }
         }
+    }
+
+    override fun getLayoutResId(): Int {
+        return R.layout.fragment_toolbar_list
     }
 }
 

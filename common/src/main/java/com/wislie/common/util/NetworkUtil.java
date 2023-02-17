@@ -19,27 +19,27 @@ import java.util.Enumeration;
  */
 
 public class NetworkUtil {
-    public static String url = "http://www.baidu.com";
+    public static final String url = "http://www.baidu.com";
     /**
      * NetworkAvailable
      */
-    public static int NET_CNNT_BAIDU_OK = 1;
+    public static final int NET_CNNT_BAIDU_OK = 1;
     /**
      * no NetworkAvailable
      */
-    public static int NET_CNNT_BAIDU_TIMEOUT = 2;
+    public static final int NET_CNNT_BAIDU_TIMEOUT = 2;
     /**
      * Net no ready
      */
-    public static int NET_NOT_PREPARE = 3;
+    public static final int NET_NOT_PREPARE = 3;
     /**
      * net error
      */
-    public static int NET_ERROR = 4;
+    public static final int NET_ERROR = 4;
     /**
      * TIMEOUT
      */
-    private static int TIMEOUT = 3000;
+    private static final int TIMEOUT = 3000;
 
 
     /**

@@ -13,7 +13,7 @@ import com.wislie.common.ext.init
 import com.wislie.wanandroid.App
 import com.wislie.wanandroid.R
 import com.wislie.wanandroid.adapter.FirstPageArticleAdapter
-import com.wislie.wanandroid.databinding.FragmentProjectArticleBinding
+import com.wislie.wanandroid.databinding.FragmentListBinding
 import com.wislie.wanandroid.ext.startLogin
 import com.wislie.wanandroid.viewmodel.ArticlesViewModel
 import kotlinx.coroutines.flow.collectLatest
@@ -23,7 +23,7 @@ import kotlinx.coroutines.launch
  * 项目分类
  */
 class ProjectCategoryFragment :
-    BaseViewModelFragment<BaseViewModel, FragmentProjectArticleBinding>() {
+    BaseViewModelFragment<BaseViewModel, FragmentListBinding>() {
 
     private val projectArticlesViewModel: ArticlesViewModel by viewModels()
     private val adapter by lazy {
@@ -51,10 +51,6 @@ class ProjectCategoryFragment :
         }
         binding.list.swipeRv.adapter = adapter
         adapter.addFreshListener(mBaseLoadService)
-    }
-
-    override fun getLayoutResId(): Int {
-        return R.layout.fragment_project_article
     }
 
     override fun observeData() {
@@ -144,5 +140,9 @@ class ProjectCategoryFragment :
                     }
             }
         }
+    }
+
+    override fun getLayoutResId(): Int {
+        return R.layout.fragment_list
     }
 }

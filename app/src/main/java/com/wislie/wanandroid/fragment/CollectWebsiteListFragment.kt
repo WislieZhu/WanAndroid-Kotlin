@@ -15,7 +15,7 @@ import com.wislie.common.ext.init
 import com.wislie.wanandroid.App
 import com.wislie.wanandroid.R
 import com.wislie.wanandroid.adapter.CollectWebsiteAdapter
-import com.wislie.wanandroid.databinding.FragmentCollectWebsiteListBinding
+import com.wislie.wanandroid.databinding.FragmentListBinding
 import com.wislie.wanandroid.viewmodel.ArticlesViewModel
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
@@ -24,7 +24,7 @@ import kotlinx.coroutines.launch
  * 收藏的网址列表
  */
 class CollectWebsiteListFragment :
-    BaseViewModelFragment<BaseViewModel, FragmentCollectWebsiteListBinding>() {
+    BaseViewModelFragment<BaseViewModel, FragmentListBinding>() {
 
 
     private val articlesViewModel: ArticlesViewModel by viewModels()
@@ -38,7 +38,7 @@ class CollectWebsiteListFragment :
     }
 
     override fun getLayoutResId(): Int {
-        return R.layout.fragment_collect_website_list
+        return R.layout.fragment_list
     }
 
     override fun init(root: View) {

@@ -19,6 +19,7 @@
             <ImageView
                 android:id="@+id/iv_back"
                 android:paddingLeft="@dimen/dp_20"
+                android:paddingRight="@dimen/dp_20"
                 android:layout_gravity="center_vertical"
                 android:src="@mipmap/ic_back"
                 android:layout_width="wrap_content"
@@ -36,6 +37,7 @@
 
             <ImageView
                 android:id="@+id/iv_search"
+                android:paddingLeft="@dimen/dp_20"
                 android:paddingRight="@dimen/dp_20"
                 android:layout_gravity="center_vertical|right"
                 android:src="@mipmap/ic_search"

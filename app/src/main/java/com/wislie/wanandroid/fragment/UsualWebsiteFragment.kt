@@ -12,14 +12,14 @@ import com.wislie.common.ext.init
 import com.wislie.wanandroid.R
 import com.wislie.wanandroid.adapter.LoadStateFooterAdapter
 import com.wislie.wanandroid.adapter.UsualWebsiteAdapter
-import com.wislie.wanandroid.databinding.FragmentUsualWebsiteBinding
+import com.wislie.wanandroid.databinding.FragmentToolbarListBinding
 import com.wislie.wanandroid.viewmodel.ArticlesViewModel
 import kotlinx.coroutines.launch
 
 /**
  * 常用网站
  */
-class UsualWebsiteFragment : BaseViewModelFragment<BaseViewModel, FragmentUsualWebsiteBinding>() {
+class UsualWebsiteFragment : BaseViewModelFragment<BaseViewModel, FragmentToolbarListBinding>() {
 
     private val articlesViewModel: ArticlesViewModel by viewModels()
 
@@ -78,6 +78,6 @@ class UsualWebsiteFragment : BaseViewModelFragment<BaseViewModel, FragmentUsualW
     }
 
     override fun getLayoutResId(): Int {
-        return R.layout.fragment_usual_website
+        return R.layout.fragment_toolbar_list
     }
 }

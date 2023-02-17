@@ -14,7 +14,7 @@ import com.wislie.common.ext.init
 import com.wislie.wanandroid.R
 import com.wislie.wanandroid.adapter.CoinRankAdapter
 import com.wislie.wanandroid.adapter.LoadStateFooterAdapter
-import com.wislie.wanandroid.databinding.FragmentCoinRankListBinding
+import com.wislie.wanandroid.databinding.FragmentToolbarListBinding
 import com.wislie.wanandroid.ext.initFab
 import com.wislie.wanandroid.viewmodel.CoinViewModel
 import kotlinx.coroutines.flow.collectLatest
@@ -28,7 +28,7 @@ import java.io.IOException
  *    desc   : 积分排行版
  *    version: 1.0
  */
-class CoinRankListFragment : BaseViewModelFragment<BaseViewModel, FragmentCoinRankListBinding>() {
+class CoinRankListFragment : BaseViewModelFragment<BaseViewModel, FragmentToolbarListBinding>() {
 
     private val adapter by lazy {
         CoinRankAdapter()
@@ -111,6 +111,6 @@ class CoinRankListFragment : BaseViewModelFragment<BaseViewModel, FragmentCoinRa
     }
 
     override fun getLayoutResId(): Int {
-        return R.layout.fragment_coin_rank_list
+        return R.layout.fragment_toolbar_list
     }
 }

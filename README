@@ -580,6 +580,11 @@ inline 内联函数的原理
     2.减少入栈出栈过程（次要优点）： 内联函数的函数体被固化到函数调用位置，执行过程中减少了栈帧创建、入栈和出栈过程。
     需要注意：如果函数体太大就不适合使用内联函数了，因为会大幅度增加字节码大小
 
+databinding 布局中 include 嵌套layout, 如果要要使用嵌套layout的子控件(假设childId)，需要
+1.设置include 嵌套layout的 id  (假设includeLayoutId)
+2.嵌套layout 也改造成databinding格式
+3.activity/fragment中引用 layout的子控件  binding.includeLayoutId.childId
+
 todo:
 kotlin中 ArrayList与MutableList
 MutableList 默认是 ArrayList
@@ -644,7 +649,7 @@ https://juejin.cn/post/6844904099998089230#heading-71
 1.compose ui版玩Android
 2.APT
 3.android开源库理解和手写
-其他:flutter基础, 设计模式等
+其他:flutter基础, 设计模式, 单元测试等
 
 
 

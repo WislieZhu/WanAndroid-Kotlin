@@ -5,7 +5,7 @@
         android:id="@+id/square_share"
         android:icon="@mipmap/ic_add"
         android:title="添加"
-        app:showAsAction="always" />
+        app:showAsAction="ifRoom" />
 
     <item
         android:id="@+id/tree_search"

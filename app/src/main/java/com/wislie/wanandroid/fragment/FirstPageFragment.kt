@@ -1,10 +1,8 @@
 package com.wislie.wanandroid.fragment
 
 import android.text.TextUtils
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
-import androidx.appcompat.widget.Toolbar
 import androidx.core.content.ContextCompat
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.viewModels
@@ -21,7 +19,7 @@ import com.wislie.wanandroid.adapter.LoadStateFooterAdapter
 import com.wislie.wanandroid.adapter.holder.BannerViewHolder
 import com.wislie.wanandroid.data.Banner
 import com.wislie.wanandroid.data.CollectEvent
-import com.wislie.wanandroid.databinding.FragmentFirstPageBinding
+import com.wislie.wanandroid.databinding.FragmentToolbarListBinding
 import com.wislie.wanandroid.databinding.ItemFirstPageHeaderBinding
 import com.wislie.wanandroid.ext.initFab
 import com.wislie.wanandroid.ext.startLogin
@@ -36,7 +34,7 @@ import kotlinx.coroutines.launch
 /**
  * 首页
  */
-class FirstPageFragment : BaseViewModelFragment<BaseViewModel, FragmentFirstPageBinding>() {
+class FirstPageFragment : BaseViewModelFragment<BaseViewModel, FragmentToolbarListBinding>() {
 
     private val articlesViewModel: ArticlesViewModel by viewModels()
 
@@ -50,10 +48,6 @@ class FirstPageFragment : BaseViewModelFragment<BaseViewModel, FragmentFirstPage
                 }
             }
         }
-    }
-
-    override fun getLayoutResId(): Int {
-        return R.layout.fragment_first_page
     }
 
     override fun init(root: View) {
@@ -215,6 +209,9 @@ class FirstPageFragment : BaseViewModelFragment<BaseViewModel, FragmentFirstPage
                     articlesViewModel.getBanner()
                 }
         }
+    }
+    override fun getLayoutResId(): Int {
+        return R.layout.fragment_toolbar_list
     }
 }
 

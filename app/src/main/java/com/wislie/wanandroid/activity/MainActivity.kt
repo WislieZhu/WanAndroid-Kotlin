@@ -23,13 +23,11 @@ class MainActivity : BaseActivity<ActivityMainBinding>() {
         )
 
     override fun onCreate(savedInstanceState: Bundle?) {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            //设置修改状态栏
-            window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS)
-            //设置状态栏的颜色，和你的APP主题或者标题栏颜色一致就可以了
-            window.statusBarColor = ContextCompat.getColor(this, R.color.purple_500)
-        }
-//        installSplashScreen()
+        //设置修改状态栏
+        window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS)
+        //设置状态栏的颜色，和你的APP主题或者标题栏颜色一致就可以了
+        window.statusBarColor = ContextCompat.getColor(this, R.color.purple_500)
+        //        installSplashScreen()
 
 
         super.onCreate(savedInstanceState)

@@ -30,7 +30,7 @@
     <fragment
         android:id="@+id/fragment_search_article_result"
         android:name="com.wislie.wanandroid.fragment.SearchArticleResultFragment"
-        tools:layout="@layout/fragment_search_article_result">
+        tools:layout="@layout/fragment_toolbar_list">
         <argument
             android:name="hotKey"
             app:argType="string" />
@@ -44,7 +44,7 @@
     <fragment
         android:id="@+id/fragment_coin_rank"
         android:name="com.wislie.wanandroid.fragment.CoinRankListFragment"
-        tools:layout="@layout/fragment_coin_rank_list">
+        tools:layout="@layout/fragment_toolbar_list">
         <action
             android:id="@+id/action_fragment_coin_rank_to_fragment_my_coin"
             app:destination="@id/fragment_my_coin" />
@@ -53,7 +53,7 @@
     <fragment
         android:id="@+id/fragment_my_coin"
         android:name="com.wislie.wanandroid.fragment.MyCoinListFragment"
-        tools:layout="@layout/fragment_my_coin_list"/>
+        tools:layout="@layout/fragment_toolbar_list"/>
 
 
     <!-- 收藏 -->
@@ -95,7 +95,7 @@
     <fragment
         android:id="@+id/fragment_usual_website"
         android:name="com.wislie.wanandroid.fragment.UsualWebsiteFragment"
-        tools:layout="@layout/fragment_usual_website">
+        tools:layout="@layout/fragment_toolbar_list">
 
     </fragment>
 
@@ -116,7 +116,7 @@
     <fragment
         android:id="@+id/fragment_todo_list"
         android:name="com.wislie.wanandroid.fragment.TodoListFragment"
-        tools:layout="@layout/fragment_todo_list">
+        tools:layout="@layout/fragment_toolbar_list">
 
     </fragment>
 

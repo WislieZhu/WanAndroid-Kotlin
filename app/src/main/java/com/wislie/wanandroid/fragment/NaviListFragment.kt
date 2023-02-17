@@ -14,14 +14,14 @@ import com.wislie.common.ext.showErrorCallback
 import com.wislie.wanandroid.App
 import com.wislie.wanandroid.R
 import com.wislie.wanandroid.adapter.NaviListAdapter
-import com.wislie.wanandroid.databinding.FragmentNaviListBinding
+import com.wislie.wanandroid.databinding.FragmentListBinding
 import com.wislie.wanandroid.viewmodel.ArticlesViewModel
 import kotlinx.coroutines.launch
 
 /**
  * 导航列表
  */
-class NaviListFragment : BaseViewModelFragment<BaseViewModel, FragmentNaviListBinding>() {
+class NaviListFragment : BaseViewModelFragment<BaseViewModel, FragmentListBinding>() {
 
     private val articlesViewModel: ArticlesViewModel by viewModels()
 
@@ -116,6 +116,6 @@ class NaviListFragment : BaseViewModelFragment<BaseViewModel, FragmentNaviListBi
     }
 
     override fun getLayoutResId(): Int {
-        return R.layout.fragment_navi_list
+        return R.layout.fragment_list
     }
 }

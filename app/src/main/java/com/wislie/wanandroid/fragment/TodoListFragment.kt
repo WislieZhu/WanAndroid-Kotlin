@@ -12,7 +12,7 @@ import com.wislie.common.ext.init
 import com.wislie.wanandroid.R
 import com.wislie.wanandroid.adapter.LoadStateFooterAdapter
 import com.wislie.wanandroid.adapter.TodoAdapter
-import com.wislie.wanandroid.databinding.FragmentTodoListBinding
+import com.wislie.wanandroid.databinding.FragmentToolbarListBinding
 import com.wislie.wanandroid.viewmodel.TodoViewModel
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
@@ -20,7 +20,7 @@ import kotlinx.coroutines.launch
 /**
  * todo列表
  */
-class TodoListFragment : BaseViewModelFragment<BaseViewModel, FragmentTodoListBinding>() {
+class TodoListFragment : BaseViewModelFragment<BaseViewModel, FragmentToolbarListBinding>() {
 
     private val todoViewModel: TodoViewModel by viewModels()
     private val adapter: TodoAdapter by lazy {
@@ -77,6 +77,6 @@ class TodoListFragment : BaseViewModelFragment<BaseViewModel, FragmentTodoListBi
     }
 
     override fun getLayoutResId(): Int {
-        return R.layout.fragment_todo_list
+        return R.layout.fragment_toolbar_list
     }
 }

@@ -17,7 +17,7 @@ import com.wislie.wanandroid.R
 import com.wislie.wanandroid.adapter.LoadStateFooterAdapter
 import com.wislie.wanandroid.adapter.TreeArticleAdapter
 import com.wislie.wanandroid.data.CollectEvent
-import com.wislie.wanandroid.databinding.FragmentTreeArticleListBinding
+import com.wislie.wanandroid.databinding.FragmentListBinding
 import com.wislie.wanandroid.viewmodel.ArticlesViewModel
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.combine
@@ -28,7 +28,7 @@ import kotlinx.coroutines.launch
  * 体系的文章列表
  */
 class TreeArticleListFragment :
-    BaseViewModelFragment<BaseViewModel, FragmentTreeArticleListBinding>() {
+    BaseViewModelFragment<BaseViewModel, FragmentListBinding>() {
 
     private val articlesViewModel: ArticlesViewModel by viewModels()
     private var articleId: Int? = null
@@ -131,7 +131,7 @@ class TreeArticleListFragment :
     }
 
     override fun getLayoutResId(): Int {
-        return R.layout.fragment_tree_article_list
+        return R.layout.fragment_list
     }
 
     companion object{

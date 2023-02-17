@@ -12,7 +12,7 @@ import com.wislie.common.ext.init
 import com.wislie.wanandroid.R
 import com.wislie.wanandroid.adapter.LoadStateFooterAdapter
 import com.wislie.wanandroid.adapter.MyCoinAdapter
-import com.wislie.wanandroid.databinding.FragmentMyCoinListBinding
+import com.wislie.wanandroid.databinding.FragmentToolbarListBinding
 import com.wislie.wanandroid.ext.initFab
 import com.wislie.wanandroid.viewmodel.CoinViewModel
 import kotlinx.coroutines.flow.collectLatest
@@ -25,7 +25,7 @@ import kotlinx.coroutines.launch
  *    desc   : 我的积分列表
  *    version: 1.0
  */
-class MyCoinListFragment : BaseViewModelFragment<BaseViewModel, FragmentMyCoinListBinding>() {
+class MyCoinListFragment : BaseViewModelFragment<BaseViewModel, FragmentToolbarListBinding>() {
 
     private val adapter by lazy {
         MyCoinAdapter()
@@ -59,10 +59,6 @@ class MyCoinListFragment : BaseViewModelFragment<BaseViewModel, FragmentMyCoinLi
         binding.list.fab.initFab(binding.list.swipeRv)
     }
 
-    override fun getLayoutResId(): Int {
-        return R.layout.fragment_my_coin_list
-    }
-
     override fun loadData() {
         lifecycleScope.launch {
             coinViewModel.myCoinList
@@ -73,5 +69,9 @@ class MyCoinListFragment : BaseViewModelFragment<BaseViewModel, FragmentMyCoinLi
                     adapter.submitData(lifecycle, it)
                 }
         }
+    }
+
+    override fun getLayoutResId(): Int {
+        return R.layout.fragment_toolbar_list
     }
 }

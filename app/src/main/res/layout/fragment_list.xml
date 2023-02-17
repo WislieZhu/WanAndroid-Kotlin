@@ -5,16 +5,12 @@
 
     </data>
 
-
-    <LinearLayout
-        android:orientation="vertical"
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
         <include
             android:id="@+id/list"
             layout="@layout/include_list" />
-    </LinearLayout>
-
-
+    </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

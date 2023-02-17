@@ -12,7 +12,7 @@ import com.wislie.common.ext.init
 import com.wislie.common.ext.showErrorCallback
 import com.wislie.wanandroid.R
 import com.wislie.wanandroid.adapter.TreeListAdapter
-import com.wislie.wanandroid.databinding.FragmentTreeListBinding
+import com.wislie.wanandroid.databinding.FragmentListBinding
 import com.wislie.wanandroid.viewmodel.ArticlesViewModel
 import kotlinx.coroutines.launch
 
@@ -21,7 +21,7 @@ import kotlinx.coroutines.launch
  * 两种不同类型的数据
  *
  */
-class TreeListFragment : BaseViewModelFragment<BaseViewModel, FragmentTreeListBinding>() {
+class TreeListFragment : BaseViewModelFragment<BaseViewModel, FragmentListBinding>() {
 
     private val articlesViewModel: ArticlesViewModel by viewModels()
 
@@ -67,6 +67,6 @@ class TreeListFragment : BaseViewModelFragment<BaseViewModel, FragmentTreeListBi
     }
 
     override fun getLayoutResId(): Int {
-        return R.layout.fragment_tree_list
+        return R.layout.fragment_list
     }
 }

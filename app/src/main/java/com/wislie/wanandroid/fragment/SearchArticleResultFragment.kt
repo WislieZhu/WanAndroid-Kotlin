@@ -16,7 +16,7 @@ import com.wislie.wanandroid.R
 import com.wislie.wanandroid.adapter.LoadStateFooterAdapter
 import com.wislie.wanandroid.adapter.SearchArticleResultAdapter
 import com.wislie.wanandroid.data.CollectEvent
-import com.wislie.wanandroid.databinding.FragmentSearchArticleResultBinding
+import com.wislie.wanandroid.databinding.FragmentToolbarListBinding
 import com.wislie.wanandroid.ext.startLogin
 import com.wislie.wanandroid.viewmodel.ArticlesViewModel
 import com.wislie.wanandroid.viewmodel.SearchViewModel
@@ -27,7 +27,7 @@ import kotlinx.coroutines.launch
  * 文章搜索结果
  */
 class SearchArticleResultFragment :
-    BaseViewModelFragment<SearchViewModel, FragmentSearchArticleResultBinding>() {
+    BaseViewModelFragment<SearchViewModel, FragmentToolbarListBinding>() {
 
     private val args: SearchArticleResultFragmentArgs by navArgs()
     private val searchViewModel: SearchViewModel by viewModels()
@@ -149,7 +149,7 @@ class SearchArticleResultFragment :
     }
 
     override fun getLayoutResId(): Int {
-        return R.layout.fragment_search_article_result
+        return R.layout.fragment_toolbar_list
     }
 
 }

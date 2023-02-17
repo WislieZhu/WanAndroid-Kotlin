@@ -16,7 +16,7 @@ import com.wislie.wanandroid.R
 import com.wislie.wanandroid.adapter.CollectArticleAdapter
 import com.wislie.wanandroid.adapter.LoadStateFooterAdapter
 import com.wislie.wanandroid.data.CollectEvent
-import com.wislie.wanandroid.databinding.FragmentCollectArticleListBinding
+import com.wislie.wanandroid.databinding.FragmentListBinding
 import com.wislie.wanandroid.viewmodel.ArticlesViewModel
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.combine
@@ -26,7 +26,7 @@ import kotlinx.coroutines.launch
  * 收藏的文章列表
  */
 class CollectArticleListFragment :
-    BaseViewModelFragment<BaseViewModel, FragmentCollectArticleListBinding>() {
+    BaseViewModelFragment<BaseViewModel, FragmentListBinding>() {
 
     private val articlesViewModel: ArticlesViewModel by viewModels()
 
@@ -112,6 +112,6 @@ class CollectArticleListFragment :
     }
 
     override fun getLayoutResId(): Int {
-        return R.layout.fragment_collect_article_list
+        return R.layout.fragment_list
     }
 }

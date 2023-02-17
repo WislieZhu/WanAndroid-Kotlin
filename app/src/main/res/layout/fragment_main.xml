@@ -15,9 +15,7 @@
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:layout_weight="1"
-            android:id="@+id/mainViewpager"
-            android:layout_above="@id/bottom_nav"
-            />
+            android:id="@+id/mainViewpager" />
 
         <com.google.android.material.bottomnavigation.BottomNavigationView
             android:id="@+id/bottom_nav"
@@ -30,8 +28,7 @@
             app:menu="@menu/menu_items"
             app:elevation="0dp"
             app:itemIconSize="20dp"
-            android:showAsAction="always|withText"
-            android:layout_alignParentBottom="true"/>
+            android:showAsAction="always|withText" />
 
 
     </LinearLayout>
