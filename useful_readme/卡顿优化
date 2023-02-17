@@ -1,6 +1,6 @@
 
 定义卡顿:
-App的FPS平均值小于30，最小值小于24，即表明应用发生了卡顿
+App的FPS平均值小于30，最小值小于24，即表明应用发生了卡顿； 而流畅画面是60FPS
 卡顿产生原因:
 涉及到代码、内存、绘制、IO、CPU, 最终都会反映到CPU时间上
 
@@ -83,6 +83,9 @@ Systrace 如何使用?
 
 BlockCanary 怎么使用
 
-targetSdk
-compileSdk
-minSdk
+targetSdk:运行时真正用的是targetSdkVersion
+compileSdk:开发时用的sdk，开发中能不能用新特性，取决于你compileSdkVersion够不够高，一般情况越高越好，基本所有API会向下兼容的
+minSdk:兼容到最低的sdk版本，即如果你设置它为14（Android4.0），则Android4.0系统以下的手机就安装不上了
+如果你没有兼容到高版本的sdk，你完全可以把compileSdkVersion降到已经过稳定性验证的targetSdkVersion
+最终的不等式:
+minSdkVersion <= targetSdkVersion <= compileSdkVersion

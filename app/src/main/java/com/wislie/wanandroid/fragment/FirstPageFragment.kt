@@ -58,7 +58,7 @@ class FirstPageFragment : BaseViewModelFragment<BaseViewModel, FragmentFirstPage
 
     override fun init(root: View) {
         super.init(root)
-        root.findViewById<Toolbar>(R.id.toolbar).run {
+        binding.tb.toolbar.run {
             setBackgroundColor(ContextCompat.getColor(hostActivity, R.color.purple_500))
             title = "玩Android"
             inflateMenu(R.menu.first_page_menu)
@@ -74,13 +74,16 @@ class FirstPageFragment : BaseViewModelFragment<BaseViewModel, FragmentFirstPage
                 true
             }
         }
-        registerLoadSir(binding.rvArticles) {
+
+
+        registerLoadSir(binding.list.swipeRv) {
             adapter.refresh() //点击即刷新
         }
-        binding.swipeRefreshLayout.init(adapter){
+        binding.list.swipeRefreshLayout.init(adapter){
             adapter.refresh() //点击即刷新
         }
-        binding.rvArticles.adapter =
+
+        binding.list.swipeRv.adapter =
             adapter.withLoadStateFooter(
                 footer = LoadStateFooterAdapter(
                     retry = { adapter.retry() })
@@ -88,10 +91,10 @@ class FirstPageFragment : BaseViewModelFragment<BaseViewModel, FragmentFirstPage
         adapter.addFreshListener(mBaseLoadService)
         val header: ItemFirstPageHeaderBinding = DataBindingUtil.inflate(
             LayoutInflater.from(hostActivity),
-            R.layout.item_first_page_header, binding.rvArticles, false
+            R.layout.item_first_page_header, binding.list.swipeRv, false
         )
-        binding.rvArticles.addHeaderView(header.root)
-        binding.fab.initFab(binding.rvArticles)
+        binding.list.swipeRv.addHeaderView(header.root)
+        binding.list.fab.initFab(binding.list.swipeRv)
     }
 
     override fun observeData() {
@@ -99,7 +102,7 @@ class FirstPageFragment : BaseViewModelFragment<BaseViewModel, FragmentFirstPage
             viewLifecycleOwner
         ) { resultState ->
             parseState(resultState, { banners ->
-                val header = binding.rvArticles.getChildAt(0)
+                val header = binding.list.swipeRv.getChildAt(0)
                 if (header != null && header is BannerViewPager<*, *>) {
                     val bannerVp = header as BannerViewPager<Banner, BannerViewHolder>
                     val bannerPager = BannerPager()
@@ -205,8 +208,8 @@ class FirstPageFragment : BaseViewModelFragment<BaseViewModel, FragmentFirstPage
             articlesViewModel
                 .articleList
                 .collectLatest {
-                    if (binding.swipeRefreshLayout.isRefreshing) {
-                        binding.swipeRefreshLayout.isRefreshing = false
+                    if (binding.list.swipeRefreshLayout.isRefreshing) {
+                        binding.list.swipeRefreshLayout.isRefreshing = false
                     }
                     adapter.submitData(lifecycle, it)
                     articlesViewModel.getBanner()

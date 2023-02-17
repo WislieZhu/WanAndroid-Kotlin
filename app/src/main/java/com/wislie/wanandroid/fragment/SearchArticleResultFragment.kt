@@ -2,7 +2,6 @@ package com.wislie.wanandroid.fragment
 
 import android.text.TextUtils
 import android.view.View
-import androidx.appcompat.widget.Toolbar
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
@@ -48,7 +47,7 @@ class SearchArticleResultFragment :
     override fun init(root: View) {
         super.init(root)
 
-        root.findViewById<Toolbar>(R.id.toolbar).run {
+        binding.tb.toolbar.run {
             setNavigationIcon(R.mipmap.ic_back)
             setBackgroundColor(ContextCompat.getColor(hostActivity, R.color.purple_500))
             title = args.hotKey
@@ -56,13 +55,13 @@ class SearchArticleResultFragment :
                 findNav().navigateUp()
             }
         }
-        registerLoadSir(binding.rvArticles) {
+        registerLoadSir(binding.list.swipeRv) {
             adapter.refresh() //点击即刷新
         }
-        binding.swipeRefreshLayout.init(adapter) {
+        binding.list.swipeRefreshLayout.init(adapter) {
             adapter.refresh() //点击即刷新
         }
-        binding.rvArticles.adapter = adapter.withLoadStateFooter(
+        binding.list.swipeRv.adapter = adapter.withLoadStateFooter(
             footer = LoadStateFooterAdapter(
                 retry = { adapter.retry() })
         )
@@ -73,8 +72,8 @@ class SearchArticleResultFragment :
         lifecycleScope.launch {
             searchViewModel.getArticleList(args.hotKey)
                 .collectLatest {
-                    if (binding.swipeRefreshLayout.isRefreshing) {
-                        binding.swipeRefreshLayout.isRefreshing = false
+                    if (binding.list.swipeRefreshLayout.isRefreshing) {
+                        binding.list.swipeRefreshLayout.isRefreshing = false
                     }
                     adapter.submitData(lifecycle, it)
                 }

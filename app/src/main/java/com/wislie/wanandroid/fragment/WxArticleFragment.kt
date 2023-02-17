@@ -45,13 +45,13 @@ class WxArticleFragment :
         super.init(root)
         binding.wxArticleStateVm = mViewModel
         accountId = arguments?.getInt("accountId")
-        registerLoadSir(binding.rvWxArticles) {
+        registerLoadSir(binding.list.swipeRv) {
             adapter.refresh() //点击即刷新
         }
-        binding.swipeRefreshLayout.init(adapter){
+        binding.list.swipeRefreshLayout.init(adapter){
             adapter.refresh() //点击即刷新
         }
-        binding.rvWxArticles.adapter =
+        binding.list.swipeRv.adapter =
             adapter.withLoadStateFooter(footer = LoadStateFooterAdapter { adapter.retry() })
         adapter.addFreshListener(mBaseLoadService)
 
@@ -67,8 +67,8 @@ class WxArticleFragment :
             lifecycleScope.launch {
                 articlesViewModel.getWxArticleList(id, mViewModel?.inputContent?.get())
                     .collectLatest {
-                        if (binding.swipeRefreshLayout.isRefreshing) {
-                            binding.swipeRefreshLayout.isRefreshing = false
+                        if (binding.list.swipeRefreshLayout.isRefreshing) {
+                            binding.list.swipeRefreshLayout.isRefreshing = false
                         }
                         adapter.submitData(lifecycle, it)
                     }

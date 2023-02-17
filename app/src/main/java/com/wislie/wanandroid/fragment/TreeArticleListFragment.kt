@@ -2,10 +2,8 @@ package com.wislie.wanandroid.fragment
 
 import android.os.Bundle
 import android.text.TextUtils
-import android.util.Log
 import android.view.View
 import androidx.fragment.app.viewModels
-import androidx.lifecycle.Observer
 import androidx.lifecycle.lifecycleScope
 import androidx.paging.cachedIn
 import androidx.paging.filter
@@ -52,13 +50,13 @@ class TreeArticleListFragment :
         arguments?.run {
             articleId = getInt("cid")
         }
-        registerLoadSir(binding.rvArticles) {
+        registerLoadSir(binding.list.swipeRv) {
             adapter.refresh() //点击即刷新
         }
-        binding.swipeRefreshLayout.init(adapter){
+        binding.list.swipeRefreshLayout.init(adapter){
             adapter.refresh() //点击即刷新
         }
-        binding.rvArticles.adapter =
+        binding.list.swipeRv.adapter =
             adapter.withLoadStateFooter(footer = LoadStateFooterAdapter { adapter.retry() })
         adapter.addFreshListener(mBaseLoadService)
     }
@@ -77,8 +75,8 @@ class TreeArticleListFragment :
                         }
                     }
                     .collectLatest {
-                        if (binding.swipeRefreshLayout.isRefreshing) {
-                            binding.swipeRefreshLayout.isRefreshing = false
+                        if (binding.list.swipeRefreshLayout.isRefreshing) {
+                            binding.list.swipeRefreshLayout.isRefreshing = false
                         }
                         adapter.submitData(lifecycle, it)
                     }

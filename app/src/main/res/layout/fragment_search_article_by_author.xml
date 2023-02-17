@@ -5,28 +5,19 @@
 
     </data>
 
-    <androidx.constraintlayout.widget.ConstraintLayout
-        xmlns:app="http://schemas.android.com/apk/res-auto"
+    <LinearLayout
+        android:orientation="vertical"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:background="@color/color_dddddd">
+        android:layout_height="match_parent">
 
         <include
+            android:id="@+id/tb"
+            android:background="@color/color_dddddd"
             layout="@layout/include_toolbar_search"/>
 
-        <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
-            android:layout_marginTop="?attr/actionBarSize"
-            android:id="@+id/swipe_refresh_layout"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent">
+        <include
+            android:id="@+id/list"
+            layout="@layout/include_list" />
+    </LinearLayout>
 
-            <com.yanzhenjie.recyclerview.SwipeRecyclerView
-                android:id="@+id/rv_search"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager" />
-        </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
-
-
-    </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

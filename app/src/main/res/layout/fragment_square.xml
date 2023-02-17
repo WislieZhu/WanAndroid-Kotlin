@@ -15,7 +15,9 @@
             android:layout_height="?attr/actionBarSize"
             android:background="@color/purple_500">
 
-            <include layout="@layout/include_toolbar" />
+            <include
+                android:id="@+id/tb"
+                layout="@layout/include_toolbar" />
 
             <net.lucode.hackware.magicindicator.MagicIndicator
                 android:id="@+id/indicator_square"

@@ -1,9 +1,6 @@
 package com.wislie.wanandroid.fragment
 
 import android.view.View
-import android.widget.EditText
-import android.widget.ImageView
-import androidx.appcompat.widget.Toolbar
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
@@ -33,7 +30,6 @@ class SearchArticleByAuthorFragment :
 
     private val articlesViewModel: ArticlesViewModel by viewModels()
 
-    private lateinit var inputSearchEt:EditText
     private val adapter by lazy {
         SearchArticleResultAdapter { articleInfo ->
             articleInfo?.run {
@@ -48,20 +44,17 @@ class SearchArticleByAuthorFragment :
 
     override fun init(root: View) {
         super.init(root)
-        root.findViewById<Toolbar>(R.id.toolbar).run {
+        binding.tb.toolbar.run {
             setBackgroundColor(ContextCompat.getColor(hostActivity, R.color.purple_500))
             setNavigationIcon(R.mipmap.ic_back)
             setNavigationOnClickListener {
                 findNav().navigateUp()
             }
         }
-
-        inputSearchEt = root.findViewById<EditText>(R.id.et_input_content)
-        val closeIv = root.findViewById<ImageView>(R.id.iv_close)
-        inputSearchEt.hint = "请输入昵称"
-        inputSearchEt.addTextListener(etAfterTextChanged = { editable ->
+        binding.tb.etInputContent.hint = "请输入昵称"
+        binding.tb.etInputContent.addTextListener(etAfterTextChanged = { editable ->
             editable?.run {
-                closeIv.visibility = if (this.isEmpty()) {
+                binding.tb.ivClose.visibility = if (this.isEmpty()) {
                     View.INVISIBLE
                 } else {
                     View.VISIBLE
@@ -69,18 +62,18 @@ class SearchArticleByAuthorFragment :
                 startSearch(this.toString())
             }
         })
-        closeIv.setOnClickListener {
-            inputSearchEt.setText("")
-            closeIv.visibility = View.INVISIBLE
+        binding.tb.ivClose.setOnClickListener {
+            binding.tb.etInputContent.setText("")
+            binding.tb.ivClose.visibility = View.INVISIBLE
             startSearch("")
         }
-        registerLoadSir(binding.rvSearch) {
+        registerLoadSir(binding.list.swipeRv) {
             adapter.refresh() //点击即刷新
         }
-        binding.swipeRefreshLayout.init(adapter){
+        binding.list.swipeRefreshLayout.init(adapter){
             adapter.refresh()
         }
-        binding.rvSearch.adapter = adapter.withLoadStateFooter(
+        binding.list.swipeRv.adapter = adapter.withLoadStateFooter(
             footer = LoadStateFooterAdapter(
                 retry = { adapter.retry() })
         )
@@ -89,7 +82,7 @@ class SearchArticleByAuthorFragment :
 
     override fun loadData() {
         super.loadData()
-        startSearch(inputSearchEt.text.toString())
+        startSearch(binding.tb.etInputContent.text.toString())
     }
 
     private fun startSearch(author: String) {
@@ -97,8 +90,8 @@ class SearchArticleByAuthorFragment :
             articlesViewModel
                 .getTreeArticleSearchList(author)
                 .collectLatest {
-                    if (binding.swipeRefreshLayout.isRefreshing) {
-                        binding.swipeRefreshLayout.isRefreshing = false
+                    if (binding.list.swipeRefreshLayout.isRefreshing) {
+                        binding.list.swipeRefreshLayout.isRefreshing = false
                     }
                     adapter.submitData(lifecycle, it)
                 }

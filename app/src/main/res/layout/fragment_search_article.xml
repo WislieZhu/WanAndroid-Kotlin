@@ -12,6 +12,7 @@
         android:background="@color/color_dddddd">
 
         <include
+            android:id="@+id/tb"
             layout="@layout/include_toolbar_search"/>
 
         <TextView

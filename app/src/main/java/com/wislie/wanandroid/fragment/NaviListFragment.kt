@@ -31,13 +31,13 @@ class NaviListFragment : BaseViewModelFragment<BaseViewModel, FragmentNaviListBi
 
     override fun init(root: View) {
         super.init(root)
-        registerLoadSir(binding.rvNavi) {
+        registerLoadSir(binding.list.swipeRv) {
             adapter.refresh() //点击即刷新
         }
-        binding.swipeRefreshLayout.init(adapter) {
+        binding.list.swipeRefreshLayout.init(adapter) {
             adapter.refresh() //点击即刷新
         }
-        binding.rvNavi.adapter = adapter
+        binding.list.swipeRv.adapter = adapter
         adapter.addFreshListener(mBaseLoadService)
     }
 
@@ -60,8 +60,8 @@ class NaviListFragment : BaseViewModelFragment<BaseViewModel, FragmentNaviListBi
             }, { errorMsg ->
                 mBaseLoadService.showErrorCallback()
             })
-            if (binding.swipeRefreshLayout.isRefreshing) {
-                binding.swipeRefreshLayout.isRefreshing = false
+            if (binding.list.swipeRefreshLayout.isRefreshing) {
+                binding.list.swipeRefreshLayout.isRefreshing = false
             }
         }
 

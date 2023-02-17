@@ -8,7 +8,6 @@ import android.webkit.WebResourceRequest
 import android.webkit.WebView
 import android.widget.LinearLayout
 import android.widget.Toast
-import androidx.appcompat.widget.Toolbar
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.viewModels
 import com.just.agentweb.AgentWeb
@@ -37,8 +36,6 @@ class WebFragment : BaseViewModelFragment<ArticlesViewModel, FragmentWebBinding>
     private val articlesViewModel: ArticlesViewModel by viewModels()
     private lateinit var mAgentWeb: AgentWeb
 
-    private lateinit var toolbar: Toolbar
-
     private var articleType: Int? = null //文章类型
     private var articleId: Int? = null //文章id
     private var articleOriginId: Int = -1 // 收藏页
@@ -61,8 +58,8 @@ class WebFragment : BaseViewModelFragment<ArticlesViewModel, FragmentWebBinding>
         }
 
 
-        toolbar = root.findViewById(R.id.toolbar)
-        toolbar.run {
+
+        binding.tb.toolbar.run {
             setNavigationIcon(R.mipmap.ic_back)
             setBackgroundColor(ContextCompat.getColor(hostActivity, R.color.purple_500))
             setNavigationOnClickListener {
@@ -185,8 +182,8 @@ class WebFragment : BaseViewModelFragment<ArticlesViewModel, FragmentWebBinding>
     private val mWebChromeClient: WebChromeClient = object : WebChromeClient() {
         override fun onReceivedTitle(view: WebView, t: String) {
             super.onReceivedTitle(view, t)
-            toolbar.title = t
-            toolbar.marquee()
+            binding.tb.toolbar.title = t
+            binding.tb.toolbar.marquee()
         }
     }
 
@@ -275,8 +272,11 @@ class WebFragment : BaseViewModelFragment<ArticlesViewModel, FragmentWebBinding>
      */
     private fun setCollectStatus(collect: Boolean?) {
         collect?.run {
-            toolbar.menu.findItem(R.id.collect).isVisible = !this //收藏
-            toolbar.menu.findItem(R.id.uncollect).isVisible = this //取消收藏
+            val isCollect = this
+            binding.tb.toolbar.menu.run {
+                findItem(R.id.collect).isVisible = !isCollect //收藏
+                findItem(R.id.uncollect).isVisible = isCollect //取消收藏
+            }
         }
     }
 

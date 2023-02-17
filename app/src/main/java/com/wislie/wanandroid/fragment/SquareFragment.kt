@@ -1,7 +1,6 @@
 package com.wislie.wanandroid.fragment
 
 import android.view.View
-import androidx.appcompat.widget.Toolbar
 import androidx.viewpager2.widget.ViewPager2.*
 import com.wislie.common.base.BaseFragment
 import com.wislie.common.ext.findNav
@@ -16,10 +15,9 @@ import net.lucode.hackware.magicindicator.buildins.commonnavigator.CommonNavigat
  */
 class SquareFragment : BaseFragment<FragmentSquareBinding>() {
 
-    private lateinit var toolbar: Toolbar
 
     override fun init(root: View) {
-        toolbar = root.findViewById<Toolbar>(R.id.toolbar).apply {
+        binding.tb.toolbar.apply {
             inflateMenu(R.menu.square_menu)
             setOnMenuItemClickListener {
                 when (it.itemId) {
@@ -59,16 +57,22 @@ class SquareFragment : BaseFragment<FragmentSquareBinding>() {
                 super.onPageSelected(position)
                 when (position) {
                     0 -> {
-                        toolbar.menu.findItem(R.id.square_share).isVisible = true
-                        toolbar.menu.findItem(R.id.tree_search).isVisible = false
+                        binding.tb.toolbar.menu.run {
+                            findItem(R.id.square_share).isVisible = true
+                            findItem(R.id.tree_search).isVisible = false
+                        }
                     }
                     1 -> {
-                        toolbar.menu.findItem(R.id.square_share).isVisible = false
-                        toolbar.menu.findItem(R.id.tree_search).isVisible = true
+                        binding.tb.toolbar.menu.run {
+                            findItem(R.id.square_share).isVisible = false
+                            findItem(R.id.tree_search).isVisible = true
+                        }
                     }
                     else -> {
-                        toolbar.menu.findItem(R.id.square_share).isVisible = false
-                        toolbar.menu.findItem(R.id.tree_search).isVisible = false
+                        binding.tb.toolbar.menu.run {
+                            findItem(R.id.square_share).isVisible = false
+                            findItem(R.id.tree_search).isVisible = false
+                        }
                     }
                 }
             }

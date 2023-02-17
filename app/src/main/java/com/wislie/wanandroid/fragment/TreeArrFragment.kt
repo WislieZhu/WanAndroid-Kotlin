@@ -69,10 +69,7 @@ class TreeArrFragment : BaseFragment<FragmentTreeArrBinding>() {
         )
     }
 
-
     override fun getLayoutResId(): Int {
         return R.layout.fragment_tree_arr
     }
-
-
 }

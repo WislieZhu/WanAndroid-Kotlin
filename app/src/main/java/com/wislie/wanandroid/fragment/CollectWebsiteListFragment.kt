@@ -43,13 +43,13 @@ class CollectWebsiteListFragment :
 
     override fun init(root: View) {
         super.init(root)
-        registerLoadSir(binding.rvWebsite) {
+        registerLoadSir(binding.list.swipeRv) {
             adapter.refresh() //点击即刷新
         }
-        binding.swipeRefreshLayout.init(adapter) {
+        binding.list.swipeRefreshLayout.init(adapter) {
             adapter.refresh() //点击即刷新
         }
-        binding.rvWebsite.adapter = adapter
+        binding.list.swipeRv.adapter = adapter
         adapter.addFreshListener(mBaseLoadService)
     }
 
@@ -59,8 +59,8 @@ class CollectWebsiteListFragment :
         articlesViewModel.collectWebsiteListLiveData
             .observe(viewLifecycleOwner) { resultState ->
                 parseStateNoLogin(resultState) { websiteInfoList ->
-                    if (binding.swipeRefreshLayout.isRefreshing) {
-                        binding.swipeRefreshLayout.isRefreshing = false
+                    if (binding.list.swipeRefreshLayout.isRefreshing) {
+                        binding.list.swipeRefreshLayout.isRefreshing = false
                     }
                     lifecycleScope.launch {
                         websiteInfoList?.run {

@@ -1,3 +1,29 @@
 1.CPU和GPU
 
 
+
+
+1.界面绘制层级深
+RelativeLayout的问题:
+RelativeLayout会对子View做两次测量,LinearLayout中有weight属性，也需要进行两次测量，但是因为没有更多的依赖关系，所以仍然会比RelativeLayout的效率高(可以验证)
+使用Merge:
+merge的原理：在Android布局的源码中，如果是Merge标签，那么直接将其中的子元素添加到Merge标签Parent中
+    1、Merge只能用在布局XML文件的根元素。
+    2、使用merge来加载一个布局时，必须指定一个ViewGroup作为其父元素，并且要设置加载的attachToRoot参数为true。
+    3、不能在ViewStub中使用Merge标签。原因就是ViewStub的inflate方法中根本没有attachToRoot的设置
+使用ViewStub:
+
+使用include:
+
+
+
+2.数据处理在ui线程
+
+
+1.使用profiler查看布局层级
+2.profile cpu 如何使用?
+
+adb命令将具体的渲染耗时输出到日志中来分析:
+adb shell dumpsys gfxinfo 包名
+
+延迟初始化怎么做?

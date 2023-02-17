@@ -43,13 +43,13 @@ class WendaListFragment : BaseViewModelFragment<BaseViewModel, FragmentWendaList
 
     override fun init(root: View) {
         super.init(root)
-        registerLoadSir(binding.rvArticles) {
+        registerLoadSir(binding.list.swipeRv) {
             adapter.refresh() //点击即刷新
         }
-        binding.swipeRefreshLayout.init(adapter){
+        binding.list.swipeRefreshLayout.init(adapter){
             adapter.refresh() //点击即刷新
         }
-        binding.rvArticles.adapter =
+        binding.list.swipeRv.adapter =
             adapter.withLoadStateFooter(footer = LoadStateFooterAdapter(retry = {
                 adapter.retry()
             }))
@@ -148,8 +148,8 @@ class WendaListFragment : BaseViewModelFragment<BaseViewModel, FragmentWendaList
             articlesViewModel
                 .wendaArticleList
                 .collectLatest {
-                    if (binding.swipeRefreshLayout.isRefreshing) {
-                        binding.swipeRefreshLayout.isRefreshing = false
+                    if (binding.list.swipeRefreshLayout.isRefreshing) {
+                        binding.list.swipeRefreshLayout.isRefreshing = false
                     }
                     adapter.submitData(lifecycle, it)
                 }

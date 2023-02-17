@@ -1,7 +1,6 @@
 package com.wislie.wanandroid.fragment
 
 import android.view.View
-import androidx.appcompat.widget.Toolbar
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
@@ -30,7 +29,7 @@ class UsualWebsiteFragment : BaseViewModelFragment<BaseViewModel, FragmentUsualW
 
     override fun init(root: View) {
         super.init(root)
-        root.findViewById<Toolbar>(R.id.toolbar).run {
+        binding.tb.toolbar.run {
             setNavigationIcon(R.mipmap.ic_back)
             setBackgroundColor(ContextCompat.getColor(hostActivity, R.color.purple_500))
             title = "常用网站"
@@ -39,13 +38,13 @@ class UsualWebsiteFragment : BaseViewModelFragment<BaseViewModel, FragmentUsualW
             }
         }
 
-        registerLoadSir(binding.rvWeb) {
+        registerLoadSir(binding.list.swipeRv) {
             adapter.refresh() //点击即刷新
         }
-        binding.swipeRefreshLayout.init(adapter){
+        binding.list.swipeRefreshLayout.init(adapter) {
             adapter.refresh() //点击即刷新
         }
-        binding.rvWeb.adapter =
+        binding.list.swipeRv.adapter =
             adapter.withLoadStateFooter(
                 footer = LoadStateFooterAdapter(
                     retry = { adapter.retry() })
@@ -59,8 +58,8 @@ class UsualWebsiteFragment : BaseViewModelFragment<BaseViewModel, FragmentUsualW
             .usualWebsiteLiveData
             .observe(viewLifecycleOwner) { resultState ->
                 parseState(resultState, { dataList ->
-                    if (binding.swipeRefreshLayout.isRefreshing) {
-                        binding.swipeRefreshLayout.isRefreshing = false
+                    if (binding.list.swipeRefreshLayout.isRefreshing) {
+                        binding.list.swipeRefreshLayout.isRefreshing = false
                     }
                     dataList?.run {
                         lifecycleScope.launch {

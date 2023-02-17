@@ -31,13 +31,13 @@ class TreeListFragment : BaseViewModelFragment<BaseViewModel, FragmentTreeListBi
 
     override fun init(root: View) {
         super.init(root)
-        registerLoadSir(binding.rvTree) {
+        registerLoadSir(binding.list.swipeRv) {
             adapter.refresh() //点击即刷新
         }
-        binding.swipeRefreshLayout.init(adapter) {
+        binding.list.swipeRefreshLayout.init(adapter) {
             adapter.refresh() //点击即刷新
         }
-        binding.rvTree.adapter = adapter
+        binding.list.swipeRv.adapter = adapter
         adapter.addFreshListener(mBaseLoadService)
     }
 
@@ -49,6 +49,9 @@ class TreeListFragment : BaseViewModelFragment<BaseViewModel, FragmentTreeListBi
     override fun observeData() {
         super.observeData()
         articlesViewModel.treeListLiveData.observe(viewLifecycleOwner) { resultState ->
+            if (binding.list.swipeRefreshLayout.isRefreshing) {
+                binding.list.swipeRefreshLayout.isRefreshing = false
+            }
             parseState(resultState, { treeList ->
                 treeList?.run {
                     //list 数据填充
@@ -60,9 +63,6 @@ class TreeListFragment : BaseViewModelFragment<BaseViewModel, FragmentTreeListBi
             }, { errorMsg ->
                 mBaseLoadService.showErrorCallback()
             })
-            if (binding.swipeRefreshLayout.isRefreshing) {
-                binding.swipeRefreshLayout.isRefreshing = false
-            }
         }
     }
 

@@ -1,6 +1,5 @@
 package com.wislie.wanandroid.fragment
 
-import android.util.Log
 import android.view.View
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
@@ -42,13 +41,13 @@ class CollectArticleListFragment :
 
     override fun init(root: View) {
         super.init(root)
-        registerLoadSir(binding.rvArticle) {
+        registerLoadSir(binding.list.swipeRv) {
             adapter.refresh() //点击即刷新
         }
-        binding.swipeRefreshLayout.init(adapter){
+        binding.list.swipeRefreshLayout.init(adapter) {
             adapter.refresh() //点击即刷新
         }
-        binding.rvArticle.adapter =
+        binding.list.swipeRv.adapter =
             adapter.withLoadStateFooter(footer = LoadStateFooterAdapter { adapter.retry() })
         adapter.addFreshListener(mBaseLoadService)
     }
@@ -65,8 +64,8 @@ class CollectArticleListFragment :
                     }
                 }
                 .collectLatest {
-                    if (binding.swipeRefreshLayout.isRefreshing) {
-                        binding.swipeRefreshLayout.isRefreshing = false
+                    if (binding.list.swipeRefreshLayout.isRefreshing) {
+                        binding.list.swipeRefreshLayout.isRefreshing = false
                     }
                     adapter.submitData(lifecycle, it)
                 }
@@ -91,7 +90,7 @@ class CollectArticleListFragment :
                             break
                         }
                     }
-                },{ errorMsg->
+                }, { errorMsg ->
 
                 })
             }

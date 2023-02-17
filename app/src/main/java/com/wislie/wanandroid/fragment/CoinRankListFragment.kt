@@ -2,7 +2,6 @@ package com.wislie.wanandroid.fragment
 
 import android.util.Log
 import android.view.View
-import androidx.appcompat.widget.Toolbar
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
@@ -39,7 +38,7 @@ class CoinRankListFragment : BaseViewModelFragment<BaseViewModel, FragmentCoinRa
 
     override fun init(root: View) {
         super.init(root)
-        root.findViewById<Toolbar>(R.id.toolbar).run {
+        binding.tb.toolbar.run {
             setNavigationIcon(R.mipmap.ic_back)
             setBackgroundColor(ContextCompat.getColor(hostActivity, R.color.purple_500))
             title = "积分排行版"
@@ -59,19 +58,19 @@ class CoinRankListFragment : BaseViewModelFragment<BaseViewModel, FragmentCoinRa
                 true
             }
         }
-        registerLoadSir(binding.rvCoinRank) {
+        registerLoadSir(binding.list.swipeRv) {
             adapter.refresh() //点击即刷新
         }
-        binding.swipeRefreshLayout.init(adapter){
+        binding.list.swipeRefreshLayout.init(adapter){
             adapter.refresh() //点击即刷新
         }
-        binding.rvCoinRank.adapter =
+        binding.list.swipeRv.adapter =
             adapter.withLoadStateFooter(
                 footer = LoadStateFooterAdapter(
                     retry = { adapter.retry() })
             )
         adapter.addFreshListener(mBaseLoadService)
-        binding.fab.initFab(binding.rvCoinRank)
+        binding.list.fab.initFab(binding.list.swipeRv)
     }
 
     override fun observeData() {
@@ -103,8 +102,8 @@ class CoinRankListFragment : BaseViewModelFragment<BaseViewModel, FragmentCoinRa
         lifecycleScope.launch {
             coinViewModel.coinRankList
                 .collectLatest {
-                    if (binding.swipeRefreshLayout.isRefreshing) {
-                        binding.swipeRefreshLayout.isRefreshing = false
+                    if (binding.list.swipeRefreshLayout.isRefreshing) {
+                        binding.list.swipeRefreshLayout.isRefreshing = false
                     }
                     adapter.submitData(lifecycle, it)
                 }
