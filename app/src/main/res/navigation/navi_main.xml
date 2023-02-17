@@ -120,4 +120,11 @@
 
     </fragment>
 
+    <fragment
+        android:id="@+id/fragment_update_todo"
+        android:name="com.wislie.wanandroid.fragment.UpdateTodoFragment"
+        tools:layout="@layout/fragment_todo">
+
+    </fragment>
+
 </navigation>

@@ -168,4 +168,38 @@ interface ApiService {
         @Path("page") pageNo: Long
     ): ApiResponse<ApiPageResponse<ToDoInfo>?> //todo列表数据
 
+    @POST("lg/todo/add/json")
+    @FormUrlEncoded
+    suspend fun addTodo(
+        @Field("title") title: String,
+        @Field("content") content: String,
+        @Field("date") date: String,
+        @Field("type") type: Int,
+        @Field("priority ") priority: Int
+    ): ApiResponse<Any?> //新增一个todo
+
+    @POST("lg/todo/update/{id}/json")
+    @FormUrlEncoded
+    suspend fun updateTodo(
+        @Path("id") id: Int,
+        @Field("title") title: String,
+        @Field("content") content: String,
+        @Field("date") date: String,
+        @Field("status") status: Int,
+        @Field("type") type: Int,
+        @Field("priority ") priority: Int
+    ): ApiResponse<ToDoInfo?> //更新一个Todo
+
+
+    @POST("lg/todo/delete/{id}/json")
+    @FormUrlEncoded
+    suspend fun deleteTodo(
+        @Path("id") id: Int
+    ): ApiResponse<Any?> //删除一个Todo
+
+    @POST("lg/todo/done/{id}/json")
+    @FormUrlEncoded
+    suspend fun updateTodoDone(
+        @Path("id") id: Int
+    ): ApiResponse<Any?> //仅更新完成状态Todo
 }
