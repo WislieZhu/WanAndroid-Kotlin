@@ -11,6 +11,7 @@ import com.wislie.common.base.parseState
 import com.wislie.common.ext.findNav
 import com.wislie.wanandroid.R
 import com.wislie.wanandroid.databinding.FragmentTodoBinding
+import com.wislie.wanandroid.ext.showCalendar
 import com.wislie.wanandroid.viewmodel.TodoViewModel
 
 /**
@@ -60,7 +61,11 @@ class UpdateTodoFragment : BaseViewModelFragment<BaseViewModel, FragmentTodoBind
             }
         }
 
-        binding.btnCommit.setOnClickListener {
+        binding.tvChooseDate.setOnClickListener { //选择日期
+            showCalendar()
+        }
+
+       /* binding.btnCommit.setOnClickListener {
             when{
                 id == null -> return@setOnClickListener
                 title.isNullOrEmpty() -> Toast.makeText(
@@ -83,7 +88,7 @@ class UpdateTodoFragment : BaseViewModelFragment<BaseViewModel, FragmentTodoBind
                     todoViewModel.updateTodo(id!!, title!!, content!!, dateStr!!, status, type, priority!!)
                 }
             }
-        }
+        }*/
 
     }
 

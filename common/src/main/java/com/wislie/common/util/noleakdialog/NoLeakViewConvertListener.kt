@@ -8,7 +8,7 @@ import com.shehuan.nicedialog.ViewHolder
 abstract class NoLeakViewConvertListener : Parcelable{
 
     constructor()
-    abstract fun convertView(holder: ViewHolder?, dialog: com.wislie.common.util.noleakdialog.BNiceDialog?)
+    abstract fun convertView(holder: ViewHolder?, dialog: BNiceDialog?)
     override fun describeContents() = 0
 
     override fun writeToParcel(dest: Parcel?, flags: Int) {
@@ -19,7 +19,7 @@ abstract class NoLeakViewConvertListener : Parcelable{
         override fun createFromParcel(parcel: Parcel): NoLeakViewConvertListener {
             return object : NoLeakViewConvertListener() {
 
-                override fun convertView(holder: ViewHolder?, dialog: com.wislie.common.util.noleakdialog.BNiceDialog?) {
+                override fun convertView(holder: ViewHolder?, dialog: BNiceDialog?) {
 
                 }
             }

@@ -92,6 +92,8 @@ dependencies {
     kapt deps.room.compiler
     implementation deps.room.paging
 
+    implementation deps.calendarview
+
 
 //    debugApi deps.blockcanary.android
 //    releaseApi deps.blockcanary.no_op

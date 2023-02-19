@@ -145,6 +145,8 @@
                 android:layout_height="wrap_content"/>
         </RadioGroup>
 
+
+
         <Button
             android:id="@+id/btn_commit"
             android:text="提交"
