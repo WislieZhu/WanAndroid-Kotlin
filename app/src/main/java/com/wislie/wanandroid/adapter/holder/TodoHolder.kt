@@ -49,6 +49,7 @@ class TodoHolder(
             Log.i("wislieZhu","onDeleteBtnCilck index=$index")
 //            mIDeleteBtnClickListener.onDeleteBtnCilck(v, index)
             onDeleteClick.invoke(binding.todoInfo)
+            closeMenu()
         }
         binding.leftSv.setSlidingButtonListener(this)
     }
@@ -61,18 +62,22 @@ class TodoHolder(
     }
 
     override fun onMenuIsOpen(view: View) {
-        mMenu = view as LeftSlideView
+        mMenu = view as LeftSlideView //todo 得看看menu是不是LeftSlideView
+        Log.i("wislieZhu","onMenuIsOpen menu是否为空:${mMenu==null}")
     }
 
     override fun onDownOrMove(leftSlideView: LeftSlideView) {
         if (menuIsOpen()) {
+            Log.i("wislieZhu","onDownOrMove menu是否为空:${mMenu==null}")
             if (mMenu != leftSlideView) {
+                Log.i("wislieZhu","onDownOrMove:mMenu != leftSlideView")
                 closeMenu()
             }
         }
     }
 
     private fun menuIsOpen():Boolean{
+        Log.i("wislieZhu","menu是否为空:${mMenu==null}")
         mMenu?.run {
             return true
         }
@@ -80,6 +85,7 @@ class TodoHolder(
     }
 
     private fun closeMenu(){
+        Log.i("wislieZhu","closeMenu:${mMenu==null}")
         mMenu?.closeMenu()
         mMenu = null
     }

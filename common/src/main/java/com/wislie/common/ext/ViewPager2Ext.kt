@@ -12,7 +12,6 @@ fun BottomNavigationView.bindViewPager2(viewPager2: ViewPager2, actionItemId:Int
         viewPager2.setCurrentItem(item.order, false);
         true
     }
-    itemIconTintList = null
     selectedItemId = actionItemId
 }
 
