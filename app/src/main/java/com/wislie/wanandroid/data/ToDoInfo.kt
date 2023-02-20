@@ -14,5 +14,6 @@ data class ToDoInfo(
     var status: Int,
     var title: String,
     var type: Int,
-    val userId: Int
+    val userId: Int,
+    var isOpen:Boolean = false
 )

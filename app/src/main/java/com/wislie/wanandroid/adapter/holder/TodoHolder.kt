@@ -1,15 +1,16 @@
 package com.wislie.wanandroid.adapter.holder
 
 import android.os.Bundle
-import android.util.Log
 import android.view.View
+import android.widget.Toast
+import com.d.lib.slidelayout.SlideLayout
+import com.d.lib.slidelayout.SlideLayout.OnStateChangeListener
 import com.wislie.common.base.BaseVHolder
 import com.wislie.common.ext.findNav
-import com.wislie.common.util.Utils
 import com.wislie.wanandroid.R
 import com.wislie.wanandroid.data.ToDoInfo
 import com.wislie.wanandroid.databinding.ItemTodoBinding
-import com.wislie.wanandroid.widget.LeftSlideView
+import com.wislie.wanandroid.util.SlideHelper
 
 /**
  * to do
@@ -17,76 +18,59 @@ import com.wislie.wanandroid.widget.LeftSlideView
 class TodoHolder(
     override val binding: ItemTodoBinding, onDeleteClick:(ToDoInfo?)->Unit
 ) :
-    BaseVHolder<ToDoInfo>(binding), LeftSlideView.IonSlidingButtonListener  {
+    BaseVHolder<ToDoInfo>(binding)  {
 
-    private var mMenu:LeftSlideView? = null
 
     private var index:Int = 0
 
     init {
 
-        binding.layoutContent.layoutParams.width =
-            Utils.getScreenWidth(binding.root.context) - Utils.dp2px(binding.root.context, 20f)
-        binding.layoutContent.setOnClickListener {v->
-            //判断是否有删除菜单打开
-            if (menuIsOpen()) {
-                closeMenu()//关闭菜单
-            } else {
-                val bundle = Bundle().apply {
-                    val todo = binding.todoInfo
-                    putInt("id", todo?.id ?: -1)
-                    putString("title", todo?.title)
-                    putString("content", todo?.content)
-                    putString("dateStr", todo?.dateStr)
-                    putInt("status", todo?.status ?: 0)
-                    putInt("type", todo?.type ?: 0)
-                    putInt("priority", todo?.priority ?: 0)
-                }
-                v.findNav().navigate(R.id.fragment_update_todo, bundle)
+        val mSlideHelper = SlideHelper()
+        binding.slSlide.setOnStateChangeListener(object : OnStateChangeListener() {
+            override fun onInterceptTouchEvent(layout: SlideLayout): Boolean {
+                val result: Boolean = mSlideHelper.closeAll(layout)
+                return false
             }
+
+            override fun onStateChanged(layout: SlideLayout, open: Boolean) {
+                binding.todoInfo?.isOpen = open
+                mSlideHelper.onStateChanged(layout, open)
+            }
+        })
+        binding.tvStick.setOnClickListener {
+            binding.slSlide.setOpen(false,false)
         }
-        binding.tvDelete.setOnClickListener {v->
-            Log.i("wislieZhu","onDeleteBtnCilck index=$index")
-//            mIDeleteBtnClickListener.onDeleteBtnCilck(v, index)
+        binding.tvDelete.setOnClickListener { //删除
+            binding.slSlide.close()
             onDeleteClick.invoke(binding.todoInfo)
-            closeMenu()
         }
-        binding.leftSv.setSlidingButtonListener(this)
+        binding.slSlide.setOnClickListener{ v->
+            if(binding.slSlide.isOpen){
+                binding.slSlide.close()
+                return@setOnClickListener
+            }
+            val bundle = Bundle().apply {
+                val todo = binding.todoInfo
+                putInt("id", todo?.id ?: -1)
+                putString("title", todo?.title)
+                putString("content", todo?.content)
+                putString("dateStr", todo?.dateStr)
+                putInt("status", todo?.status ?: 0)
+                putInt("type", todo?.type ?: 0)
+                putInt("priority", todo?.priority ?: 0)
+            }
+            v.findNav().navigate(R.id.fragment_update_todo, bundle)
+        }
+
     }
 
 
     override fun bind(data: ToDoInfo?, position: Int) {
+        data?.run {
+            binding.slSlide.setOpen(this.isOpen, false)
+        }
         binding.todoInfo = data
         index = position
         binding.executePendingBindings()
-    }
-
-    override fun onMenuIsOpen(view: View) {
-        mMenu = view as LeftSlideView //todo 得看看menu是不是LeftSlideView
-        Log.i("wislieZhu","onMenuIsOpen menu是否为空:${mMenu==null}")
-    }
-
-    override fun onDownOrMove(leftSlideView: LeftSlideView) {
-        if (menuIsOpen()) {
-            Log.i("wislieZhu","onDownOrMove menu是否为空:${mMenu==null}")
-            if (mMenu != leftSlideView) {
-                Log.i("wislieZhu","onDownOrMove:mMenu != leftSlideView")
-                closeMenu()
-            }
-        }
-    }
-
-    private fun menuIsOpen():Boolean{
-        Log.i("wislieZhu","menu是否为空:${mMenu==null}")
-        mMenu?.run {
-            return true
-        }
-        return false
-    }
-
-    private fun closeMenu(){
-        Log.i("wislieZhu","closeMenu:${mMenu==null}")
-        mMenu?.closeMenu()
-        mMenu = null
     }
 }

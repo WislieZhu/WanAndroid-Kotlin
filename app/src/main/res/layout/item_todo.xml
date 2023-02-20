@@ -3,36 +3,36 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools">
 
-    <data>
-
-        <variable
-            name="todoInfo"
-            type="com.wislie.wanandroid.data.ToDoInfo" />
-    </data>
-
-
-    <com.wislie.wanandroid.widget.LeftSlideView
-        android:id="@+id/left_sv"
+    <androidx.cardview.widget.CardView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_margin="10dp">
+        android:layout_margin="@dimen/dp_5">
 
-
-        <androidx.constraintlayout.widget.ConstraintLayout
+        <com.d.lib.slidelayout.SlideLayout
+            android:id="@+id/sl_slide"
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
+
 
             <LinearLayout
                 android:id="@+id/layout_content"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                app:layout_constraintLeft_toLeftOf="parent"
-                app:layout_constraintTop_toTopOf="parent">
+                android:orientation="horizontal">
 
                 <RelativeLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content">
+
+                    <ImageView
+                        android:id="@+id/item_todo_status"
+                        android:layout_width="48dp"
+                        android:layout_height="48dp"
+                        android:layout_alignParentEnd="true"
+                        android:layout_centerVertical="true"
+                        android:layout_marginEnd="36dp"
+                        app:srcCompat="@mipmap/ic_done"
+                        app:todoStatus="@{todoInfo.status}" />
 
                     <LinearLayout
                         android:layout_width="match_parent"
@@ -56,6 +56,25 @@
                                 app:layout_constraintTop_toTopOf="parent"
                                 app:todoStatusIcon="@{todoInfo.status}" />
 
+                            <ImageView
+                                android:id="@+id/item_todo_setting"
+                                android:layout_width="36dp"
+                                android:layout_height="50dp"
+                                android:layout_gravity="center_vertical"
+                                android:paddingTop="16dp"
+                                android:paddingBottom="16dp"
+                                android:src="@mipmap/ic_more" />
+
+                            <TextView
+                                android:id="@+id/item_todo_date"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_gravity="center_vertical"
+                                android:text="@{todoInfo.dateStr}"
+                                android:textColor="@color/color_666"
+                                android:textSize="12dp"
+                                tools:text="2019-09-04" />
+
                             <TextView
                                 android:id="@+id/item_todo_title"
                                 android:layout_width="0dp"
@@ -73,33 +92,7 @@
                                 android:textColor="@color/black"
                                 android:textSize="16dp"
                                 tools:text="今天晚上一起来开黑啊" />
-
-                            <TextView
-                                android:id="@+id/item_todo_date"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:layout_gravity="center_vertical"
-                                android:text="@{todoInfo.dateStr}"
-                                android:textColor="@color/color_666"
-                                android:textSize="12dp"
-                                tools:text="2019-09-04" />
-
-                            <ImageView
-                                android:id="@+id/item_todo_setting"
-                                android:layout_width="36dp"
-                                android:layout_height="50dp"
-                                android:layout_gravity="center_vertical"
-                                android:paddingTop="16dp"
-                                android:paddingBottom="16dp"
-                                android:src="@mipmap/ic_more" />
                         </LinearLayout>
-
-                        <View
-                            android:layout_width="match_parent"
-                            android:layout_height="0.5dp"
-                            android:layout_marginLeft="8dp"
-                            android:layout_marginRight="8dp"
-                            android:background="@color/color_CCCCCC" />
 
                         <TextView
                             android:id="@+id/item_todo_content"
@@ -115,36 +108,54 @@
                             android:textColor="@color/color_666"
                             android:textSize="14dp"
                             tools:text="来一起打王者啊？我关羽6双鞋，跑的贼鸡儿快" />
-                    </LinearLayout>
 
-                    <ImageView
-                        android:id="@+id/item_todo_status"
-                        android:layout_width="48dp"
-                        android:layout_height="48dp"
-                        android:layout_alignParentEnd="true"
-                        android:layout_centerVertical="true"
-                        android:layout_marginEnd="36dp"
-                        app:srcCompat="@mipmap/ic_done"
-                        app:todoStatus="@{todoInfo.status}" />
+                        <View
+                            android:layout_width="match_parent"
+                            android:layout_height="0.5dp"
+                            android:layout_marginLeft="8dp"
+                            android:layout_marginRight="8dp"
+                            android:background="@color/color_CCCCCC" />
+                    </LinearLayout>
                 </RelativeLayout>
 
             </LinearLayout>
 
-            <TextView
-                android:id="@+id/tv_delete"
-                android:layout_width="80dp"
-                android:layout_height="0dp"
-                android:background="@color/color_FF0000"
-                android:gravity="center"
-                android:text="删 除"
-                android:textColor="@color/white"
-                android:textSize="25dp"
-                app:layout_constraintBottom_toBottomOf="@id/layout_content"
-                app:layout_constraintLeft_toRightOf="@id/layout_content"
-                app:layout_constraintTop_toTopOf="@id/layout_content"
-                app:layout_constraintVertical_weight="1" />
+            <!-- Slide view -->
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:orientation="horizontal">
 
-        </androidx.constraintlayout.widget.ConstraintLayout>
-    </com.wislie.wanandroid.widget.LeftSlideView>
+                <TextView
+                    android:id="@+id/tv_stick"
+                    android:layout_width="80dp"
+                    android:layout_height="match_parent"
+                    android:background="#C7C7CD"
+                    android:gravity="center"
+                    android:text="DONE"
+                    android:textColor="@color/white"
+                    android:textSize="14dp" />
+
+                <TextView
+                    android:id="@+id/tv_delete"
+                    android:layout_width="80dp"
+                    android:layout_height="match_parent"
+                    android:background="#FF3A30"
+                    android:gravity="center"
+                    android:text="DELETE"
+                    android:textColor="@color/white"
+                    android:textSize="14dp" />
+            </LinearLayout>
+
+
+        </com.d.lib.slidelayout.SlideLayout>
+    </androidx.cardview.widget.CardView>
+
+    <data>
+
+        <variable
+            name="todoInfo"
+            type="com.wislie.wanandroid.data.ToDoInfo" />
+    </data>
 
 </layout>

@@ -94,7 +94,7 @@ dependencies {
 
     implementation deps.calendarview
 
-
+    implementation deps.slidelayout
 //    debugApi deps.blockcanary.android
 //    releaseApi deps.blockcanary.no_op
 
