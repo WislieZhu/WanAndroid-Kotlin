@@ -92,7 +92,7 @@
     <com.haibin.calendarview.CalendarLayout
         android:id="@+id/calendarLayout"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="wrap_content"
         android:background="#fff"
         android:orientation="vertical">
 
@@ -116,7 +116,7 @@
             app:scheme_theme_color="#128c4b"
             app:selected_lunar_text_color="#fff"
             app:selected_text_color="#fff"
-            app:selected_theme_color="#046cea"
+            app:selected_theme_color="@color/purple_500"
             app:week_background="#fff"
             app:week_start_with="mon"
             app:week_text_color="#e1e1e1"
@@ -132,6 +132,36 @@
             app:year_view_week_text_size="6sp" />
 
     </com.haibin.calendarview.CalendarLayout>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="@dimen/dp_30">
+        <TextView
+            android:id="@+id/tv_confirm"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:text="确定"
+            android:textColor="@color/purple_500"
+            android:textSize="15sp"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            />
+
+        <TextView
+            android:id="@+id/tv_cancel"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:text="取消"
+            android:layout_marginRight="@dimen/dp_30"
+            android:textColor="@color/purple_500"
+            android:textSize="15sp"
+            app:layout_constraintBottom_toBottomOf="@id/tv_confirm"
+            app:layout_constraintRight_toLeftOf="@id/tv_confirm"
+            app:layout_constraintTop_toTopOf="@id/tv_confirm" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
 
 </LinearLayout>

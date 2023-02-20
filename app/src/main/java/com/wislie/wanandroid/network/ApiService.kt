@@ -175,8 +175,8 @@ interface ApiService {
         @Field("content") content: String,
         @Field("date") date: String,
         @Field("type") type: Int,
-        @Field("priority ") priority: Int
-    ): ApiResponse<Any?> //新增一个todo
+        @Field("priority") priority: Int
+    ): ApiResponse<ToDoInfo?> //新增一个todo
 
     @POST("lg/todo/update/{id}/json")
     @FormUrlEncoded
@@ -187,12 +187,11 @@ interface ApiService {
         @Field("date") date: String,
         @Field("status") status: Int,
         @Field("type") type: Int,
-        @Field("priority ") priority: Int
+        @Field("priority") priority: Int
     ): ApiResponse<ToDoInfo?> //更新一个Todo
 
 
     @POST("lg/todo/delete/{id}/json")
-    @FormUrlEncoded
     suspend fun deleteTodo(
         @Path("id") id: Int
     ): ApiResponse<Any?> //删除一个Todo

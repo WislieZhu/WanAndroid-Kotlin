@@ -10,11 +10,10 @@ import com.wislie.wanandroid.databinding.ItemTodoBinding
 /**
  * to do 适配器
  */
-class TodoAdapter :
+class TodoAdapter(private val onDeleteClick:(ToDoInfo?)->Unit) :
     BaseAdapter<ToDoInfo, ItemTodoBinding, TodoHolder>(callback) {
-
     override fun onCreateViewHolder(binding: ItemTodoBinding): TodoHolder {
-        return TodoHolder(binding)
+        return TodoHolder(binding, onDeleteClick)
     }
 
     override fun getItemLayoutId(): Int {

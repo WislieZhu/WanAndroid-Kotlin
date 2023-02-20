@@ -10,6 +10,8 @@ import android.view.LayoutInflater
 import android.view.View
 import android.widget.EditText
 import android.widget.ImageView
+import android.widget.RadioButton
+import android.widget.RadioGroup
 import android.widget.TextView
 import androidx.core.content.ContextCompat
 import androidx.core.graphics.drawable.DrawableCompat
@@ -240,10 +242,50 @@ fun bindTodoStatusIcon(view: ImageView, status: Int?) { //首页的文章标题
     val tintDrawable: Drawable = DrawableCompat.wrap(view.drawable).mutate()
     status?.run {
         if (status == 0) {
-            DrawableCompat.setTint(tintDrawable, ContextCompat.getColor(view.context,R.color.purple_500))
+            DrawableCompat.setTint(
+                tintDrawable,
+                ContextCompat.getColor(view.context, R.color.purple_500)
+            )
         } else if (status == 1) {
             DrawableCompat.setTint(tintDrawable, Color.RED)
         }
     }
     view.setImageDrawable(tintDrawable)
+}
+
+@BindingAdapter(value = ["checkedChange"])
+fun RadioGroup.bindCheckedChange(l: RadioGroup.OnCheckedChangeListener) {
+    setOnCheckedChangeListener(l)
+}
+
+@BindingAdapter(value = ["todoType"])
+fun bindRadioButtonType(radioGroup: RadioGroup, type: Int?) {
+    type?.run {
+        if (this == 1) {
+            radioGroup.findViewById<RadioButton>(R.id.rb_job).isChecked = true
+            radioGroup.findViewById<RadioButton>(R.id.rb_life).isChecked = false
+            radioGroup.findViewById<RadioButton>(R.id.rb_entertainment).isChecked = false
+        } else if (this == 2) {
+            radioGroup.findViewById<RadioButton>(R.id.rb_job).isChecked = false
+            radioGroup.findViewById<RadioButton>(R.id.rb_life).isChecked = true
+            radioGroup.findViewById<RadioButton>(R.id.rb_entertainment).isChecked = false
+        } else if (this == 3) {
+            radioGroup.findViewById<RadioButton>(R.id.rb_job).isChecked = false
+            radioGroup.findViewById<RadioButton>(R.id.rb_life).isChecked = false
+            radioGroup.findViewById<RadioButton>(R.id.rb_entertainment).isChecked = true
+        }
+    }
+}
+
+@BindingAdapter(value = ["todoPriority"])
+fun bindRadioButtonPriority(radioGroup: RadioGroup, priority: Int?) {
+    priority?.run {
+        if (this == 1) {
+            radioGroup.findViewById<RadioButton>(R.id.rb_import).isChecked = true
+            radioGroup.findViewById<RadioButton>(R.id.rb_generate).isChecked = false
+        } else if (this == 2) {
+            radioGroup.findViewById<RadioButton>(R.id.rb_import).isChecked = false
+            radioGroup.findViewById<RadioButton>(R.id.rb_generate).isChecked = true
+        }
+    }
 }

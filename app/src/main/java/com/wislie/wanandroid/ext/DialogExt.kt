@@ -1,17 +1,11 @@
 package com.wislie.wanandroid.ext
 
-import android.util.Log
 import android.view.Gravity
 import android.view.View
-import android.widget.RelativeLayout
 import android.widget.TextView
-import android.widget.Toast
 import com.haibin.calendarview.Calendar
-import com.haibin.calendarview.Calendar.Scheme
-import com.haibin.calendarview.CalendarLayout
 import com.haibin.calendarview.CalendarView
 import com.haibin.calendarview.CalendarView.OnCalendarSelectListener
-import com.haibin.calendarview.CalendarView.OnYearChangeListener
 import com.shehuan.nicedialog.ViewHolder
 import com.wislie.common.base.BaseFragment
 import com.wislie.common.util.noleakdialog.BNiceDialog
@@ -30,7 +24,7 @@ import com.wislie.wanandroid.R
 /**
  * 清理搜索历史
  */
-fun BaseFragment<*>.clearSearchHistory(confirm:()->Unit){
+inline fun BaseFragment<*>.clearSearchHistory(crossinline confirm: () -> Unit) {
     val frag = this
     activity?.let {
         if (!it.isFinishing) {
@@ -46,21 +40,21 @@ fun BaseFragment<*>.clearSearchHistory(confirm:()->Unit){
                     setConvertListener(object : NoLeakViewConvertListener() {
                         override fun convertView(holder: ViewHolder?, dialog: BNiceDialog?) {
                             holder?.run {
-                                this.setOnClickListener(R.id.tv_clear_confirm, object : View.OnClickListener{
-                                    override fun onClick(v: View?) {
-                                        confirm()
-                                        dialog?.run {
-                                            dismiss()
-                                        }
+                                this.setOnClickListener(
+                                    R.id.tv_clear_confirm
+                                ) {
+                                    confirm()
+                                    dialog?.run {
+                                        dismiss()
                                     }
-                                })
-                                this.setOnClickListener(R.id.tv_clear_cancel, object : View.OnClickListener{
-                                    override fun onClick(v: View?) {
-                                        dialog?.run {
-                                            dismiss()
-                                        }
+                                }
+                                this.setOnClickListener(
+                                    R.id.tv_clear_cancel
+                                ) {
+                                    dialog?.run {
+                                        dismiss()
                                     }
-                                })
+                                }
                             }
                         }
                     })
@@ -71,7 +65,7 @@ fun BaseFragment<*>.clearSearchHistory(confirm:()->Unit){
     }
 }
 
-fun BaseFragment<*>.showCalendar(){
+inline fun BaseFragment<*>.showCalendar(crossinline confirm: (Int, Int, Int) -> Unit) {
     val frag = this
     activity?.let {
         if (!it.isFinishing) {
@@ -87,30 +81,27 @@ fun BaseFragment<*>.showCalendar(){
                     setConvertListener(object : NoLeakViewConvertListener() {
                         override fun convertView(holder: ViewHolder?, dialog: BNiceDialog?) {
                             holder?.run {
-                                val mTextMonthDay =holder.getView<TextView>(R.id.tv_month_day)
-                                val mTextYear = holder.getView<TextView>(R.id.tv_year)
-                                val mTextLunar = holder.getView<TextView>(R.id.tv_lunar)
-                                val mCalendarLayout = holder.getView<CalendarLayout>(R.id.calendarLayout)
-                                val mCalendarView = holder.getView<CalendarView>(R.id.calendarView)
-                                val  mTextCurrentDay = holder.getView<TextView>(R.id.tv_current_day)
-                                mTextYear.text = mCalendarView.curYear.toString()
-                                var mYear = mCalendarView.curYear
-                                mTextMonthDay.text = mCalendarView.curMonth
-                                    .toString() + "月" + mCalendarView.curDay + "日"
-                                mTextLunar.text = "今日"
-                                mTextCurrentDay.text = mCalendarView.curDay.toString()
-                                mTextMonthDay.setOnClickListener(View.OnClickListener {
-                                    if (!mCalendarLayout.isExpand) {
-                                        mCalendarLayout.expand()
-                                        return@OnClickListener
-                                    }
-                                })
+                                val textMonthDay = holder.getView<TextView>(R.id.tv_month_day)
+                                val textYear = holder.getView<TextView>(R.id.tv_year)
+                                val textLunar = holder.getView<TextView>(R.id.tv_lunar)
+                                val calendarView = holder.getView<CalendarView>(R.id.calendarView)
+                                val textCurrentDay = holder.getView<TextView>(R.id.tv_current_day)
+                                textYear.text = calendarView.curYear.toString()
+                                var year = calendarView.curYear
+                                var month = calendarView.curMonth
+                                var day = calendarView.curDay
+                                textMonthDay.text = calendarView.curMonth
+                                    .toString() + "月" + calendarView.curDay + "日"
+                                textLunar.text = "今日"
+                                textCurrentDay.text = calendarView.curDay.toString()
+
                                 holder.setOnClickListener(R.id.fl_current,
                                     View.OnClickListener {
-                                        mCalendarView.scrollToCurrent()
+                                        calendarView.scrollToCurrent()
                                     })
 
-                                mCalendarView.setOnCalendarSelectListener(object :OnCalendarSelectListener{
+                                calendarView.setOnCalendarSelectListener(object :
+                                    OnCalendarSelectListener {
                                     override fun onCalendarOutOfRange(calendar: Calendar?) {
 
                                     }
@@ -119,47 +110,28 @@ fun BaseFragment<*>.showCalendar(){
                                         calendar: Calendar,
                                         isClick: Boolean
                                     ) {
-                                        mTextLunar.visibility = View.VISIBLE
-                                        mTextYear.visibility = View.VISIBLE
-                                        mTextMonthDay.text =
+                                        textLunar.visibility = View.VISIBLE
+                                        textYear.visibility = View.VISIBLE
+                                        textMonthDay.text =
                                             calendar.month.toString() + "月" + calendar.day + "日"
-                                        mTextYear.text = calendar.year.toString()
-                                        mTextLunar.text = calendar.lunar
-                                        mYear = calendar.year
+                                        textYear.text = calendar.year.toString()
+                                        textLunar.text = calendar.lunar
+                                        year = calendar.year
+                                        month = calendar.month
+                                        day = calendar.day
+                                    }
+                                })
+                                calendarView.setOnYearChangeListener { year ->
+                                    textMonthDay.text = year.toString()
+                                }
 
-                                        Log.e(
-                                            "onDateSelected", "  -- " + calendar.year +
-                                                    "  --  " + calendar.month +
-                                                    "  -- " + calendar.day +
-                                                    "  --  " + isClick + "  --   " + calendar.scheme
-                                        )
-                                    }
-                                })
-                                mCalendarView.setOnYearChangeListener(object :OnYearChangeListener{
-                                    override fun onYearChange(year: Int) {
-                                        mTextMonthDay.text = year.toString()
-                                    }
-
-                                })
-                                mCalendarView.setOnClickCalendarPaddingListener(object :CalendarView.OnClickCalendarPaddingListener{
-                                    override fun onClickCalendarPadding(
-                                        x: Float,
-                                        y: Float,
-                                        isMonthView: Boolean,
-                                        adjacentCalendar: Calendar?,
-                                        obj: Any?
-                                    ) {
-                                        Log.e(
-                                            "onClickCalendarPadding",
-                                            "  --  $x  $y  $obj  $adjacentCalendar"
-                                        )
-                                        Toast.makeText(
-                                            hostActivity,
-                                            adjacentCalendar?.year.toString() + "年，第" + obj + "周",
-                                            Toast.LENGTH_SHORT
-                                        ).show()
-                                    }
-                                })
+                                holder.setOnClickListener(R.id.tv_confirm) { //确定
+                                    confirm.invoke(year, month, day)
+                                    dialog?.dismiss()
+                                }
+                                holder.setOnClickListener(R.id.tv_cancel) { //取消
+                                    dialog?.dismiss()
+                                }
                             }
                         }
                     })

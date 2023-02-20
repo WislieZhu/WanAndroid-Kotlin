@@ -122,7 +122,14 @@
 
     <fragment
         android:id="@+id/fragment_update_todo"
-        android:name="com.wislie.wanandroid.fragment.UpdateTodoFragment"
+        android:name="com.wislie.wanandroid.fragment.TodoUpdateFragment"
+        tools:layout="@layout/fragment_todo">
+
+    </fragment>
+
+    <fragment
+        android:id="@+id/fragment_add_todo"
+        android:name="com.wislie.wanandroid.fragment.TodoAddFragment"
         tools:layout="@layout/fragment_todo">
 
     </fragment>

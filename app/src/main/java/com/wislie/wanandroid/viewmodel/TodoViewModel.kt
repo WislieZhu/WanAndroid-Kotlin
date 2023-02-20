@@ -23,7 +23,7 @@ class TodoViewModel : BaseViewModel() {
             .flow
     }
 
-     val todoLiveData:MutableLiveData<ResultState<ToDoInfo?>> = MutableLiveData()
+    val todoUpdateLiveData: MutableLiveData<ResultState<ToDoInfo?>> = MutableLiveData()
 
     //更新todo
     fun updateTodo(
@@ -36,8 +36,41 @@ class TodoViewModel : BaseViewModel() {
         priority: Int
     ) {
         request({
-            apiService.updateTodo(id,title, content, date, status, type, priority)
-        },todoLiveData, isShowDialog = true)
+            apiService.updateTodo(id, title, content, date, status, type, priority)
+        }, todoUpdateLiveData, isShowDialog = true)
+    }
+
+    val todoAddLiveData: MutableLiveData<ResultState<ToDoInfo?>> = MutableLiveData()
+
+    //添加todo
+    fun addTodo(
+        title: String,
+        content: String,
+        date: String,
+        type: Int, //生活1,工作2,娱乐3
+        priority: Int
+    ) {
+        request({
+            apiService.addTodo(title, content, date, type, priority)
+        }, todoAddLiveData, isShowDialog = true)
+    }
+
+
+    val todoDelLiveData: MutableLiveData<ResultState<Int>> = MutableLiveData()
+
+    //删除todo
+    fun deleteTodo(
+        id: Int
+    ) {
+        request({
+            apiService.deleteTodo(id)
+        },{
+            todoDelLiveData.value = ResultState.Success(id)
+        }, { exception, errorCode ->
+            todoDelLiveData.value = ResultState.Error(exception, errorCode)
+        }, { loadingMessage, isShowingDialog ->
+            todoDelLiveData.value = ResultState.Loading(loadingMessage, isShowingDialog)
+        })
     }
 
 }
