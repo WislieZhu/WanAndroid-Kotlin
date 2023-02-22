@@ -79,9 +79,6 @@ class TodoAddFragment : BaseViewModelFragment<TodoStateViewModel, FragmentTodoBi
             parseState(resultState, { todoInfo ->
                 App.instance().appViewModel.todoInfoAddLiveData.value = todoInfo
                 findNav().navigateUp()
-            }, { errorMsg ->
-
-
             })
         }
     }

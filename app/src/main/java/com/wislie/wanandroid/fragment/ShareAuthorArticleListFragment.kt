@@ -8,7 +8,7 @@ import androidx.lifecycle.lifecycleScope
 import com.wislie.common.base.BaseViewModel
 import com.wislie.common.base.BaseViewModelFragment
 import com.wislie.common.base.parseState
-import com.wislie.common.ext.addFreshListener
+import com.wislie.common.ext.addStateListener
 import com.wislie.common.ext.init
 import com.wislie.wanandroid.App
 import com.wislie.wanandroid.R
@@ -62,7 +62,7 @@ class ShareAuthorArticleListFragment :
         registerLoadSir(binding.list.swipeRv) {
             adapter.refresh() //点击即刷新
         }
-        binding.list.swipeRefreshLayout.init(adapter) {
+        binding.list.swipeRefreshLayout.init{
             adapter.refresh() //点击即刷新
         }
 
@@ -71,7 +71,7 @@ class ShareAuthorArticleListFragment :
                 footer = LoadStateFooterAdapter(
                     retry = { adapter.retry() })
             )
-        adapter.addFreshListener(mBaseLoadService)
+        adapter.addStateListener(hostActivity, mBaseLoadService)
         binding.list.fab.initFab(binding.list.swipeRv)
     }
 
@@ -92,8 +92,7 @@ class ShareAuthorArticleListFragment :
                         break
                     }
                 }
-            }, { errorMsg ->
-            }, {
+            },  {
                 startLogin()
             })
         }
@@ -113,7 +112,6 @@ class ShareAuthorArticleListFragment :
                         break
                     }
                 }
-            }, { errorMsg ->
             }, {
                 startLogin()
             })

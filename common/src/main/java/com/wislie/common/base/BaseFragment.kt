@@ -65,7 +65,7 @@ fun <R> BaseFragment<*>.parseStateNoLogin(
             success.invoke(resultState.data)
         }
         is ResultState.Error -> {
-            Toast.makeText(hostActivity, "${resultState.exception.message}", Toast.LENGTH_SHORT)
+            Toast.makeText(hostActivity, "${resultState.exception.errorMsg}", Toast.LENGTH_SHORT)
                 .show()
         }
         is ResultState.Loading -> {
@@ -82,7 +82,7 @@ fun <R> BaseFragment<*>.parseStateNoLogin(
 fun <R> BaseFragment<*>.parseState(
     resultState: ResultState<R>,
     success: (R) -> Unit,
-    error:(String?)->Unit,
+    error:((String?)->Unit)? = null,
     login: (() -> Unit)? = null
 ) {
     when (resultState) {
@@ -90,13 +90,13 @@ fun <R> BaseFragment<*>.parseState(
             success.invoke(resultState.data)
         }
         is ResultState.Error -> {
-            Toast.makeText(hostActivity, "${resultState.exception.message}", Toast.LENGTH_SHORT)
+            Toast.makeText(hostActivity, "${resultState.exception.errorMsg}", Toast.LENGTH_SHORT)
                 .show()
             if (resultState.errorCode == -1001) {
                 login?.invoke()
                 return
             }
-            error.invoke(resultState.exception.message)
+            error?.invoke(resultState.exception.message)
         }
         is ResultState.Loading -> {
             if (resultState.isShownDialog) {
@@ -118,7 +118,7 @@ fun <R> BaseFragment<*>.parseListState(
             success.invoke(resultState.data, resultState.position)
         }
         is ResultState.Error -> {
-            Toast.makeText(hostActivity, "${resultState.exception.message}", Toast.LENGTH_SHORT)
+            Toast.makeText(hostActivity, "${resultState.exception.errorMsg}", Toast.LENGTH_SHORT)
                 .show()
             if (resultState.errorCode == -1001) {
                 login?.invoke()

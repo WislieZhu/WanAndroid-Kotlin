@@ -32,11 +32,6 @@ class ArticlesViewModel : BaseViewModel() {
                 }
             })
             .flow
-
-        /* Pager(
-             PagingConfig(pageSize = 1),
-             pagingSourceFactory = { WendaArticlePagingSource() })
-             .flow*/
     }
 
     /**
@@ -53,21 +48,7 @@ class ArticlesViewModel : BaseViewModel() {
                 }
             })
             .flow
-
-        /*Pager(
-            PagingConfig(pageSize = 1),
-            pagingSourceFactory = { CollectArticlePagingSource() })
-            .flow*/
     }
-
-    /**
-     * 问答评论列表
-     */
-   /* fun getWendaCommentList(id: Int) =
-        Pager(
-            PagingConfig(pageSize = 1),
-            pagingSourceFactory = { WendaCommentPagingSource(id) })
-            .flow*/
 
 
     val bannerResultLiveData by lazy {
@@ -112,12 +93,6 @@ class ArticlesViewModel : BaseViewModel() {
                 }
             })
             .flow
-
-    /*    Pager(
-            PagingConfig(pageSize = 1),
-            pagingSourceFactory = { ArticleCategoryPagingSource(cid) })
-            .flow*/
-
 
     val usualWebsiteLiveData by lazy {
         MutableLiveData<ResultState<List<UsualWebsite>?>>()
@@ -299,11 +274,6 @@ class ArticlesViewModel : BaseViewModel() {
             })
             .flow
 
-       /* Pager(
-            PagingConfig(pageSize = 1),
-            pagingSourceFactory = { WxArticlePagingSource(id, key) })
-            .flow*/
-
     /**
      * 广场文章列表
      */
@@ -318,11 +288,6 @@ class ArticlesViewModel : BaseViewModel() {
                 }
             })
             .flow
-
-       /* Pager(
-            PagingConfig(pageSize = 1),
-            pagingSourceFactory = { SquareArticlePagingSource() })
-            .flow*/
     }
 
     /**
@@ -353,10 +318,6 @@ class ArticlesViewModel : BaseViewModel() {
                 }
             })
             .flow
-      /*  Pager(
-            PagingConfig(pageSize = 1),
-            pagingSourceFactory = { TreeArticlePagingSource(id) })
-            .flow*/
 
     /**
      * 按照作者昵称搜索文章
@@ -372,11 +333,6 @@ class ArticlesViewModel : BaseViewModel() {
                 }
             })
             .flow
-
-       /* Pager(
-            PagingConfig(pageSize = 1),
-            pagingSourceFactory = { TreeArticleSearchPagingSource(author) })
-            .flow*/
 
     /**
      * 获取导航列表
@@ -398,26 +354,5 @@ class ArticlesViewModel : BaseViewModel() {
         PagingConfig(pageSize = 1),
         pagingSourceFactory = { ShareAuthorArticlePagingSource(id) })
         .flow
-
-    /*  fun getShareAuthorArticleList(id: Int) = Pager(
-          PagingConfig(pageSize = 1),
-          pagingSourceFactory = {
-              BasePagingSource { currentPage ->
-                  runBlocking {
-                      apiService.getShareAuthorArticles(id, currentPage)
-                  }
-              }
-          })
-          .flow*/
-    /*  Pager(
-          PagingConfig(pageSize = 1),
-          pagingSourceFactory = {
-              BasePagingSource { currentPage ->
-                  runBlocking {
-                      apiService.getShareAuthorArticles(id, currentPage)
-                  }
-              }
-          })
-          .flow*/
 
 }

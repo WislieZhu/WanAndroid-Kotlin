@@ -10,7 +10,7 @@ import androidx.paging.filter
 import com.wislie.common.base.BaseViewModel
 import com.wislie.common.base.BaseViewModelFragment
 import com.wislie.common.base.parseState
-import com.wislie.common.ext.addFreshListener
+import com.wislie.common.ext.addStateListener
 import com.wislie.common.ext.init
 import com.wislie.wanandroid.App
 import com.wislie.wanandroid.R
@@ -53,12 +53,12 @@ class TreeArticleListFragment :
         registerLoadSir(binding.list.swipeRv) {
             adapter.refresh() //点击即刷新
         }
-        binding.list.swipeRefreshLayout.init(adapter){
+        binding.list.swipeRefreshLayout.init{
             adapter.refresh() //点击即刷新
         }
         binding.list.swipeRv.adapter =
             adapter.withLoadStateFooter(footer = LoadStateFooterAdapter { adapter.retry() })
-        adapter.addFreshListener(mBaseLoadService)
+        adapter.addStateListener(hostActivity, mBaseLoadService)
     }
 
     override fun loadData() {
@@ -103,7 +103,6 @@ class TreeArticleListFragment :
                             break
                         }
                     }
-                }, { errorMsg ->
                 })
             }
 

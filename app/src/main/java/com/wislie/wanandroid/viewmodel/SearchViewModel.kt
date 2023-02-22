@@ -7,6 +7,7 @@ import androidx.paging.PagingConfig
 import com.wislie.common.base.BaseViewModel
 import com.wislie.common.base.ResultState
 import com.wislie.common.base.request
+import com.wislie.common.network.AppException
 import com.wislie.wanandroid.data.HotKey
 import com.wislie.wanandroid.datasource.BasePagingSource
 import com.wislie.wanandroid.db.AppDatabase
@@ -46,10 +47,6 @@ class SearchViewModel : BaseViewModel() {
             })
             .flow
 
-        /*Pager(
-            PagingConfig(pageSize = 1),
-            pagingSourceFactory = { ArticleSearchPagingSource(hotKey) })
-            .flow*/
 
     /**
      * 所有的搜索记录
@@ -76,7 +73,7 @@ class SearchViewModel : BaseViewModel() {
             if (row > 0) {
                 searchKeyLiveData.value = ResultState.Success(searchKey)
             } else {
-                searchKeyLiveData.value = ResultState.Error(Exception("删除出错了"))
+                searchKeyLiveData.value = ResultState.Error(AppException(0,"删除出错了"))
             }
         }
     }

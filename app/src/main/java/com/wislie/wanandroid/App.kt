@@ -64,7 +64,7 @@ class App : Application() {
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
             val file = File("/data/anr")
-            Log.i("wislieZhu","file 是否存在 ${file.exists()}")
+//            Log.i("wislieZhu","file 是否存在 ${file.exists()}")
             val fileObserver =   ANRFileObserver(file)
             fileObserver.startWatching()
         }

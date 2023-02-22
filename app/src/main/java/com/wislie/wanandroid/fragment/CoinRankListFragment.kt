@@ -8,7 +8,7 @@ import androidx.lifecycle.lifecycleScope
 import androidx.paging.LoadState
 import com.wislie.common.base.BaseViewModel
 import com.wislie.common.base.BaseViewModelFragment
-import com.wislie.common.ext.addFreshListener
+import com.wislie.common.ext.addStateListener
 import com.wislie.common.ext.findNav
 import com.wislie.common.ext.init
 import com.wislie.wanandroid.R
@@ -61,7 +61,7 @@ class CoinRankListFragment : BaseViewModelFragment<BaseViewModel, FragmentToolba
         registerLoadSir(binding.list.swipeRv) {
             adapter.refresh() //点击即刷新
         }
-        binding.list.swipeRefreshLayout.init(adapter){
+        binding.list.swipeRefreshLayout.init{
             adapter.refresh() //点击即刷新
         }
         binding.list.swipeRv.adapter =
@@ -69,7 +69,7 @@ class CoinRankListFragment : BaseViewModelFragment<BaseViewModel, FragmentToolba
                 footer = LoadStateFooterAdapter(
                     retry = { adapter.retry() })
             )
-        adapter.addFreshListener(mBaseLoadService)
+        adapter.addStateListener(hostActivity, mBaseLoadService)
         binding.list.fab.initFab(binding.list.swipeRv)
     }
 
@@ -84,7 +84,7 @@ class CoinRankListFragment : BaseViewModelFragment<BaseViewModel, FragmentToolba
                     Log.i("wislieZhu", "is Loading")
                 }
                 is LoadState.Error -> {
-                    Log.i("wislieZhu", "is Error:")
+                    Log.i("wislieZhu","刷新加载出错=${(it.refresh as LoadState.Error).error.message}")
                     when ((it.refresh as LoadState.Error).error) {
                         is IOException -> {
                             Log.i("wislieZhu", "IOException")
