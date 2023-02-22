@@ -1,10 +1,13 @@
 package com.wislie.wanandroid.fragment
 
 import android.os.Bundle
+import android.util.Log
+import android.view.View
 import androidx.fragment.app.viewModels
 import com.wislie.common.base.BaseViewModel
 import com.wislie.common.base.BaseViewModelFragment
 import com.wislie.common.base.parseState
+import com.wislie.common.ext.showErrorCallback
 import com.wislie.wanandroid.R
 import com.wislie.wanandroid.adapter.MultiCategoryPagerAdapter
 import com.wislie.wanandroid.data.ProjectCategory
@@ -20,6 +23,14 @@ class ProjectFragment : BaseViewModelFragment<BaseViewModel, FragmentProjectBind
 
     private val projectViewModel: ArticlesViewModel by viewModels()
 
+    override fun init(root: View) {
+        super.init(root)
+        registerLoadSir(binding.vpProject) {
+            loadData()
+        }
+    }
+
+
     override fun loadData() {
         projectViewModel.getProjectCategory()
     }
@@ -28,8 +39,10 @@ class ProjectFragment : BaseViewModelFragment<BaseViewModel, FragmentProjectBind
         projectViewModel.projectCategoryLiveData
             .observe(viewLifecycleOwner) { resultState ->
                 parseState(resultState, { projectCategories ->
+                    mBaseLoadService.showSuccess()
                     projectCategories?.also(::createChildFrags)
-                }, { errorMsg ->
+                }, {
+                    mBaseLoadService.showErrorCallback()
                 })
             }
     }

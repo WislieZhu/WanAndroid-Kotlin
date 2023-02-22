@@ -1,15 +1,14 @@
 package com.wislie.wanandroid.fragment
 
 import android.os.Bundle
-import android.util.Log
 import android.view.View
 import androidx.fragment.app.viewModels
 import com.wislie.common.base.BaseViewModel
 import com.wislie.common.base.BaseViewModelFragment
 import com.wislie.common.base.parseState
+import com.wislie.common.ext.showErrorCallback
 import com.wislie.wanandroid.R
 import com.wislie.wanandroid.adapter.MultiCategoryPagerAdapter
-import com.wislie.wanandroid.data.ProjectCategory
 import com.wislie.wanandroid.data.WxAccountInfo
 import com.wislie.wanandroid.databinding.FragmentWxAccountBinding
 import com.wislie.wanandroid.ext.setNavigator
@@ -20,6 +19,13 @@ class WxAccountFragment : BaseViewModelFragment<BaseViewModel, FragmentWxAccount
 
     private val articlesViewModel: ArticlesViewModel by viewModels()
 
+    override fun init(root: View) {
+        super.init(root)
+        registerLoadSir(binding.vpWxAccount) {
+            loadData()
+        }
+    }
+
     override fun loadData() {
         articlesViewModel.getWxAccountList()
     }
@@ -29,8 +35,10 @@ class WxAccountFragment : BaseViewModelFragment<BaseViewModel, FragmentWxAccount
         articlesViewModel.wxAccountListLiveData
             .observe(viewLifecycleOwner) { resultState ->
                 parseState(resultState, { categories ->
+                    mBaseLoadService.showSuccess()
                     categories?.also(::createChildFrags)
-                }, { errorMsg ->
+                }, {
+                    mBaseLoadService.showErrorCallback()
                 })
             }
     }

@@ -69,7 +69,6 @@ class FirstPageFragment : BaseViewModelFragment<BaseViewModel, FragmentToolbarLi
             }
         }
 
-
         registerLoadSir(binding.list.swipeRv) {
             adapter.refresh() //点击即刷新
         }
