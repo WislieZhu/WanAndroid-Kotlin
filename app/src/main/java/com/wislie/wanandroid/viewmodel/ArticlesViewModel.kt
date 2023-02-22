@@ -313,7 +313,7 @@ class ArticlesViewModel : BaseViewModel() {
             pagingSourceFactory = {
                 BasePagingSource(0) { currentPage ->
                     runBlocking {
-                        apiService.getTreeArticleList(currentPage,id)
+                        apiService.getTreeArticleList(currentPage, id)
                     }
                 }
             })
@@ -328,7 +328,7 @@ class ArticlesViewModel : BaseViewModel() {
             pagingSourceFactory = {
                 BasePagingSource(0) { currentPage ->
                     runBlocking {
-                        apiService.getTreeArticleList(currentPage,author)
+                        apiService.getTreeArticleList(currentPage, author)
                     }
                 }
             })
@@ -350,9 +350,49 @@ class ArticlesViewModel : BaseViewModel() {
     /**
      * 分享者的文章列表
      */
-    fun getShareAuthorArticleList(id: Int) = Pager(
-        PagingConfig(pageSize = 1),
-        pagingSourceFactory = { ShareAuthorArticlePagingSource(id) })
-        .flow
+    fun getShareAuthorArticleList(id: Int) =
+        Pager(
+            PagingConfig(pageSize = 1),
+            pagingSourceFactory = {
+                ShareAuthorArticlePagingSource { currentPage ->
+                    runBlocking {
+                        apiService.getShareAuthorArticles(id, currentPage)
+                    }
+                }
+            })
+            .flow
 
+    /**
+     * 自己的分享的文章列表
+     */
+    fun getSharePrivateArticleList() =
+        Pager(
+            PagingConfig(pageSize = 1),
+            pagingSourceFactory = {
+                ShareAuthorArticlePagingSource { currentPage ->
+                    runBlocking {
+                        apiService.getSharePrivateArticles(currentPage)
+                    }
+                }
+            })
+            .flow
+
+    /**
+     * 删除分享文章
+     */
+    val delShareArticleLiveData by lazy {
+        MutableLiveData<ResultState<Int>>()
+    }
+
+    fun delShareArticleLiveData(id:Int) {
+        request({
+            apiService.deleteShareArticle(id)
+        }, {
+            delShareArticleLiveData.value = ResultState.Success(id)
+        }, { exception, errorCode ->
+            delShareArticleLiveData.value = ResultState.Error(exception, errorCode, true)
+        }, { loadingMessage, isShowingDialog ->
+            delShareArticleLiveData.value = ResultState.Loading(loadingMessage, isShowingDialog)
+        })
+    }
 }

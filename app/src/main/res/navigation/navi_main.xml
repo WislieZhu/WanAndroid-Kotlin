@@ -141,4 +141,11 @@
 
     </fragment>
 
+    <fragment
+        android:id="@+id/fragment_share_private_article_list"
+        android:name="com.wislie.wanandroid.fragment.SharePrivateArticleListFragment"
+        tools:layout="@layout/fragment_toolbar_list">
+
+    </fragment>
+
 </navigation>

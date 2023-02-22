@@ -38,5 +38,6 @@ data class ArticleInfo(
     val visible: Int,
     val zan: Int,
     val originId: Int?,
-    val route:Boolean?
+    val route:Boolean?,
+    var isOpen:Boolean = false
 )

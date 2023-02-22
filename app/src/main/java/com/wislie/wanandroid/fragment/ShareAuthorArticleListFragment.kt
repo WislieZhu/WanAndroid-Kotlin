@@ -9,6 +9,7 @@ import com.wislie.common.base.BaseViewModel
 import com.wislie.common.base.BaseViewModelFragment
 import com.wislie.common.base.parseState
 import com.wislie.common.ext.addStateListener
+import com.wislie.common.ext.findNav
 import com.wislie.common.ext.init
 import com.wislie.wanandroid.App
 import com.wislie.wanandroid.R
@@ -55,7 +56,11 @@ class ShareAuthorArticleListFragment :
 
         binding.tb.toolbar.run {
             setBackgroundColor(ContextCompat.getColor(hostActivity, R.color.purple_500))
+            setNavigationIcon(R.mipmap.ic_back)
             title = author ?: ""
+            setNavigationOnClickListener {
+                findNav().navigateUp()
+            }
         }
 
 

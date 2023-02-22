@@ -208,4 +208,22 @@ interface ApiService {
         @Path("id") id: Int,
         @Path("page") pageNo: Long
     ): ApiResponse<ShareAuthorInfo?> //分享人对应列表数据
+
+    @GET("user/lg/private_articles/{page}/json")
+    suspend fun getSharePrivateArticles(
+        @Path("page") pageNo: Long
+    ): ApiResponse<ShareAuthorInfo?> //自己的分享的文章列表
+
+
+    @POST("lg/user_article/add/json")
+    @FormUrlEncoded
+    suspend fun shareArticle(
+        @Field("title") title: String,
+        @Field("content") content: String
+    ): ApiResponse<Any?>
+
+    @POST("lg/user_article/delete/{id}/json")
+    suspend fun deleteShareArticle(
+        @Path("id") id: Int
+    ): ApiResponse<Any?>
 }

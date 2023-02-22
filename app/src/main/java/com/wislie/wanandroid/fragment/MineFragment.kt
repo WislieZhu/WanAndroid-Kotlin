@@ -63,6 +63,12 @@ class MineFragment : BaseViewModelFragment<MineStateViewModel, FragmentMineBindi
         }
 
 
+        binding.btnMyArticle.setOnClickListener { //我分享的文章
+            startDestination {
+                findNav().navigate(R.id.fragment_share_private_article_list)
+            }
+        }
+
         binding.btnLogout.setOnClickListener { //退出登录
             logoutViewModel.logout()
         }
