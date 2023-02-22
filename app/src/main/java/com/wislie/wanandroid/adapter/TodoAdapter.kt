@@ -6,14 +6,20 @@ import com.wislie.wanandroid.R
 import com.wislie.wanandroid.adapter.holder.TodoHolder
 import com.wislie.wanandroid.data.ToDoInfo
 import com.wislie.wanandroid.databinding.ItemTodoBinding
+import com.wislie.wanandroid.util.SlideHelper
 
 /**
  * to do 适配器
  */
-class TodoAdapter(private val onDeleteClick:(ToDoInfo?)->Unit) :
+class TodoAdapter(
+    private val onDeleteClick: (ToDoInfo?) -> Unit,
+    private val onDoneClick: (ToDoInfo?) -> Unit
+) :
     BaseAdapter<ToDoInfo, ItemTodoBinding, TodoHolder>(callback) {
+
+    private val mSlideHelper = SlideHelper()
     override fun onCreateViewHolder(binding: ItemTodoBinding): TodoHolder {
-        return TodoHolder(binding, onDeleteClick)
+        return TodoHolder(mSlideHelper, binding, onDeleteClick, onDoneClick)
     }
 
     override fun getItemLayoutId(): Int {

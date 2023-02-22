@@ -73,6 +73,23 @@ class TodoViewModel : BaseViewModel() {
         })
     }
 
+    val todoDoneLiveData: MutableLiveData<ResultState<ToDoInfo>> = MutableLiveData()
+    //完成todo
+    fun doneTodo(
+        id: Int
+    ) {
+        request({
+            apiService.doneTodo(id,1)
+        },{ todoInfo->
+            todoInfo?.data?.run {
+                todoDoneLiveData.value = ResultState.Success(this)
+            }
+        }, { exception, errorCode ->
+            todoDoneLiveData.value = ResultState.Error(exception, errorCode)
+        }, { loadingMessage, isShowingDialog ->
+            todoDoneLiveData.value = ResultState.Loading(loadingMessage, isShowingDialog)
+        })
+    }
 }
 
 //Failure(java.io.FileNotFoundException: /storage/emulated/0/Pictures/Screenshots/Screenshot_20221222_165319_frontier_defense.jiuqitech.cn.jpg: open failed: EACCES (Permission denied))

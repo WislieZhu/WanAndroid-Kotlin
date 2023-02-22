@@ -198,7 +198,8 @@ interface ApiService {
 
     @POST("lg/todo/done/{id}/json")
     @FormUrlEncoded
-    suspend fun updateTodoDone(
-        @Path("id") id: Int
-    ): ApiResponse<Any?> //仅更新完成状态Todo
+    suspend fun doneTodo(
+        @Path("id") id: Int,
+        @Field("status") status: Int
+    ): ApiResponse<ToDoInfo?> //仅更新完成状态Todo
 }

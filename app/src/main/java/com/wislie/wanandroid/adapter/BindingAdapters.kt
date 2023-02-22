@@ -235,6 +235,17 @@ fun bindTodoStatus(view: ImageView, status: Int?) {
         }
     }
 }
+@BindingAdapter("todoStatusVisible")
+fun bindTodoStatusVisible(view: TextView, status: Int?) {
+    status?.run {
+        if (status == 0) {
+            view.visibility = View.VISIBLE
+        } else if (status == 1) {
+            view.visibility = View.GONE
+        }
+    }
+}
+
 
 @BindingAdapter("todoStatusIcon")
 fun bindTodoStatusIcon(view: ImageView, status: Int?) { //首页的文章标题

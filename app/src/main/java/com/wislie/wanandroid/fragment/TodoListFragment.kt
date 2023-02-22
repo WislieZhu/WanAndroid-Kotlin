@@ -1,5 +1,6 @@
 package com.wislie.wanandroid.fragment
 
+import android.util.Log
 import android.view.View
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.viewModels
@@ -14,6 +15,7 @@ import com.wislie.common.base.parseState
 import com.wislie.common.ext.addFreshListener
 import com.wislie.common.ext.findNav
 import com.wislie.common.ext.init
+import com.wislie.common.ext.showEmptyCallback
 import com.wislie.wanandroid.App
 import com.wislie.wanandroid.R
 import com.wislie.wanandroid.adapter.LoadStateFooterAdapter
@@ -31,11 +33,16 @@ class TodoListFragment : BaseViewModelFragment<BaseViewModel, FragmentToolbarLis
 
     private val todoViewModel: TodoViewModel by viewModels()
     private val adapter: TodoAdapter by lazy {
-        TodoAdapter { toDoInfo -> //删除
+        TodoAdapter({ toDoInfo -> //删除
             toDoInfo?.run {
                 todoViewModel.deleteTodo(toDoInfo.id)
             }
-        }
+        }, { toDoInfo -> //完成
+            toDoInfo?.run {
+                todoViewModel.doneTodo(toDoInfo.id)
+            }
+        })
+
     }
 
     override fun init(root: View) {
@@ -114,15 +121,16 @@ class TodoListFragment : BaseViewModelFragment<BaseViewModel, FragmentToolbarLis
         //新增Todo信息
         App.instance().appViewModel.todoInfoAddLiveData
             .observe(viewLifecycleOwner) { todoInfo ->
+                loadData()
                 //todo 总觉得这么写有问题，比如数量超过一页的时候
-                lifecycleScope.launch {
-                    todoViewModel
-                        .todoList
-                        .collectLatest {
-                            it.insertFooterItem(TerminalSeparatorType.FULLY_COMPLETE, todoInfo)
-                            adapter.submitData(lifecycle, it)
-                        }
-                }
+//                lifecycleScope.launch {
+//                    todoViewModel
+//                        .todoList
+//                        .collectLatest {
+//                            it.insertFooterItem(TerminalSeparatorType.FULLY_COMPLETE, todoInfo)
+////                            adapter.submitData(lifecycle, it)
+//                        }
+//                }
             }
 
         //删除todo
@@ -131,12 +139,30 @@ class TodoListFragment : BaseViewModelFragment<BaseViewModel, FragmentToolbarLis
                 val list = adapter.snapshot().items
                 for (i in list.indices) {
                     if (list[i].id == id) {
+                        if (list.size == 1) {
+                            mBaseLoadService.showEmptyCallback()
+                        }
                         todoViewModel.removeFlowItem(list[i])
                         break
                     }
                 }
             }, { errorMsg ->
             })
+        }
+        //完成
+        todoViewModel.todoDoneLiveData.observe(viewLifecycleOwner){resultState ->
+            parseState(resultState, { todoInfo ->
+                val list = adapter.snapshot().items
+                for (i in list.indices) {
+                    if (list[i].id == todoInfo.id) {
+                        list[i].status = 1
+                        adapter.notifyItemChanged(i, Any())
+                        break
+                    }
+                }
+            }, { errorMsg ->
+            })
+
         }
     }
 

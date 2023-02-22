@@ -14,7 +14,6 @@ import com.wislie.common.base.State
 fun BaseAdapter<*, *, *>.addFreshListener(
     loadService: LoadService<*>
 ) {
-    val adapter = this
     setOnRefreshStateListener {
         when (it) {
             is State.Loading -> {

@@ -16,36 +16,39 @@ import com.wislie.wanandroid.util.SlideHelper
  * to do
  */
 class TodoHolder(
-    override val binding: ItemTodoBinding, onDeleteClick:(ToDoInfo?)->Unit
-) :
-    BaseVHolder<ToDoInfo>(binding)  {
+    val slideHelper: SlideHelper,
+    override val binding: ItemTodoBinding,
+    onDeleteClick: (ToDoInfo?) -> Unit,
+    onDoneClick: (ToDoInfo?) -> Unit
+) : BaseVHolder<ToDoInfo>(binding) {
 
 
-    private var index:Int = 0
+    private var index: Int = 0
 
     init {
 
-        val mSlideHelper = SlideHelper()
+
         binding.slSlide.setOnStateChangeListener(object : OnStateChangeListener() {
             override fun onInterceptTouchEvent(layout: SlideLayout): Boolean {
-                val result: Boolean = mSlideHelper.closeAll(layout)
+                val result: Boolean = slideHelper.closeAll(layout)
                 return false
             }
 
             override fun onStateChanged(layout: SlideLayout, open: Boolean) {
                 binding.todoInfo?.isOpen = open
-                mSlideHelper.onStateChanged(layout, open)
+                slideHelper.onStateChanged(layout, open)
             }
         })
         binding.tvStick.setOnClickListener {
-            binding.slSlide.setOpen(false,false)
+            binding.slSlide.setOpen(false, false)
+            onDoneClick.invoke(binding.todoInfo)
         }
         binding.tvDelete.setOnClickListener { //删除
             binding.slSlide.close()
             onDeleteClick.invoke(binding.todoInfo)
         }
-        binding.slSlide.setOnClickListener{ v->
-            if(binding.slSlide.isOpen){
+        binding.slSlide.setOnClickListener { v ->
+            if (binding.slSlide.isOpen) {
                 binding.slSlide.close()
                 return@setOnClickListener
             }

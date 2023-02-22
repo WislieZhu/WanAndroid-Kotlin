@@ -56,15 +56,6 @@
                                 app:layout_constraintTop_toTopOf="parent"
                                 app:todoStatusIcon="@{todoInfo.status}" />
 
-                            <ImageView
-                                android:id="@+id/item_todo_setting"
-                                android:layout_width="36dp"
-                                android:layout_height="50dp"
-                                android:layout_gravity="center_vertical"
-                                android:paddingTop="16dp"
-                                android:paddingBottom="16dp"
-                                android:src="@mipmap/ic_more" />
-
                             <TextView
                                 android:id="@+id/item_todo_date"
                                 android:layout_width="wrap_content"
@@ -133,6 +124,7 @@
                     android:background="#C7C7CD"
                     android:gravity="center"
                     android:text="DONE"
+                    app:todoStatusVisible="@{todoInfo.status}"
                     android:textColor="@color/white"
                     android:textSize="14dp" />
 
