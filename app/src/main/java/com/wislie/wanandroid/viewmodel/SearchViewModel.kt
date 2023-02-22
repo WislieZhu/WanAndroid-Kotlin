@@ -8,10 +8,11 @@ import com.wislie.common.base.BaseViewModel
 import com.wislie.common.base.ResultState
 import com.wislie.common.base.request
 import com.wislie.wanandroid.data.HotKey
-import com.wislie.wanandroid.datasource.ArticleSearchPagingSource
+import com.wislie.wanandroid.datasource.BasePagingSource
 import com.wislie.wanandroid.db.AppDatabase
 import com.wislie.wanandroid.db.SearchKey
 import com.wislie.wanandroid.network.apiService
+import kotlinx.coroutines.runBlocking
 import java.lang.Exception
 
 class SearchViewModel : BaseViewModel() {
@@ -36,8 +37,19 @@ class SearchViewModel : BaseViewModel() {
     fun getArticleList(hotKey: String) =
         Pager(
             PagingConfig(pageSize = 1),
-            pagingSourceFactory = { ArticleSearchPagingSource(hotKey) })
+            pagingSourceFactory = {
+                BasePagingSource(0) { currentPage ->
+                    runBlocking {
+                        apiService.queryArticles(currentPage, hotKey)
+                    }
+                }
+            })
             .flow
+
+        /*Pager(
+            PagingConfig(pageSize = 1),
+            pagingSourceFactory = { ArticleSearchPagingSource(hotKey) })
+            .flow*/
 
     /**
      * 所有的搜索记录

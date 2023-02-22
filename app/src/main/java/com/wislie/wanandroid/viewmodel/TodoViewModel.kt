@@ -7,8 +7,9 @@ import com.wislie.common.base.BaseViewModel
 import com.wislie.common.base.ResultState
 import com.wislie.common.base.request
 import com.wislie.wanandroid.data.ToDoInfo
-import com.wislie.wanandroid.datasource.TodoListPagingSource
+import com.wislie.wanandroid.datasource.BasePagingSource
 import com.wislie.wanandroid.network.apiService
+import kotlinx.coroutines.runBlocking
 
 /**
  * todo相关
@@ -17,10 +18,22 @@ class TodoViewModel : BaseViewModel() {
 
     //todo列表
     val todoList by lazy {
+
         Pager(
             PagingConfig(pageSize = 1),
-            pagingSourceFactory = { TodoListPagingSource() })
+            pagingSourceFactory = {
+                BasePagingSource(1) { currentPage ->
+                    runBlocking {
+                        apiService.getTodoList(currentPage)
+                    }
+                }
+            })
             .flow
+
+        /*Pager(
+            PagingConfig(pageSize = 1),
+            pagingSourceFactory = { TodoListPagingSource() })
+            .flow*/
     }
 
     val todoUpdateLiveData: MutableLiveData<ResultState<ToDoInfo?>> = MutableLiveData()

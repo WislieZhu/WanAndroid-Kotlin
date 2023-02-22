@@ -38,6 +38,14 @@ class FirstPageArticleHolder(
             }
             collect.invoke(binding.articleInfo)
         }
+
+        binding.tvAuthor.setOnClickListener { v->
+            val bundle = Bundle().apply {
+                putInt("id", binding.articleInfo?.id ?: -1)
+                putString("author", binding.articleInfo?.author)
+            }
+            v.findNav().navigate(R.id.fragment_share_author_article_list, bundle)
+        }
     }
 
     override fun bind(data: ArticleInfo?, position: Int) {

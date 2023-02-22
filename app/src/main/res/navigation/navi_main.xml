@@ -134,4 +134,11 @@
 
     </fragment>
 
+    <fragment
+        android:id="@+id/fragment_share_author_article_list"
+        android:name="com.wislie.wanandroid.fragment.ShareAuthorArticleListFragment"
+        tools:layout="@layout/fragment_toolbar_list">
+
+    </fragment>
+
 </navigation>

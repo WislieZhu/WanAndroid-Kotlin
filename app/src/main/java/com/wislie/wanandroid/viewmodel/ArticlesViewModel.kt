@@ -9,6 +9,7 @@ import com.wislie.common.base.request
 import com.wislie.wanandroid.data.*
 import com.wislie.wanandroid.datasource.*
 import com.wislie.wanandroid.network.apiService
+import kotlinx.coroutines.runBlocking
 
 
 class ArticlesViewModel : BaseViewModel() {
@@ -23,8 +24,19 @@ class ArticlesViewModel : BaseViewModel() {
     val wendaArticleList by lazy {
         Pager(
             PagingConfig(pageSize = 1),
-            pagingSourceFactory = { WendaArticlePagingSource() })
+            pagingSourceFactory = {
+                BasePagingSource(1) { currentPage ->
+                    runBlocking {
+                        apiService.getWendaArticles(currentPage)
+                    }
+                }
+            })
             .flow
+
+        /* Pager(
+             PagingConfig(pageSize = 1),
+             pagingSourceFactory = { WendaArticlePagingSource() })
+             .flow*/
     }
 
     /**
@@ -33,18 +45,29 @@ class ArticlesViewModel : BaseViewModel() {
     val collectArticleList by lazy {
         Pager(
             PagingConfig(pageSize = 1),
-            pagingSourceFactory = { CollectArticlePagingSource() })
+            pagingSourceFactory = {
+                BasePagingSource(0) { currentPage ->
+                    runBlocking {
+                        apiService.getCollectArticles(currentPage)
+                    }
+                }
+            })
             .flow
+
+        /*Pager(
+            PagingConfig(pageSize = 1),
+            pagingSourceFactory = { CollectArticlePagingSource() })
+            .flow*/
     }
 
     /**
      * 问答评论列表
      */
-    fun getWendaCommentList(id: Int) =
+   /* fun getWendaCommentList(id: Int) =
         Pager(
             PagingConfig(pageSize = 1),
             pagingSourceFactory = { WendaCommentPagingSource(id) })
-            .flow
+            .flow*/
 
 
     val bannerResultLiveData by lazy {
@@ -77,8 +100,23 @@ class ArticlesViewModel : BaseViewModel() {
     fun getArticleListByCategory(cid: Int) =
         Pager(
             PagingConfig(pageSize = 1),
-            pagingSourceFactory = { ArticleCategoryPagingSource(cid) })
+            pagingSourceFactory = {
+                BasePagingSource(0) { currentPage ->
+                    runBlocking {
+                        if (cid == 0) {
+                            apiService.getProjectLatest(currentPage)
+                        } else {
+                            apiService.getProjectByCategory(currentPage, cid)
+                        }
+                    }
+                }
+            })
             .flow
+
+    /*    Pager(
+            PagingConfig(pageSize = 1),
+            pagingSourceFactory = { ArticleCategoryPagingSource(cid) })
+            .flow*/
 
 
     val usualWebsiteLiveData by lazy {
@@ -245,10 +283,26 @@ class ArticlesViewModel : BaseViewModel() {
      * 公众号文章列表
      */
     fun getWxArticleList(id: Int, key: String?) =
+
         Pager(
             PagingConfig(pageSize = 1),
-            pagingSourceFactory = { WxArticlePagingSource(id, key) })
+            pagingSourceFactory = {
+                BasePagingSource(1) { currentPage ->
+                    runBlocking {
+                        if (key.isNullOrEmpty()) {
+                            apiService.getWxHistoryArticleList(id, currentPage)
+                        } else {
+                            apiService.getWxHistoryArticleList(id, currentPage, key)
+                        }
+                    }
+                }
+            })
             .flow
+
+       /* Pager(
+            PagingConfig(pageSize = 1),
+            pagingSourceFactory = { WxArticlePagingSource(id, key) })
+            .flow*/
 
     /**
      * 广场文章列表
@@ -256,8 +310,19 @@ class ArticlesViewModel : BaseViewModel() {
     val squareArticleList by lazy {
         Pager(
             PagingConfig(pageSize = 1),
-            pagingSourceFactory = { SquareArticlePagingSource() })
+            pagingSourceFactory = {
+                BasePagingSource(0) { currentPage ->
+                    runBlocking {
+                        apiService.getSquareArticleList(currentPage)
+                    }
+                }
+            })
             .flow
+
+       /* Pager(
+            PagingConfig(pageSize = 1),
+            pagingSourceFactory = { SquareArticlePagingSource() })
+            .flow*/
     }
 
     /**
@@ -277,10 +342,21 @@ class ArticlesViewModel : BaseViewModel() {
      * 体系的文章列表
      */
     fun getTreeArticleList(id: Int) =
+
         Pager(
             PagingConfig(pageSize = 1),
-            pagingSourceFactory = { TreeArticlePagingSource(id) })
+            pagingSourceFactory = {
+                BasePagingSource(0) { currentPage ->
+                    runBlocking {
+                        apiService.getTreeArticleList(currentPage,id)
+                    }
+                }
+            })
             .flow
+      /*  Pager(
+            PagingConfig(pageSize = 1),
+            pagingSourceFactory = { TreeArticlePagingSource(id) })
+            .flow*/
 
     /**
      * 按照作者昵称搜索文章
@@ -288,8 +364,19 @@ class ArticlesViewModel : BaseViewModel() {
     fun getTreeArticleSearchList(author: String) =
         Pager(
             PagingConfig(pageSize = 1),
-            pagingSourceFactory = { TreeArticleSearchPagingSource(author) })
+            pagingSourceFactory = {
+                BasePagingSource(0) { currentPage ->
+                    runBlocking {
+                        apiService.getTreeArticleList(currentPage,author)
+                    }
+                }
+            })
             .flow
+
+       /* Pager(
+            PagingConfig(pageSize = 1),
+            pagingSourceFactory = { TreeArticleSearchPagingSource(author) })
+            .flow*/
 
     /**
      * 获取导航列表
@@ -303,5 +390,34 @@ class ArticlesViewModel : BaseViewModel() {
             apiService.getNaviList()
         }, naviListLiveData)
     }
+
+    /**
+     * 分享者的文章列表
+     */
+    fun getShareAuthorArticleList(id: Int) = Pager(
+        PagingConfig(pageSize = 1),
+        pagingSourceFactory = { ShareAuthorArticlePagingSource(id) })
+        .flow
+
+    /*  fun getShareAuthorArticleList(id: Int) = Pager(
+          PagingConfig(pageSize = 1),
+          pagingSourceFactory = {
+              BasePagingSource { currentPage ->
+                  runBlocking {
+                      apiService.getShareAuthorArticles(id, currentPage)
+                  }
+              }
+          })
+          .flow*/
+    /*  Pager(
+          PagingConfig(pageSize = 1),
+          pagingSourceFactory = {
+              BasePagingSource { currentPage ->
+                  runBlocking {
+                      apiService.getShareAuthorArticles(id, currentPage)
+                  }
+              }
+          })
+          .flow*/
 
 }

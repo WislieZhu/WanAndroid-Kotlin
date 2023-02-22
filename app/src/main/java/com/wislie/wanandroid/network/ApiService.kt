@@ -201,4 +201,11 @@ interface ApiService {
     suspend fun updateTodoDone(
         @Path("id") id: Int
     ): ApiResponse<Any?> //仅更新完成状态Todo
+
+
+    @GET("user/{id}/share_articles/{page}/json")
+    suspend fun getShareAuthorArticles(
+        @Path("id") id: Int,
+        @Path("page") pageNo: Long
+    ): ApiResponse<ShareAuthorInfo?> //分享人对应列表数据
 }
