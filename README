@@ -592,15 +592,14 @@ MutableList 默认是 ArrayList
 2.收藏页 取消收藏时, 首页的变化
 3.收藏的文章列表  取消收藏后展示不对
 4.有些不需要没有更多，加载中这些,只需要加载 比如体系，导航列表
+5.bottom navigation 文字和图标同时变色
 上述已搞定
-1.bottom navigation 文字和图标同时变色
+1.我的(有很多东西需要改进)
 2.每一个列表的item 对照改进
 3.asm onclick 拦截
 4.背景色改变
 5.换肤
-6.我的(有很多东西需要改进)
-
-
+6.error相关的统一处理
 
 
 
@@ -613,9 +612,7 @@ PagingSource->Pager->Flow<PagingData>->PagingDataAdapter
 编辑收藏的文章，支持站内，站外  lg/collect/user_article/update/ 文章 id/json
 编辑收藏网站 lg/collect/updatetool/json
 7.搜索 article/query/0/json
-8.todo https://www.wanandroid.com/blog/show/2442
 10.
-分享人对应列表数据  2/share_articles/页码/json  用户id: 拼接在url上,页码拼接在url上从1开始 get请求
 自己的分享的文章列表 user/lg/private_articles/1/json
 删除自己分享的文章 lg/user_article/delete/9475/json
 分享文章 lg/user_article/add/json
@@ -627,11 +624,6 @@ PagingSource->Pager->Flow<PagingData>->PagingDataAdapter
 17.工具列表 tools/list/json
 18.教程列表 chapter/547/sublist/json
 单个教程下所有文章列表 list/0/json?cid=549&order_type=1
-
-
-
-
-
 
 
 
@@ -660,4 +652,7 @@ https://juejin.cn/post/6844904099998089230#heading-71
 2.Android知识点整体复习完
 
 3.算法了解
+
+
+
 

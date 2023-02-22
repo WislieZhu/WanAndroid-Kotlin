@@ -5,7 +5,7 @@ import android.view.View
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import com.wislie.common.base.*
-import com.wislie.common.ext.addFreshListener
+import com.wislie.common.ext.addStateListener
 import com.wislie.wanandroid.R
 import com.wislie.common.ext.init
 import com.wislie.wanandroid.App
@@ -43,14 +43,14 @@ class WendaListFragment : BaseViewModelFragment<BaseViewModel, FragmentToolbarLi
         registerLoadSir(binding.list.swipeRv) {
             adapter.refresh() //点击即刷新
         }
-        binding.list.swipeRefreshLayout.init(adapter) {
+        binding.list.swipeRefreshLayout.init{
             adapter.refresh() //点击即刷新
         }
         binding.list.swipeRv.adapter =
             adapter.withLoadStateFooter(footer = LoadStateFooterAdapter(retry = {
                 adapter.retry()
             }))
-        adapter.addFreshListener(mBaseLoadService)
+        adapter.addStateListener(hostActivity, mBaseLoadService)
     }
 
     override fun observeData() {
@@ -69,7 +69,6 @@ class WendaListFragment : BaseViewModelFragment<BaseViewModel, FragmentToolbarLi
                         break
                     }
                 }
-            }, { errorMsg ->
             }, {
                 startLogin()
             })
@@ -90,7 +89,6 @@ class WendaListFragment : BaseViewModelFragment<BaseViewModel, FragmentToolbarLi
                         break
                     }
                 }
-            }, { errorMsg ->
             }, {
                 startLogin()
             })

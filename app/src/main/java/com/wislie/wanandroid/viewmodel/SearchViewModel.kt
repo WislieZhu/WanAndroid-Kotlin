@@ -7,11 +7,13 @@ import androidx.paging.PagingConfig
 import com.wislie.common.base.BaseViewModel
 import com.wislie.common.base.ResultState
 import com.wislie.common.base.request
+import com.wislie.common.network.AppException
 import com.wislie.wanandroid.data.HotKey
-import com.wislie.wanandroid.datasource.ArticleSearchPagingSource
+import com.wislie.wanandroid.datasource.BasePagingSource
 import com.wislie.wanandroid.db.AppDatabase
 import com.wislie.wanandroid.db.SearchKey
 import com.wislie.wanandroid.network.apiService
+import kotlinx.coroutines.runBlocking
 import java.lang.Exception
 
 class SearchViewModel : BaseViewModel() {
@@ -36,8 +38,15 @@ class SearchViewModel : BaseViewModel() {
     fun getArticleList(hotKey: String) =
         Pager(
             PagingConfig(pageSize = 1),
-            pagingSourceFactory = { ArticleSearchPagingSource(hotKey) })
+            pagingSourceFactory = {
+                BasePagingSource(0) { currentPage ->
+                    runBlocking {
+                        apiService.queryArticles(currentPage, hotKey)
+                    }
+                }
+            })
             .flow
+
 
     /**
      * 所有的搜索记录
@@ -64,7 +73,7 @@ class SearchViewModel : BaseViewModel() {
             if (row > 0) {
                 searchKeyLiveData.value = ResultState.Success(searchKey)
             } else {
-                searchKeyLiveData.value = ResultState.Error(Exception("删除出错了"))
+                searchKeyLiveData.value = ResultState.Error(AppException(0,"删除出错了"))
             }
         }
     }

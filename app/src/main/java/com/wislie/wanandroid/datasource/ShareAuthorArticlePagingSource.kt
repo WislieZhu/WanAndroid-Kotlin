@@ -2,34 +2,40 @@ package com.wislie.wanandroid.datasource
 
 import androidx.paging.PagingSource
 import androidx.paging.PagingState
+import com.wislie.common.wrapper.ApiPageResponse
+import com.wislie.common.wrapper.ApiResponse
 import com.wislie.wanandroid.data.ArticleInfo
+import com.wislie.wanandroid.data.ShareAuthorInfo
 import com.wislie.wanandroid.network.apiService
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 
 /**
- * 体系的文章列表分页
+ * 文章分页
  */
-class TreeArticlePagingSource(val cid:Int) : PagingSource<Long, ArticleInfo>() {
+class ShareAuthorArticlePagingSource(private val block: (Long) ->ApiResponse<ShareAuthorInfo?>)
+    : PagingSource<Long, ArticleInfo>() {
 
     override fun getRefreshKey(state: PagingState<Long, ArticleInfo>): Long? = null
 
     override suspend fun load(params: LoadParams<Long>): LoadResult<Long, ArticleInfo> {
 
         return withContext(Dispatchers.IO) {
-            val currentPage = params.key ?: 0
+            val currentPage = params.key ?: 1
             try {
-                val articleListResp = apiService.getTreeArticleList(currentPage,cid)
+//                val articleListResp = apiService.getShareAuthorArticles(articleId, currentPage)
+                val articleListResp = block.invoke(currentPage)
                 //当前页码小于总页码页面加1
                 var nextPage: Long? = null
                 if (articleListResp != null && articleListResp.errorCode == 0) {
-                    articleListResp?.data?.run {
-                        if (currentPage < this.pageCount - 1) { //初始值 currentPage为0的情况
+
+                    articleListResp?.data?.shareArticles?.run {
+                        if (currentPage < this.pageCount) { //初始值 currentPage为1的情况
                             nextPage = currentPage + 1
                         }
                     }
                     LoadResult.Page(
-                        data = articleListResp.data?.datas ?: listOf(),
+                        data = articleListResp.data?.shareArticles?.datas ?: listOf(),
                         prevKey = null,
                         nextKey = nextPage
                     )
@@ -43,3 +49,4 @@ class TreeArticlePagingSource(val cid:Int) : PagingSource<Long, ArticleInfo>() {
         }
     }
 }
+

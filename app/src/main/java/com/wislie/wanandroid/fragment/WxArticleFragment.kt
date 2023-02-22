@@ -6,7 +6,7 @@ import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import com.wislie.common.base.BaseViewModelFragment
 import com.wislie.common.base.parseState
-import com.wislie.common.ext.addFreshListener
+import com.wislie.common.ext.addStateListener
 import com.wislie.common.ext.init
 import com.wislie.wanandroid.App
 import com.wislie.wanandroid.R
@@ -48,12 +48,12 @@ class WxArticleFragment :
         registerLoadSir(binding.list.swipeRv) {
             adapter.refresh() //点击即刷新
         }
-        binding.list.swipeRefreshLayout.init(adapter){
+        binding.list.swipeRefreshLayout.init{
             adapter.refresh() //点击即刷新
         }
         binding.list.swipeRv.adapter =
             adapter.withLoadStateFooter(footer = LoadStateFooterAdapter { adapter.retry() })
-        adapter.addFreshListener(mBaseLoadService)
+        adapter.addStateListener(hostActivity, mBaseLoadService)
 
         binding.btnSearch.setOnClickListener {
             loadData()
@@ -91,7 +91,6 @@ class WxArticleFragment :
                         break
                     }
                 }
-            }, { errorMsg ->
             }, {
                 startLogin()
             })
@@ -110,7 +109,6 @@ class WxArticleFragment :
                         break
                     }
                 }
-            }, { errorMsg ->
             }, {
                 startLogin()
             })

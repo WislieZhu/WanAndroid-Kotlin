@@ -12,7 +12,7 @@ import androidx.paging.insertFooterItem
 import com.wislie.common.base.BaseViewModel
 import com.wislie.common.base.BaseViewModelFragment
 import com.wislie.common.base.parseState
-import com.wislie.common.ext.addFreshListener
+import com.wislie.common.ext.addStateListener
 import com.wislie.common.ext.findNav
 import com.wislie.common.ext.init
 import com.wislie.common.ext.showEmptyCallback
@@ -69,7 +69,7 @@ class TodoListFragment : BaseViewModelFragment<BaseViewModel, FragmentToolbarLis
         registerLoadSir(binding.list.swipeRv) {
             adapter.refresh() //点击即刷新
         }
-        binding.list.swipeRefreshLayout.init(adapter) {
+        binding.list.swipeRefreshLayout.init {
             adapter.refresh() //点击即刷新
         }
         binding.list.swipeRv.adapter =
@@ -77,7 +77,7 @@ class TodoListFragment : BaseViewModelFragment<BaseViewModel, FragmentToolbarLis
                 footer = LoadStateFooterAdapter(
                     retry = { adapter.retry() })
             )
-        adapter.addFreshListener(mBaseLoadService)
+        adapter.addStateListener(hostActivity, mBaseLoadService)
     }
 
     override fun loadData() {
@@ -146,7 +146,6 @@ class TodoListFragment : BaseViewModelFragment<BaseViewModel, FragmentToolbarLis
                         break
                     }
                 }
-            }, { errorMsg ->
             })
         }
         //完成

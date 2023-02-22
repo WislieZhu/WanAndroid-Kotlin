@@ -7,7 +7,7 @@ import androidx.lifecycle.lifecycleScope
 import com.wislie.common.base.BaseViewModel
 import com.wislie.common.base.BaseViewModelFragment
 import com.wislie.common.base.parseState
-import com.wislie.common.ext.addFreshListener
+import com.wislie.common.ext.addStateListener
 import com.wislie.common.ext.init
 import com.wislie.wanandroid.App
 import com.wislie.wanandroid.R
@@ -45,7 +45,7 @@ class SquareArticleListFragment :
         registerLoadSir(binding.list.swipeRv) {
             adapter.refresh() //点击即刷新
         }
-        binding.list.swipeRefreshLayout.init(adapter){
+        binding.list.swipeRefreshLayout.init{
             adapter.refresh() //点击即刷新
         }
         binding.list.swipeRv.adapter =
@@ -53,7 +53,7 @@ class SquareArticleListFragment :
                 footer = LoadStateFooterAdapter(
                     retry = { adapter.retry() })
             )
-        adapter.addFreshListener(mBaseLoadService)
+        adapter.addStateListener(hostActivity, mBaseLoadService)
 
     }
 
@@ -88,8 +88,7 @@ class SquareArticleListFragment :
                         break
                     }
                 }
-            }, { errorMsg ->
-            }, {
+            },  {
                 startLogin()
             })
         }
@@ -109,7 +108,6 @@ class SquareArticleListFragment :
                         break
                     }
                 }
-            }, { errorMsg ->
             }, {
                 startLogin()
             })

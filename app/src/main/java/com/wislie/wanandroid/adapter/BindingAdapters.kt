@@ -27,7 +27,6 @@ import com.wislie.wanandroid.data.ArticleInfo
 import com.wislie.wanandroid.data.TreeInfo
 import com.wislie.wanandroid.data.Tag
 import com.wislie.wanandroid.databinding.ItemArticleTagBinding
-import com.wislie.wanandroid.databinding.ItemNaviBinding
 import com.wislie.wanandroid.databinding.ItemNaviTagBinding
 import com.wislie.wanandroid.databinding.ItemSystemTagBinding
 import com.wislie.wanandroid.util.AnimatorUtil

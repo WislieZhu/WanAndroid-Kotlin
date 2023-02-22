@@ -17,26 +17,26 @@ class LoginViewModel : BaseViewModel() {
         MutableLiveData<ResultState<UserInfo?>>()
     }
 
-    //登录信息
-    val loginInfoResultLiveData by lazy {
-        MutableLiveData<ResultState<UserInfo?>>()
-    }
-
-    //退出登录
-    val logoutResultLiveData by lazy {
-        MutableLiveData<ResultState<Any?>>()
-    }
-
     fun register(username: String, password: String, repassword: String) {
         request({
             apiService.register(username, password, repassword)
         }, registerResultLiveData)
     }
 
+    //登录信息
+    val loginInfoResultLiveData by lazy {
+        MutableLiveData<ResultState<UserInfo?>>()
+    }
+
     fun login(username: String, password: String) {
         request({
             apiService.login(username, password)
         }, loginInfoResultLiveData, isShowDialog = true)
+    }
+
+    //退出登录
+    val logoutResultLiveData by lazy {
+        MutableLiveData<ResultState<Any?>>()
     }
 
     fun logout() {

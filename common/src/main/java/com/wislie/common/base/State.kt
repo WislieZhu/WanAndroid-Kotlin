@@ -1,5 +1,7 @@
 package com.wislie.common.base
 
+import com.wislie.common.network.AppException
+
 /**
  * @author : ling luo
  * @date : 2020/11/10
@@ -8,5 +10,5 @@ package com.wislie.common.base
 sealed class State {
     object Loading : State()
     class Success(val noMoreData: Boolean) : State()
-    object Error : State()
+    class Error(val exception:AppException) : State()
 }

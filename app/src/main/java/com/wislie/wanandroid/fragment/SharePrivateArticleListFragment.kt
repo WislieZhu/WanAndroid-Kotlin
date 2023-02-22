@@ -1,69 +1,74 @@
 package com.wislie.wanandroid.fragment
 
-import android.util.Log
 import android.view.View
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
-import androidx.paging.LoadState
+import androidx.paging.cachedIn
+import androidx.paging.filter
 import com.wislie.common.base.BaseViewModel
 import com.wislie.common.base.BaseViewModelFragment
+import com.wislie.common.base.parseState
 import com.wislie.common.ext.addStateListener
 import com.wislie.common.ext.findNav
 import com.wislie.common.ext.init
+import com.wislie.common.ext.showEmptyCallback
 import com.wislie.wanandroid.R
-import com.wislie.wanandroid.adapter.CoinRankAdapter
 import com.wislie.wanandroid.adapter.LoadStateFooterAdapter
+import com.wislie.wanandroid.adapter.SharePrivateArticleAdapter
 import com.wislie.wanandroid.databinding.FragmentToolbarListBinding
 import com.wislie.wanandroid.ext.initFab
-import com.wislie.wanandroid.viewmodel.CoinViewModel
+import com.wislie.wanandroid.viewmodel.ArticlesViewModel
 import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.launch
-import java.io.IOException
 
 /**
- *    author : Wislie
- *    e-mail : 254457234@qq.comn
- *    date   : 2023/1/14 9:03 AM
- *    desc   : 积分排行版
- *    version: 1.0
+ * 自己的分享的文章列表
  */
-class CoinRankListFragment : BaseViewModelFragment<BaseViewModel, FragmentToolbarListBinding>() {
+class SharePrivateArticleListFragment :
+    BaseViewModelFragment<BaseViewModel, FragmentToolbarListBinding>() {
+
+    private val articlesViewModel: ArticlesViewModel by viewModels()
+
 
     private val adapter by lazy {
-        CoinRankAdapter()
+        SharePrivateArticleAdapter { articleInfo ->
+            articleInfo?.run {
+               articlesViewModel.delShareArticleLiveData(this.id)
+            }
+        }
     }
-
-    private val coinViewModel: CoinViewModel by viewModels()
 
     override fun init(root: View) {
         super.init(root)
+
         binding.tb.toolbar.run {
-            setNavigationIcon(R.mipmap.ic_back)
             setBackgroundColor(ContextCompat.getColor(hostActivity, R.color.purple_500))
-            title = "积分排行版"
-            setNavigationOnClickListener {
-                findNav().navigateUp()
-            }
-            inflateMenu(R.menu.coin_rank_menu)
+            setNavigationIcon(R.mipmap.ic_back)
+            title = "我分享的文章"
+            inflateMenu(R.menu.add_menu)
             setOnMenuItemClickListener {
                 when (it.itemId) {
-                    R.id.my_coin -> {
-                        val direction =
-                            CoinRankListFragmentDirections.actionFragmentCoinRankToFragmentMyCoin()
-                        findNav()
-                            .navigate(direction)
+                    R.id.item_add -> { //添加
+//                        findNav().navigate(R.id.fragment_add_todo)
                     }
                 }
                 true
             }
+            setNavigationOnClickListener {
+                findNav().navigateUp()
+            }
         }
+
+
         registerLoadSir(binding.list.swipeRv) {
             adapter.refresh() //点击即刷新
         }
-        binding.list.swipeRefreshLayout.init{
+        binding.list.swipeRefreshLayout.init {
             adapter.refresh() //点击即刷新
         }
+
         binding.list.swipeRv.adapter =
             adapter.withLoadStateFooter(
                 footer = LoadStateFooterAdapter(
@@ -75,32 +80,34 @@ class CoinRankListFragment : BaseViewModelFragment<BaseViewModel, FragmentToolba
 
     override fun observeData() {
         super.observeData()
-        adapter.addLoadStateListener {
-            when (it.refresh) {
-                is LoadState.NotLoading -> {
-                    Log.i("wislieZhu", "is NotLoading")
-                }
-                is LoadState.Loading -> {
-                    Log.i("wislieZhu", "is Loading")
-                }
-                is LoadState.Error -> {
-                    Log.i("wislieZhu","刷新加载出错=${(it.refresh as LoadState.Error).error.message}")
-                    when ((it.refresh as LoadState.Error).error) {
-                        is IOException -> {
-                            Log.i("wislieZhu", "IOException")
+
+        articlesViewModel.delShareArticleLiveData.observe(viewLifecycleOwner){
+                resultState ->
+            parseState(resultState, { id ->  //删除
+                val list = adapter.snapshot().items
+                for (i in list.indices) {
+                    if (list[i].id == id) {
+                        if(list.size == 1){
+                            mBaseLoadService.showEmptyCallback()
                         }
-                        else -> {
-                            Log.i("wislieZhu", "others exception")
-                        }
+                        articlesViewModel.removeFlowItem(list[i])
+                        break
                     }
                 }
-            }
+            })
         }
     }
 
     override fun loadData() {
         lifecycleScope.launch {
-            coinViewModel.coinRankList
+            articlesViewModel
+                .getSharePrivateArticleList()
+                .cachedIn(scope = lifecycleScope)
+                .combine(articlesViewModel.mRemovedFlow) { pagingData, removedList ->
+                    pagingData.filter {
+                        it !in removedList
+                    }
+                }
                 .collectLatest {
                     if (binding.list.swipeRefreshLayout.isRefreshing) {
                         binding.list.swipeRefreshLayout.isRefreshing = false
@@ -113,4 +120,5 @@ class CoinRankListFragment : BaseViewModelFragment<BaseViewModel, FragmentToolba
     override fun getLayoutResId(): Int {
         return R.layout.fragment_toolbar_list
     }
+
 }

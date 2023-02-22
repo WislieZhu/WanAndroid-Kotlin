@@ -21,13 +21,9 @@ class TodoHolder(
     onDeleteClick: (ToDoInfo?) -> Unit,
     onDoneClick: (ToDoInfo?) -> Unit
 ) : BaseVHolder<ToDoInfo>(binding) {
-
-
     private var index: Int = 0
 
     init {
-
-
         binding.slSlide.setOnStateChangeListener(object : OnStateChangeListener() {
             override fun onInterceptTouchEvent(layout: SlideLayout): Boolean {
                 val result: Boolean = slideHelper.closeAll(layout)

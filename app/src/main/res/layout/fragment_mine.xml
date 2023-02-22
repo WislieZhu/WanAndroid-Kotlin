@@ -11,108 +11,119 @@
     </data>
 
     <LinearLayout
-        android:orientation="vertical"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:orientation="vertical">
 
 
         <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/dp_20"
             android:gravity="center"
-            android:orientation="horizontal"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:orientation="horizontal">
 
             <TextView
-                android:text="用户名:"
-                android:textColor="@android:color/black"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"/>
+                android:layout_height="wrap_content"
+                android:text="用户名:"
+                android:textColor="@android:color/black" />
+
             <TextView
                 android:id="@+id/tv_username"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
                 android:layout_marginLeft="@dimen/dp_10"
                 android:textColor="@android:color/black"
-                app:username="@{mineViewModel.coin.username}"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"/>
+                app:username="@{mineViewModel.coin.username}" />
         </LinearLayout>
 
         <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/dp_20"
             android:gravity="center"
-            android:orientation="horizontal"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:orientation="horizontal">
 
             <TextView
-                android:text="我的积分:"
-                android:textColor="@android:color/black"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"/>
+                android:layout_height="wrap_content"
+                android:text="我的积分:"
+                android:textColor="@android:color/black" />
+
             <TextView
                 android:id="@+id/tv_coin"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
                 android:layout_marginLeft="@dimen/dp_10"
                 android:textColor="@android:color/black"
-                app:coinCount="@{mineViewModel.coin.coinCount}"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"/>
+                app:coinCount="@{mineViewModel.coin.coinCount}" />
         </LinearLayout>
 
 
         <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/dp_10"
             android:gravity="center"
-            android:orientation="horizontal"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:orientation="horizontal">
 
             <TextView
-                android:text="我的排名:"
-                android:textColor="@android:color/black"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"/>
+                android:layout_height="wrap_content"
+                android:text="我的排名:"
+                android:textColor="@android:color/black" />
+
             <TextView
                 android:id="@+id/tv_coin_rank"
-                android:textColor="@android:color/black"
-                app:rank="@{mineViewModel.coin.rank}"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"/>
+                android:layout_height="wrap_content"
+                android:textColor="@android:color/black"
+                app:rank="@{mineViewModel.coin.rank}" />
         </LinearLayout>
 
 
-
         <Button
-            android:gravity="center"
-            android:text="我的积分"
             android:id="@+id/btn_score"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"/>
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:text="我的积分" />
 
         <Button
-            android:gravity="center"
-            android:text="我的收藏"
             android:id="@+id/btn_collect"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"/>
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:text="我的收藏" />
 
         <Button
-            android:gravity="center"
-            android:text="常用网站"
             android:id="@+id/btn_urls"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"/>
-        <Button
+            android:layout_height="wrap_content"
             android:gravity="center"
-            android:text="todo"
+            android:text="常用网站" />
+
+        <Button
             android:id="@+id/btn_todo"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"/>
-        <Button
+            android:layout_height="wrap_content"
             android:gravity="center"
-            android:text="退出登录"
+            android:text="todo" />
+
+        <Button
+            android:id="@+id/btn_my_article"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:text="我的文章" />
+
+        <Button
             android:id="@+id/btn_logout"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"/>
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:text="退出登录" />
 
 
     </LinearLayout>

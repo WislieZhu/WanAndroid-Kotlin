@@ -1,7 +1,8 @@
 package com.wislie.common.ext
 
+import android.content.Context
 import android.graphics.Color
-import android.util.Log
+import android.widget.Toast
 import androidx.paging.PagingDataAdapter
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.kingja.loadsir.core.LoadService
@@ -11,17 +12,16 @@ import com.wislie.common.base.State
 /**
  * 监听刷新
  */
-fun BaseAdapter<*, *, *>.addFreshListener(
+fun BaseAdapter<*, *, *>.addStateListener(
+    context: Context,
     loadService: LoadService<*>
 ) {
     setOnRefreshStateListener {
         when (it) {
             is State.Loading -> {
-//                Log.i("wislieZhu","adapter loading -- ${adapter.javaClass.simpleName}")
                 loadService.showLoadCallback()
             }
             is State.Success -> {
-//                Log.i("wislieZhu","adapter success -- ${adapter.javaClass.simpleName}")
                 if (itemCount == 0) {
                     loadService.showEmptyCallback()
                 } else {
@@ -29,17 +29,35 @@ fun BaseAdapter<*, *, *>.addFreshListener(
                 }
             }
             is State.Error -> {
-//                Log.i("wislieZhu","adapter error -- ${adapter.javaClass.simpleName}")
                 loadService.showErrorCallback()
+                Toast.makeText(context, it.exception.errorMsg, Toast.LENGTH_SHORT).show()
             }
+        }
+    }
+    setOnLoadMoreStateListener {
+        when (it) {
+            is State.Error -> {
+                Toast.makeText(context, it.exception.errorMsg, Toast.LENGTH_SHORT).show()
+            }
+            else -> {}
+        }
+    }
+
+    setOnPrependStateListener {
+        when (it) {
+            is State.Error -> {
+                Toast.makeText(context, it.exception.errorMsg, Toast.LENGTH_SHORT).show()
+            }
+            else -> {}
         }
     }
 }
 
+
 /**
  * 刷新
  */
-fun SwipeRefreshLayout.init(adapter: PagingDataAdapter<*, *>, doRefresh: (() -> Unit)? = null) {
+fun SwipeRefreshLayout.init(doRefresh: (() -> Unit)? = null) {
     this.setColorSchemeColors(Color.rgb(47, 223, 189))
     setOnRefreshListener {
         doRefresh?.invoke()

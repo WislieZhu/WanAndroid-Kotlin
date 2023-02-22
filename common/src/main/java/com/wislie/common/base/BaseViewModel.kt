@@ -3,6 +3,8 @@ package com.wislie.common.base
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.wislie.common.network.AppException
+import com.wislie.common.network.ExceptionHandle
 import com.wislie.common.wrapper.ApiResponse
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Dispatchers
@@ -64,14 +66,14 @@ fun <T> BaseViewModel.request(
             when (result.errorCode) {
                 0 -> liveData.value = ResultState.Success(result.data)
                 else -> liveData.value =
-                    ResultState.Error(Exception(result.errorMsg), result.errorCode)
+                    ResultState.Error(AppException(result.errorCode,result.errorMsg), result.errorCode)
             }
         }.onFailure { error ->
             if (isShowDialog) {
                 liveData.value = ResultState.Loading(loadingMessage, false)
             }
             //处理失败的情况
-            liveData.value = ResultState.Error(Exception(error))
+            liveData.value = ResultState.Error(ExceptionHandle.handleException(error))
         }
     }
 }
@@ -80,7 +82,7 @@ fun <T> BaseViewModel.request(
 fun <T> BaseViewModel.request(
     block: suspend () -> ApiResponse<T?>,
     success: (ApiResponse<T?>) -> Unit,
-    failed: (Exception, Int) -> Unit,
+    failed: (AppException, Int) -> Unit,
     onLoading: (String, Boolean) -> Unit,
     isShowDialog: Boolean = false,
     loadingMessage: String = "请求网络中...",
@@ -101,14 +103,14 @@ fun <T> BaseViewModel.request(
             //处理成功的情况
             when (result.errorCode) {
                 0 -> success(result)
-                else -> failed(Exception(result.errorMsg), result.errorCode)
+                else -> failed(AppException(result.errorCode,result.errorMsg), result.errorCode) //Exception(result.errorMsg)
             }
         }.onFailure { error ->
             if (isShowDialog) {
                 onLoading(loadingMessage, false)
             }
             //处理失败的情况
-            failed(Exception(error), 0)
+            failed(ExceptionHandle.handleException(error), 0)
         }
     }
 }

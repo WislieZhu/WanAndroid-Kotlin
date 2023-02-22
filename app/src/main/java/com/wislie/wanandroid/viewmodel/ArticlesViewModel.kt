@@ -9,6 +9,7 @@ import com.wislie.common.base.request
 import com.wislie.wanandroid.data.*
 import com.wislie.wanandroid.datasource.*
 import com.wislie.wanandroid.network.apiService
+import kotlinx.coroutines.runBlocking
 
 
 class ArticlesViewModel : BaseViewModel() {
@@ -23,7 +24,13 @@ class ArticlesViewModel : BaseViewModel() {
     val wendaArticleList by lazy {
         Pager(
             PagingConfig(pageSize = 1),
-            pagingSourceFactory = { WendaArticlePagingSource() })
+            pagingSourceFactory = {
+                BasePagingSource(1) { currentPage ->
+                    runBlocking {
+                        apiService.getWendaArticles(currentPage)
+                    }
+                }
+            })
             .flow
     }
 
@@ -33,18 +40,15 @@ class ArticlesViewModel : BaseViewModel() {
     val collectArticleList by lazy {
         Pager(
             PagingConfig(pageSize = 1),
-            pagingSourceFactory = { CollectArticlePagingSource() })
+            pagingSourceFactory = {
+                BasePagingSource(0) { currentPage ->
+                    runBlocking {
+                        apiService.getCollectArticles(currentPage)
+                    }
+                }
+            })
             .flow
     }
-
-    /**
-     * 问答评论列表
-     */
-    fun getWendaCommentList(id: Int) =
-        Pager(
-            PagingConfig(pageSize = 1),
-            pagingSourceFactory = { WendaCommentPagingSource(id) })
-            .flow
 
 
     val bannerResultLiveData by lazy {
@@ -77,9 +81,18 @@ class ArticlesViewModel : BaseViewModel() {
     fun getArticleListByCategory(cid: Int) =
         Pager(
             PagingConfig(pageSize = 1),
-            pagingSourceFactory = { ArticleCategoryPagingSource(cid) })
+            pagingSourceFactory = {
+                BasePagingSource(0) { currentPage ->
+                    runBlocking {
+                        if (cid == 0) {
+                            apiService.getProjectLatest(currentPage)
+                        } else {
+                            apiService.getProjectByCategory(currentPage, cid)
+                        }
+                    }
+                }
+            })
             .flow
-
 
     val usualWebsiteLiveData by lazy {
         MutableLiveData<ResultState<List<UsualWebsite>?>>()
@@ -245,9 +258,20 @@ class ArticlesViewModel : BaseViewModel() {
      * 公众号文章列表
      */
     fun getWxArticleList(id: Int, key: String?) =
+
         Pager(
             PagingConfig(pageSize = 1),
-            pagingSourceFactory = { WxArticlePagingSource(id, key) })
+            pagingSourceFactory = {
+                BasePagingSource(1) { currentPage ->
+                    runBlocking {
+                        if (key.isNullOrEmpty()) {
+                            apiService.getWxHistoryArticleList(id, currentPage)
+                        } else {
+                            apiService.getWxHistoryArticleList(id, currentPage, key)
+                        }
+                    }
+                }
+            })
             .flow
 
     /**
@@ -256,7 +280,13 @@ class ArticlesViewModel : BaseViewModel() {
     val squareArticleList by lazy {
         Pager(
             PagingConfig(pageSize = 1),
-            pagingSourceFactory = { SquareArticlePagingSource() })
+            pagingSourceFactory = {
+                BasePagingSource(0) { currentPage ->
+                    runBlocking {
+                        apiService.getSquareArticleList(currentPage)
+                    }
+                }
+            })
             .flow
     }
 
@@ -277,9 +307,16 @@ class ArticlesViewModel : BaseViewModel() {
      * 体系的文章列表
      */
     fun getTreeArticleList(id: Int) =
+
         Pager(
             PagingConfig(pageSize = 1),
-            pagingSourceFactory = { TreeArticlePagingSource(id) })
+            pagingSourceFactory = {
+                BasePagingSource(0) { currentPage ->
+                    runBlocking {
+                        apiService.getTreeArticleList(currentPage, id)
+                    }
+                }
+            })
             .flow
 
     /**
@@ -288,7 +325,13 @@ class ArticlesViewModel : BaseViewModel() {
     fun getTreeArticleSearchList(author: String) =
         Pager(
             PagingConfig(pageSize = 1),
-            pagingSourceFactory = { TreeArticleSearchPagingSource(author) })
+            pagingSourceFactory = {
+                BasePagingSource(0) { currentPage ->
+                    runBlocking {
+                        apiService.getTreeArticleList(currentPage, author)
+                    }
+                }
+            })
             .flow
 
     /**
@@ -304,4 +347,52 @@ class ArticlesViewModel : BaseViewModel() {
         }, naviListLiveData)
     }
 
+    /**
+     * 分享者的文章列表
+     */
+    fun getShareAuthorArticleList(id: Int) =
+        Pager(
+            PagingConfig(pageSize = 1),
+            pagingSourceFactory = {
+                ShareAuthorArticlePagingSource { currentPage ->
+                    runBlocking {
+                        apiService.getShareAuthorArticles(id, currentPage)
+                    }
+                }
+            })
+            .flow
+
+    /**
+     * 自己的分享的文章列表
+     */
+    fun getSharePrivateArticleList() =
+        Pager(
+            PagingConfig(pageSize = 1),
+            pagingSourceFactory = {
+                ShareAuthorArticlePagingSource { currentPage ->
+                    runBlocking {
+                        apiService.getSharePrivateArticles(currentPage)
+                    }
+                }
+            })
+            .flow
+
+    /**
+     * 删除分享文章
+     */
+    val delShareArticleLiveData by lazy {
+        MutableLiveData<ResultState<Int>>()
+    }
+
+    fun delShareArticleLiveData(id:Int) {
+        request({
+            apiService.deleteShareArticle(id)
+        }, {
+            delShareArticleLiveData.value = ResultState.Success(id)
+        }, { exception, errorCode ->
+            delShareArticleLiveData.value = ResultState.Error(exception, errorCode, true)
+        }, { loadingMessage, isShowingDialog ->
+            delShareArticleLiveData.value = ResultState.Loading(loadingMessage, isShowingDialog)
+        })
+    }
 }

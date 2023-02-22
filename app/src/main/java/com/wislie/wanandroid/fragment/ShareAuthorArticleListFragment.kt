@@ -2,72 +2,108 @@ package com.wislie.wanandroid.fragment
 
 import android.text.TextUtils
 import android.view.View
+import androidx.core.content.ContextCompat
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import com.wislie.common.base.BaseViewModel
 import com.wislie.common.base.BaseViewModelFragment
-import com.wislie.common.base.parseListState
 import com.wislie.common.base.parseState
 import com.wislie.common.ext.addStateListener
+import com.wislie.common.ext.findNav
 import com.wislie.common.ext.init
 import com.wislie.wanandroid.App
 import com.wislie.wanandroid.R
 import com.wislie.wanandroid.adapter.FirstPageArticleAdapter
-import com.wislie.wanandroid.databinding.FragmentListBinding
+import com.wislie.wanandroid.adapter.LoadStateFooterAdapter
+import com.wislie.wanandroid.data.CollectEvent
+import com.wislie.wanandroid.databinding.FragmentToolbarListBinding
+import com.wislie.wanandroid.ext.initFab
 import com.wislie.wanandroid.ext.startLogin
 import com.wislie.wanandroid.viewmodel.ArticlesViewModel
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 
 /**
- * 项目分类
+ * 分享者的文章列表
  */
-class ProjectCategoryFragment :
-    BaseViewModelFragment<BaseViewModel, FragmentListBinding>() {
+class ShareAuthorArticleListFragment :
+    BaseViewModelFragment<BaseViewModel, FragmentToolbarListBinding>() {
 
-    private val projectArticlesViewModel: ArticlesViewModel by viewModels()
+    private val articlesViewModel: ArticlesViewModel by viewModels()
+
+    private var author: String? = null
+    private var articleId: Int? = null
+
     private val adapter by lazy {
         FirstPageArticleAdapter { articleInfo ->
             articleInfo?.run {
                 if (collect) {
-                    projectArticlesViewModel.unCollect(id)
+                    articlesViewModel.unCollect(id)
                 } else {
-                    projectArticlesViewModel.collect(articleInfo)
+                    articlesViewModel.collect(articleInfo)
                 }
             }
         }
     }
 
-    var cid: Int? = null
-
     override fun init(root: View) {
         super.init(root)
-        cid = arguments?.getInt("cid")
+
+        arguments?.run {
+            author = getString("author")
+            articleId = getInt("id")
+        }
+
+        binding.tb.toolbar.run {
+            setBackgroundColor(ContextCompat.getColor(hostActivity, R.color.purple_500))
+            setNavigationIcon(R.mipmap.ic_back)
+            title = author ?: ""
+            setNavigationOnClickListener {
+                findNav().navigateUp()
+            }
+        }
+
+
         registerLoadSir(binding.list.swipeRv) {
             adapter.refresh() //点击即刷新
         }
         binding.list.swipeRefreshLayout.init{
             adapter.refresh() //点击即刷新
         }
-        binding.list.swipeRv.adapter = adapter
+
+        binding.list.swipeRv.adapter =
+            adapter.withLoadStateFooter(
+                footer = LoadStateFooterAdapter(
+                    retry = { adapter.retry() })
+            )
         adapter.addStateListener(hostActivity, mBaseLoadService)
+        binding.list.fab.initFab(binding.list.swipeRv)
     }
 
     override fun observeData() {
+        super.observeData()
         //收藏
-        projectArticlesViewModel.collectResultLiveData.observe(
+        articlesViewModel.collectResultLiveData.observe(
             viewLifecycleOwner
         ) { resultState ->
-            parseListState(resultState, { articleInfo, position ->  //收藏成功
-                articleInfo.collect = true
-                adapter.notifyItemChanged(position, Any())
-            }, {
+            parseState(resultState, { articleInfo ->  //收藏成功
+                val list = adapter.snapshot().items
+                for (i in list.indices) {
+                    if (list[i].id == articleInfo.id) {
+                        list[i].collect = true
+                        adapter.notifyItemChanged(i, Any())
+                        App.instance().appViewModel.collectEventLiveData.value =
+                            CollectEvent(collect = true, articleInfo.id)
+                        break
+                    }
+                }
+            },  {
                 startLogin()
             })
         }
 
         //取消收藏
-        projectArticlesViewModel.uncollectLiveData.observe(
+        articlesViewModel.uncollectLiveData.observe(
             viewLifecycleOwner
         ) { resultState ->
             parseState(resultState, { id ->
@@ -76,24 +112,28 @@ class ProjectCategoryFragment :
                     if (id == list[i].id) {
                         adapter.notifyItemChanged(i, Any())
                         list[i].collect = false
+                        App.instance().appViewModel.collectEventLiveData.value =
+                            CollectEvent(collect = false, id)
                         break
                     }
                 }
-            },  {
+            }, {
                 startLogin()
             })
         }
+
+        //这是针对于用户登录后的列表收藏更新
         App.instance()
             .appViewModel
             .userInfoLiveData
             .observe(viewLifecycleOwner) { userInfo ->
                 val list = adapter.snapshot().items
-                if (userInfo == null) { //用户未登录, 显示未收藏
+                if (userInfo == null) { //用户未登录
                     for (i in list.indices) {
                         list[i].collect = false
                     }
                     adapter.notifyItemRangeChanged(0, list.size, Any())
-                } else { //用户已登录, 显示收藏
+                } else { //用户已登录
                     for (i in list.indices) {
                         if (list[i].id in userInfo.collectIds) {
                             list[i].collect = true
@@ -124,13 +164,15 @@ class ProjectCategoryFragment :
                     }
                 }
             }
+
     }
 
     override fun loadData() {
-        cid?.run {
+        articleId?.run {
             val id = this
             lifecycleScope.launch {
-                projectArticlesViewModel.getArticleListByCategory(id)
+                articlesViewModel
+                    .getShareAuthorArticleList(id)
                     .collectLatest {
                         if (binding.list.swipeRefreshLayout.isRefreshing) {
                             binding.list.swipeRefreshLayout.isRefreshing = false
@@ -139,9 +181,11 @@ class ProjectCategoryFragment :
                     }
             }
         }
+
     }
 
     override fun getLayoutResId(): Int {
-        return R.layout.fragment_list
+        return R.layout.fragment_toolbar_list
     }
+
 }

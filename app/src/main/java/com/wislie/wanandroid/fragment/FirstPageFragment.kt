@@ -10,7 +10,7 @@ import androidx.lifecycle.lifecycleScope
 import com.wislie.common.base.*
 import com.wislie.wanandroid.R
 import com.wislie.wanandroid.adapter.FirstPageArticleAdapter
-import com.wislie.common.ext.addFreshListener
+import com.wislie.common.ext.addStateListener
 import com.wislie.common.ext.findNav
 import com.wislie.common.ext.init
 import com.wislie.wanandroid.App
@@ -69,11 +69,10 @@ class FirstPageFragment : BaseViewModelFragment<BaseViewModel, FragmentToolbarLi
             }
         }
 
-
         registerLoadSir(binding.list.swipeRv) {
             adapter.refresh() //点击即刷新
         }
-        binding.list.swipeRefreshLayout.init(adapter){
+        binding.list.swipeRefreshLayout.init {
             adapter.refresh() //点击即刷新
         }
 
@@ -82,7 +81,7 @@ class FirstPageFragment : BaseViewModelFragment<BaseViewModel, FragmentToolbarLi
                 footer = LoadStateFooterAdapter(
                     retry = { adapter.retry() })
             )
-        adapter.addFreshListener(mBaseLoadService)
+        adapter.addStateListener(hostActivity, mBaseLoadService)
         val header: ItemFirstPageHeaderBinding = DataBindingUtil.inflate(
             LayoutInflater.from(hostActivity),
             R.layout.item_first_page_header, binding.list.swipeRv, false
@@ -107,7 +106,6 @@ class FirstPageFragment : BaseViewModelFragment<BaseViewModel, FragmentToolbarLi
                         .setIndicatorSliderGap(BannerUtils.dp2px(2F)) /*指示器的间距*/
                         .create(banners)  /*设置数据*/   /*必须*/
                 }
-            }, { errorMsg ->
             })
         }
 
@@ -126,7 +124,6 @@ class FirstPageFragment : BaseViewModelFragment<BaseViewModel, FragmentToolbarLi
                         break
                     }
                 }
-            }, { errorMsg ->
             }, {
                 startLogin()
             })
@@ -147,8 +144,7 @@ class FirstPageFragment : BaseViewModelFragment<BaseViewModel, FragmentToolbarLi
                         break
                     }
                 }
-            } , { errorMsg ->
-            },{
+            }, {
                 startLogin()
             })
         }
@@ -210,6 +206,7 @@ class FirstPageFragment : BaseViewModelFragment<BaseViewModel, FragmentToolbarLi
                 }
         }
     }
+
     override fun getLayoutResId(): Int {
         return R.layout.fragment_toolbar_list
     }
