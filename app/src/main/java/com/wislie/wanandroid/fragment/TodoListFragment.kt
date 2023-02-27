@@ -52,6 +52,7 @@ class TodoListFragment : BaseViewModelFragment<BaseViewModel, FragmentToolbarLis
             setBackgroundColor(ContextCompat.getColor(hostActivity, R.color.purple_500))
             setNavigationIcon(R.mipmap.ic_back)
             title = "玩Android"
+            setTitleTextColor(ContextCompat.getColor(hostActivity, R.color.white))
             inflateMenu(R.menu.add_menu)
             setOnMenuItemClickListener {
                 when (it.itemId) {
@@ -121,16 +122,9 @@ class TodoListFragment : BaseViewModelFragment<BaseViewModel, FragmentToolbarLis
         //新增Todo信息
         App.instance().appViewModel.todoInfoAddLiveData
             .observe(viewLifecycleOwner) { todoInfo ->
-                loadData()
-                //todo 总觉得这么写有问题，比如数量超过一页的时候
-//                lifecycleScope.launch {
-//                    todoViewModel
-//                        .todoList
-//                        .collectLatest {
-//                            it.insertFooterItem(TerminalSeparatorType.FULLY_COMPLETE, todoInfo)
-////                            adapter.submitData(lifecycle, it)
-//                        }
-//                }
+                todoInfo?.run {
+                    loadData()
+                }
             }
 
         //删除todo
@@ -159,7 +153,6 @@ class TodoListFragment : BaseViewModelFragment<BaseViewModel, FragmentToolbarLis
                         break
                     }
                 }
-            }, { errorMsg ->
             })
 
         }

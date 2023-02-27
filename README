@@ -612,10 +612,6 @@ PagingSource->Pager->Flow<PagingData>->PagingDataAdapter
 编辑收藏的文章，支持站内，站外  lg/collect/user_article/update/ 文章 id/json
 编辑收藏网站 lg/collect/updatetool/json
 7.搜索 article/query/0/json
-10.
-自己的分享的文章列表 user/lg/private_articles/1/json
-删除自己分享的文章 lg/user_article/delete/9475/json
-分享文章 lg/user_article/add/json
 12.个人信息接口  user/lg/userinfo/json
 13.问答评论列表 wenda/comments/问答id/json
 14.未读消息数量 message/lg/count_unread/json

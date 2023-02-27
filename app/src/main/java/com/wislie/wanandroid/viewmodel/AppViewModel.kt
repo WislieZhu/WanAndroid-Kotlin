@@ -31,4 +31,9 @@ class AppViewModel(application: Application):AndroidViewModel(application) {
     val todoInfoAddLiveData:MutableLiveData<ToDoInfo> by lazy {
         MutableLiveData()
     }
+
+    //share新增
+    val shareAddLiveData:MutableLiveData<Any> by lazy {
+        MutableLiveData()
+    }
 }

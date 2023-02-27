@@ -4,5 +4,7 @@ import com.wislie.common.util.Pref
 
 object Settings {
 
-    var isLogined: Boolean by Pref( false) //是否登录
+    var logined: Boolean by Pref(false) //是否登录
+
+    var nickname: String by Pref("") //用户名
 }

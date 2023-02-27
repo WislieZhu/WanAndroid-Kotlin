@@ -11,7 +11,6 @@ import com.wislie.wanandroid.datasource.*
 import com.wislie.wanandroid.network.apiService
 import kotlinx.coroutines.runBlocking
 
-
 class ArticlesViewModel : BaseViewModel() {
 
     val articleList by lazy {
@@ -152,26 +151,6 @@ class ArticlesViewModel : BaseViewModel() {
         })
     }
 
-
-    /**
-     * 列表收藏
-     */
-    val collectResultLiveData by lazy {
-        MutableLiveData<ResultState<ArticleInfo>>()
-    }
-
-    fun collect(articleInfo: ArticleInfo) {
-        request({
-            apiService.collect(articleInfo.id)
-        }, {
-            collectResultLiveData.value = ResultState.Success(articleInfo)
-        }, { exception, errorCode ->
-            collectResultLiveData.value = ResultState.Error(exception, errorCode, true)
-        }, { loadingMessage, isShowingDialog ->
-            collectResultLiveData.value = ResultState.Loading(loadingMessage, isShowingDialog)
-        })
-    }
-
     /**
      * 列表->收藏
      */
@@ -207,7 +186,7 @@ class ArticlesViewModel : BaseViewModel() {
     /**
      * 取消收藏
      */
-    val uncollectLiveData by lazy {
+    val unCollectLiveData by lazy {
         MutableLiveData<ResultState<Int>>()
     }
 
@@ -218,11 +197,11 @@ class ArticlesViewModel : BaseViewModel() {
         request({
             apiService.uncollect(articleId)
         }, {
-            uncollectLiveData.value = ResultState.Success(articleId)
+            unCollectLiveData.value = ResultState.Success(articleId)
         }, { exception, errorCode ->
-            uncollectLiveData.value = ResultState.Error(exception, errorCode, true)
+            unCollectLiveData.value = ResultState.Error(exception, errorCode, true)
         }, { loadingMessage, isShowingDialog ->
-            uncollectLiveData.value = ResultState.Loading(loadingMessage, isShowingDialog)
+            unCollectLiveData.value = ResultState.Loading(loadingMessage, isShowingDialog)
         }, isShowDialog = true)
     }
 
@@ -233,11 +212,11 @@ class ArticlesViewModel : BaseViewModel() {
         request({
             apiService.uncollect(id, originId)
         }, {
-            uncollectLiveData.value = ResultState.Success(id)
+            unCollectLiveData.value = ResultState.Success(id)
         }, { exception, errorCode ->
-            uncollectLiveData.value = ResultState.Error(exception, errorCode, true)
+            unCollectLiveData.value = ResultState.Error(exception, errorCode, true)
         }, { loadingMessage, isShowingDialog ->
-            uncollectLiveData.value = ResultState.Loading(loadingMessage, isShowingDialog)
+            unCollectLiveData.value = ResultState.Loading(loadingMessage, isShowingDialog)
         })
     }
 
@@ -394,5 +373,18 @@ class ArticlesViewModel : BaseViewModel() {
         }, { loadingMessage, isShowingDialog ->
             delShareArticleLiveData.value = ResultState.Loading(loadingMessage, isShowingDialog)
         })
+    }
+
+    /**
+     * 分享文章
+     */
+    val shareArticleLiveData by lazy {
+        MutableLiveData<ResultState<Any?>>()
+    }
+
+    fun shareArticle(title:String, link:String){
+        request({
+            apiService.shareArticle(title,link)
+        }, shareArticleLiveData)
     }
 }

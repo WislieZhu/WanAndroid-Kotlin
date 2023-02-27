@@ -1,9 +1,7 @@
 package com.wislie.common.base
 
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
-import android.widget.Toast
 import androidx.databinding.DataBindingUtil
 import androidx.databinding.ViewDataBinding
 import androidx.paging.LoadState
@@ -11,9 +9,9 @@ import androidx.paging.PagingDataAdapter
 import androidx.recyclerview.widget.DiffUtil
 import com.wislie.common.network.ExceptionHandle
 
-abstract class BaseAdapter<T : Any, Binding : ViewDataBinding, VH : BaseVHolder<T>>(itemCallback: DiffUtil.ItemCallback<T>) :
-    PagingDataAdapter<T, VH>(itemCallback) {
-
+abstract class BaseAdapter<T : Any, Binding : ViewDataBinding, VH : BaseVHolder<T>>(
+    itemCallback: DiffUtil.ItemCallback<T>
+) : PagingDataAdapter<T, VH>(itemCallback) {
     /**
      * 刷新状态监听
      */
@@ -31,16 +29,9 @@ abstract class BaseAdapter<T : Any, Binding : ViewDataBinding, VH : BaseVHolder<
 
     init {
         addLoadStateListener {
-            Log.i(
-                "wislieZhu",
-                "刷新=${::mOnRefreshStateListener.isInitialized}"
-            ) //KProperty0<*>.isInitialized
-            Log.i("wislieZhu", "加载更多=${::mOnLoadMoreStateListener.isInitialized}")
-            Log.i("wislieZhu", "头部添加=${::mOnPrependStateListener.isInitialized}")
             if (::mOnRefreshStateListener.isInitialized) {
                 dispatchState(
                     it.refresh, //在初始化刷新的使用
-                    "刷新...",
                     it.source.append.endOfPaginationReached,
                     mOnRefreshStateListener
                 )
@@ -48,7 +39,6 @@ abstract class BaseAdapter<T : Any, Binding : ViewDataBinding, VH : BaseVHolder<
             if (::mOnLoadMoreStateListener.isInitialized) {
                 dispatchState(
                     it.append, //在加载更多的时候使用
-                    "加载更多",
                     it.source.append.endOfPaginationReached,
                     mOnLoadMoreStateListener
                 )
@@ -56,7 +46,6 @@ abstract class BaseAdapter<T : Any, Binding : ViewDataBinding, VH : BaseVHolder<
             if (::mOnPrependStateListener.isInitialized) {
                 dispatchState(
                     it.prepend, //在当前列表头部添加数据的时候使用
-                    "头部添加数据",
                     it.source.append.endOfPaginationReached,
                     mOnPrependStateListener
                 )
@@ -67,7 +56,6 @@ abstract class BaseAdapter<T : Any, Binding : ViewDataBinding, VH : BaseVHolder<
 
     private fun dispatchState(
         loadState: LoadState,
-        tag: String,
         noMoreData: Boolean,
         stateListener: (State) -> Unit
     ) {

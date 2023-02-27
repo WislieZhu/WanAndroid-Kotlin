@@ -60,7 +60,7 @@ class TreeListFragment : BaseViewModelFragment<BaseViewModel, FragmentListBindin
                         adapter.submitData(pagingData)
                     }
                 }
-            }, { errorMsg ->
+            }, {
                 mBaseLoadService.showErrorCallback()
             })
         }

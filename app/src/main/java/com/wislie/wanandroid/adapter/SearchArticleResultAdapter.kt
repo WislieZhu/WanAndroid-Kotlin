@@ -2,7 +2,7 @@ package com.wislie.wanandroid.adapter
 
 import com.wislie.common.base.BaseAdapter
 import com.wislie.wanandroid.R
-import com.wislie.wanandroid.adapter.callback.ArticleCallback
+import com.wislie.wanandroid.adapter.callback.articleCallback
 import com.wislie.wanandroid.adapter.holder.SearchArticleResultHolder
 import com.wislie.wanandroid.data.ArticleInfo
 import com.wislie.wanandroid.databinding.ItemFirstPageArticleBinding
@@ -12,7 +12,7 @@ import com.wislie.wanandroid.databinding.ItemFirstPageArticleBinding
  */
 class SearchArticleResultAdapter(val collect: (articleInfo: ArticleInfo?) -> Unit)  :
     BaseAdapter<ArticleInfo, ItemFirstPageArticleBinding, SearchArticleResultHolder>(
-        ArticleCallback()
+        articleCallback
     ) {
     override fun onCreateViewHolder(binding: ItemFirstPageArticleBinding): SearchArticleResultHolder {
         return SearchArticleResultHolder(binding, collect)

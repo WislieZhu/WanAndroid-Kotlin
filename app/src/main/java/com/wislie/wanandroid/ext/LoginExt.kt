@@ -22,7 +22,7 @@ fun View.startLogin() {
  * 跳转目标fragment
  */
 fun BaseFragment<*>.startDestination(block: () -> Unit) {
-    if (Settings.isLogined) {
+    if (Settings.logined) {
         block.invoke()
     } else {
         startLogin()

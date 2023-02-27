@@ -17,7 +17,10 @@ class TodoAdapter(
 ) :
     BaseAdapter<ToDoInfo, ItemTodoBinding, TodoHolder>(callback) {
 
-    private val mSlideHelper = SlideHelper()
+    private val mSlideHelper by lazy {
+        SlideHelper()
+    }
+
     override fun onCreateViewHolder(binding: ItemTodoBinding): TodoHolder {
         return TodoHolder(mSlideHelper, binding, onDeleteClick, onDoneClick)
     }

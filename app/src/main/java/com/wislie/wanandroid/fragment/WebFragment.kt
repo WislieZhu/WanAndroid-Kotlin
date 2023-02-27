@@ -57,8 +57,6 @@ class WebFragment : BaseViewModelFragment<ArticlesViewModel, FragmentWebBinding>
             articleCollect = getBoolean("collect")
         }
 
-
-
         binding.tb.toolbar.run {
             setNavigationIcon(R.mipmap.ic_back)
             setBackgroundColor(ContextCompat.getColor(hostActivity, R.color.purple_500))
@@ -103,7 +101,7 @@ class WebFragment : BaseViewModelFragment<ArticlesViewModel, FragmentWebBinding>
 
     //收藏
     private fun collect() {
-        if (!Settings.isLogined) {
+        if (!Settings.logined) {
             startLogin()
             return
         }
@@ -143,7 +141,7 @@ class WebFragment : BaseViewModelFragment<ArticlesViewModel, FragmentWebBinding>
 
     //取消收藏
     private fun unCollect() {
-        if (!Settings.isLogined) {
+        if (!Settings.logined) {
             startLogin()
             return
         }
@@ -223,7 +221,7 @@ class WebFragment : BaseViewModelFragment<ArticlesViewModel, FragmentWebBinding>
         }
 
         //列表/收藏页 取消收藏
-        articlesViewModel.uncollectLiveData.observe(viewLifecycleOwner) { resultState ->
+        articlesViewModel.unCollectLiveData.observe(viewLifecycleOwner) { resultState ->
             parseState(resultState, { id ->  //取消收藏成功
                 setCollectStatus(collect = false)
                 App.instance().appViewModel.collectEventLiveData.value =

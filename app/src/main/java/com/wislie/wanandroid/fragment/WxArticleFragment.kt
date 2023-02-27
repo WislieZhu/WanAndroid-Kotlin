@@ -12,6 +12,7 @@ import com.wislie.wanandroid.App
 import com.wislie.wanandroid.R
 import com.wislie.wanandroid.adapter.LoadStateFooterAdapter
 import com.wislie.wanandroid.adapter.WxArticleAdapter
+import com.wislie.wanandroid.data.CollectEvent
 import com.wislie.wanandroid.databinding.FragmentWxArticleBinding
 import com.wislie.wanandroid.ext.startLogin
 import com.wislie.wanandroid.viewmodel.ArticlesViewModel
@@ -35,7 +36,7 @@ class WxArticleFragment :
                 if (collect) {
                     articlesViewModel.unCollect(id)
                 } else {
-                    articlesViewModel.collect(articleInfo)
+                    articlesViewModel.collect(id)
                 }
             }
         }
@@ -79,15 +80,17 @@ class WxArticleFragment :
     override fun observeData() {
         super.observeData()
         //收藏
-        articlesViewModel.collectResultLiveData.observe(
+        articlesViewModel.collectLiveData.observe(
             viewLifecycleOwner
         ) { resultState ->
-            parseState(resultState, { articleInfo ->  //收藏成功
+            parseState(resultState, { articleId ->  //收藏成功
                 val list = adapter.snapshot().items
                 for (i in list.indices) {
-                    if (list[i].id == articleInfo.id) {
+                    if (list[i].id == articleId) {
                         list[i].collect = true
                         adapter.notifyItemChanged(i, Any())
+                        App.instance().appViewModel.collectEventLiveData.value =
+                            CollectEvent(collect = true, articleId)
                         break
                     }
                 }
@@ -97,7 +100,7 @@ class WxArticleFragment :
         }
 
         //取消收藏
-        articlesViewModel.uncollectLiveData.observe(
+        articlesViewModel.unCollectLiveData.observe(
             viewLifecycleOwner
         ) { resultState ->
             parseState(resultState, { id ->

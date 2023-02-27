@@ -70,7 +70,7 @@ fun <R> BaseFragment<*>.parseStateNoLogin(
         }
         is ResultState.Loading -> {
             if (resultState.isShownDialog) {
-                showLoading(resultState.loadingMessage)
+                showLoading()
             } else {
                 dismissLoading()
             }
@@ -100,7 +100,7 @@ fun <R> BaseFragment<*>.parseState(
         }
         is ResultState.Loading -> {
             if (resultState.isShownDialog) {
-                showLoading(resultState.loadingMessage)
+                showLoading()
             } else {
                 dismissLoading()
             }
@@ -126,7 +126,7 @@ fun <R> BaseFragment<*>.parseListState(
         }
         is ResultState.Loading -> {
             if (resultState.isShownDialog) {
-                showLoading(resultState.loadingMessage)
+                showLoading()
             } else {
                 dismissLoading()
             }

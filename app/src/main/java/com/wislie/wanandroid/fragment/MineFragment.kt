@@ -3,7 +3,11 @@ package com.wislie.wanandroid.fragment
 import android.os.Environment
 import android.util.Log
 import android.view.View
+import android.widget.Toast
 import androidx.fragment.app.viewModels
+import com.hjq.permissions.OnPermissionCallback
+import com.hjq.permissions.Permission
+import com.hjq.permissions.XXPermissions
 //import com.github.moduth.blockcanary.BlockCanaryInternals
 
 import com.wislie.common.base.BaseViewModelFragment
@@ -69,6 +73,11 @@ class MineFragment : BaseViewModelFragment<MineStateViewModel, FragmentMineBindi
             }
         }
 
+        binding.btnMyPic.setOnClickListener {  //头像
+
+
+        }
+
         binding.btnLogout.setOnClickListener { //退出登录
             logoutViewModel.logout()
         }
@@ -90,6 +99,40 @@ class MineFragment : BaseViewModelFragment<MineStateViewModel, FragmentMineBindi
 
     }
 
+    private fun takeCamera(){
+        XXPermissions
+            .with(context)
+            .permission(Permission.CAMERA)
+            .permission(Permission.MANAGE_EXTERNAL_STORAGE)
+            .request(object : OnPermissionCallback {
+                override fun onGranted(
+                    granted: List<String>,
+                    all: Boolean
+                ) {
+                    if (all) {
+                        startDestination {
+
+                        }
+                    }
+                }
+
+                override fun onDenied(
+                    denied: List<String>,
+                    never: Boolean
+                ) {
+                    if (never) {
+                        Toast.makeText(hostActivity,"拍照权限被永久拒绝授权，请手动授予拍照权限",Toast.LENGTH_SHORT).show()
+                        XXPermissions.startPermissionActivity(
+                            context,
+                            denied
+                        )
+                    } else {
+                        Toast.makeText(hostActivity,"获取拍照权限失败",Toast.LENGTH_SHORT).show()
+                    }
+                }
+            })
+    }
+
 
 
     private fun log() {
@@ -108,7 +151,7 @@ class MineFragment : BaseViewModelFragment<MineStateViewModel, FragmentMineBindi
     }
 
     override fun loadData() { //表示已登录
-        if (Settings.isLogined) {
+        if (Settings.logined) {
             coinViewModel.getCoin()
         }
         //如果没有登录, 积分显示为--, 当前排名显示为--, 用户名显示为--
@@ -143,7 +186,7 @@ class MineFragment : BaseViewModelFragment<MineStateViewModel, FragmentMineBindi
 
         logoutViewModel.logoutResultLiveData.observe(viewLifecycleOwner) { resultState ->
             parseState(resultState, {
-                Settings.isLogined = false
+                Settings.logined = false
                 App.instance().appViewModel.userInfoLiveData.value = null
                 mViewModel?.coin?.set(null)
             })

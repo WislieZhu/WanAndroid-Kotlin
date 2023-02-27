@@ -1,11 +1,9 @@
 package com.wislie.wanandroid.fragment
 
-import android.util.Log
 import android.view.View
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
-import androidx.paging.LoadState
 import com.wislie.common.base.BaseViewModel
 import com.wislie.common.base.BaseViewModelFragment
 import com.wislie.common.ext.addStateListener
@@ -19,7 +17,6 @@ import com.wislie.wanandroid.ext.initFab
 import com.wislie.wanandroid.viewmodel.CoinViewModel
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
-import java.io.IOException
 
 /**
  *    author : Wislie
@@ -42,6 +39,7 @@ class CoinRankListFragment : BaseViewModelFragment<BaseViewModel, FragmentToolba
             setNavigationIcon(R.mipmap.ic_back)
             setBackgroundColor(ContextCompat.getColor(hostActivity, R.color.purple_500))
             title = "积分排行版"
+            setTitleTextColor(ContextCompat.getColor(hostActivity, R.color.white))
             setNavigationOnClickListener {
                 findNav().navigateUp()
             }
@@ -71,31 +69,6 @@ class CoinRankListFragment : BaseViewModelFragment<BaseViewModel, FragmentToolba
             )
         adapter.addStateListener(hostActivity, mBaseLoadService)
         binding.list.fab.initFab(binding.list.swipeRv)
-    }
-
-    override fun observeData() {
-        super.observeData()
-        adapter.addLoadStateListener {
-            when (it.refresh) {
-                is LoadState.NotLoading -> {
-                    Log.i("wislieZhu", "is NotLoading")
-                }
-                is LoadState.Loading -> {
-                    Log.i("wislieZhu", "is Loading")
-                }
-                is LoadState.Error -> {
-                    Log.i("wislieZhu","刷新加载出错=${(it.refresh as LoadState.Error).error.message}")
-                    when ((it.refresh as LoadState.Error).error) {
-                        is IOException -> {
-                            Log.i("wislieZhu", "IOException")
-                        }
-                        else -> {
-                            Log.i("wislieZhu", "others exception")
-                        }
-                    }
-                }
-            }
-        }
     }
 
     override fun loadData() {

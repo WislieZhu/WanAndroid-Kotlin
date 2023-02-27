@@ -18,6 +18,7 @@ import com.wislie.wanandroid.adapter.LoadStateFooterAdapter
 import com.wislie.wanandroid.adapter.TreeArticleAdapter
 import com.wislie.wanandroid.data.CollectEvent
 import com.wislie.wanandroid.databinding.FragmentListBinding
+import com.wislie.wanandroid.ext.startLogin
 import com.wislie.wanandroid.viewmodel.ArticlesViewModel
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.combine
@@ -39,7 +40,7 @@ class TreeArticleListFragment :
                 if (collect) {
                     articlesViewModel.unCollect(id)
                 } else {
-                    articlesViewModel.collect(articleInfo)
+                    articlesViewModel.collect(id)
                 }
             }
         }
@@ -87,8 +88,30 @@ class TreeArticleListFragment :
 
     override fun observeData() {
         super.observeData()
+
+
+        //收藏
+        articlesViewModel.collectLiveData.observe(
+            viewLifecycleOwner
+        ) { resultState ->
+            parseState(resultState, { articleId ->  //收藏成功
+                val list = adapter.snapshot().items
+                for (i in list.indices) {
+                    if (list[i].id == articleId) {
+                        list[i].collect = true
+                        adapter.notifyItemChanged(i, Any())
+                        App.instance().appViewModel.collectEventLiveData.value =
+                            CollectEvent(collect = true, articleId)
+                        break
+                    }
+                }
+            }, {
+                startLogin()
+            })
+        }
+
         //取消收藏
-        articlesViewModel.uncollectLiveData
+        articlesViewModel.unCollectLiveData
             .observe(viewLifecycleOwner) { resultState ->
                 parseState(resultState, { id ->
                     val list = adapter.snapshot().items
@@ -104,6 +127,27 @@ class TreeArticleListFragment :
                         }
                     }
                 })
+            }
+
+        //这是针对于用户登录后的列表收藏更新
+        App.instance()
+            .appViewModel
+            .userInfoLiveData
+            .observe(viewLifecycleOwner) { userInfo ->
+                val list = adapter.snapshot().items
+                if (userInfo == null) { //用户未登录
+                    for (i in list.indices) {
+                        list[i].collect = false
+                    }
+                    adapter.notifyItemRangeChanged(0, list.size, Any())
+                } else { //用户已登录
+                    for (i in list.indices) {
+                        if (list[i].id in userInfo.collectIds) {
+                            list[i].collect = true
+                            adapter.notifyItemChanged(i, Any())
+                        }
+                    }
+                }
             }
 
         //这是针对于WebFragment收藏/取消收藏后的列表收藏更新

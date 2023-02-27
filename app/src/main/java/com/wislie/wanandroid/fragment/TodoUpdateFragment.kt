@@ -65,6 +65,7 @@ class TodoUpdateFragment : BaseViewModelFragment<TodoStateViewModel, FragmentTod
             setNavigationIcon(R.mipmap.ic_back)
             setBackgroundColor(ContextCompat.getColor(hostActivity, R.color.purple_500))
             title = "修改TODO"
+            setTitleTextColor(ContextCompat.getColor(hostActivity, R.color.white))
             setNavigationOnClickListener {
                 findNav().navigateUp()
             }

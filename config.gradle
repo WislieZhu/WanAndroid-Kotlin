@@ -28,6 +28,7 @@ versions.room = "2.4.3"
 versions.blockcanary = "1.5.0"
 versions.calendarview="3.7.1"
 versions.slidelayout="1.0.4"
+versions.XXPermissions="16.2"
 
 def retrofit = [:]
 retrofit.runtime="com.squareup.retrofit2:retrofit:$versions.retrofit"
@@ -130,4 +131,8 @@ deps.calendarview = calendarview
 
 def slidelayout = "com.dsiner.lib:slidelayout:$versions.slidelayout"
 deps.slidelayout = slidelayout
+
+def XXPermissions = "com.github.getActivity:XXPermissions:$versions.XXPermissions"
+deps.XXPermissions = XXPermissions
+
 deps.baseUrl = "https://www.wanandroid.com/"

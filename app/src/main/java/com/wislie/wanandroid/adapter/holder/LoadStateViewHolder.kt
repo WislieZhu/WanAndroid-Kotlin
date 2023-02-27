@@ -1,6 +1,5 @@
 package com.wislie.wanandroid.adapter.holder
 
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -14,7 +13,9 @@ class LoadStateViewHolder(parent: ViewGroup, var retry: () -> Unit) :
         LayoutInflater.from(parent.context)
             .inflate(R.layout.item_load_state, parent, false)
     ) {
-    var binding: ItemLoadStateBinding = ItemLoadStateBinding.bind(itemView)
+    val binding: ItemLoadStateBinding by lazy {
+        ItemLoadStateBinding.bind(itemView)
+    }
 
     init {
         binding.btnRetry.setOnClickListener {
@@ -25,6 +26,10 @@ class LoadStateViewHolder(parent: ViewGroup, var retry: () -> Unit) :
     fun bindState(loadState: LoadState) {
         when (loadState) {
             is LoadState.Error -> {
+
+
+                loadState.error
+
                 binding.tvNoMoreData.visibility = View.GONE
                 binding.btnRetry.visibility = View.VISIBLE
                 binding.llLoading.visibility = View.GONE

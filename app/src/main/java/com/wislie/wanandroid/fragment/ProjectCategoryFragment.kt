@@ -6,13 +6,13 @@ import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import com.wislie.common.base.BaseViewModel
 import com.wislie.common.base.BaseViewModelFragment
-import com.wislie.common.base.parseListState
 import com.wislie.common.base.parseState
 import com.wislie.common.ext.addStateListener
 import com.wislie.common.ext.init
 import com.wislie.wanandroid.App
 import com.wislie.wanandroid.R
 import com.wislie.wanandroid.adapter.FirstPageArticleAdapter
+import com.wislie.wanandroid.data.CollectEvent
 import com.wislie.wanandroid.databinding.FragmentListBinding
 import com.wislie.wanandroid.ext.startLogin
 import com.wislie.wanandroid.viewmodel.ArticlesViewModel
@@ -32,7 +32,7 @@ class ProjectCategoryFragment :
                 if (collect) {
                     projectArticlesViewModel.unCollect(id)
                 } else {
-                    projectArticlesViewModel.collect(articleInfo)
+                    projectArticlesViewModel.collect(id)
                 }
             }
         }
@@ -55,19 +55,27 @@ class ProjectCategoryFragment :
 
     override fun observeData() {
         //收藏
-        projectArticlesViewModel.collectResultLiveData.observe(
+        projectArticlesViewModel.collectLiveData.observe(
             viewLifecycleOwner
         ) { resultState ->
-            parseListState(resultState, { articleInfo, position ->  //收藏成功
-                articleInfo.collect = true
-                adapter.notifyItemChanged(position, Any())
+            parseState(resultState, { articleId ->  //收藏成功
+                val list = adapter.snapshot().items
+                for (i in list.indices) {
+                    if (list[i].id == articleId) {
+                        list[i].collect = true
+                        adapter.notifyItemChanged(i, Any())
+                        App.instance().appViewModel.collectEventLiveData.value =
+                            CollectEvent(collect = true, articleId)
+                        break
+                    }
+                }
             }, {
                 startLogin()
             })
         }
 
         //取消收藏
-        projectArticlesViewModel.uncollectLiveData.observe(
+        projectArticlesViewModel.unCollectLiveData.observe(
             viewLifecycleOwner
         ) { resultState ->
             parseState(resultState, { id ->

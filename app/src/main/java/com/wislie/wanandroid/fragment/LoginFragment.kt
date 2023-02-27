@@ -1,10 +1,8 @@
 package com.wislie.wanandroid.fragment
 
-import android.annotation.SuppressLint
 import android.graphics.Color
 import android.view.View
 import android.widget.Toast
-import androidx.appcompat.widget.Toolbar
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.viewModels
 import com.wislie.common.base.BaseViewModelFragment
@@ -22,11 +20,10 @@ class LoginFragment : BaseViewModelFragment<LoginStateViewModel, FragmentLoginBi
 
     private val loginViewModel: LoginViewModel by viewModels()
 
-    @SuppressLint("RestrictedApi")
     override fun init(root: View) {
         super.init(root)
         binding.loginStateVm = mViewModel
-        root.findViewById<Toolbar>(R.id.toolbar).run {
+        binding.tb.toolbar.run {
             setNavigationIcon(R.mipmap.ic_back)
             setBackgroundColor(ContextCompat.getColor(hostActivity, R.color.purple_500))
             setTitleTextColor(Color.WHITE)
@@ -74,8 +71,9 @@ class LoginFragment : BaseViewModelFragment<LoginStateViewModel, FragmentLoginBi
                 parseState(resultState, { userInfo ->
                     userInfo?.run {
                         App.instance().appViewModel.userInfoLiveData.value = this
+                        Settings.nickname = this.nickname
                     }
-                    Settings.isLogined = true
+                    Settings.logined = true
                     findNav().navigateUp()
                 })
             }

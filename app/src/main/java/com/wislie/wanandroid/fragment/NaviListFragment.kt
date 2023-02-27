@@ -57,7 +57,7 @@ class NaviListFragment : BaseViewModelFragment<BaseViewModel, FragmentListBindin
                         adapter.submitData(pagingData)
                     }
                 }
-            }, { errorMsg ->
+            }, { 
                 mBaseLoadService.showErrorCallback()
             })
             if (binding.list.swipeRefreshLayout.isRefreshing) {

@@ -3,14 +3,13 @@ package com.wislie.common.ext
 import android.content.Context
 import android.graphics.Color
 import android.widget.Toast
-import androidx.paging.PagingDataAdapter
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.kingja.loadsir.core.LoadService
 import com.wislie.common.base.BaseAdapter
 import com.wislie.common.base.State
 
 /**
- * 监听刷新
+ * 监听刷新, 加载更多
  */
 fun BaseAdapter<*, *, *>.addStateListener(
     context: Context,

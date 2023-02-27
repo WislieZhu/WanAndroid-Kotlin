@@ -31,7 +31,6 @@ class App : Application() {
     override fun attachBaseContext(base: Context?) {
         super.attachBaseContext(base)
         TimeMonitorManager.instance?.resetTimeMonitor(TimeMonitorConfig.TIME_MONITOR_ID_APPLICATION_START)
-
     }
 
     override fun onCreate() {

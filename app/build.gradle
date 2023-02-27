@@ -46,6 +46,12 @@ android {
         enabled = true
     }
 
+    sourceSets {
+        main {
+            jniLibs.srcDirs = ['libs']
+        }
+    }
+
     /*序列化*/
     /*androidExtensions {
         experimental = true
@@ -95,6 +101,9 @@ dependencies {
     implementation deps.calendarview
 
     implementation deps.slidelayout
+
+    implementation deps.XXPermissions
+
 //    debugApi deps.blockcanary.android
 //    releaseApi deps.blockcanary.no_op
 

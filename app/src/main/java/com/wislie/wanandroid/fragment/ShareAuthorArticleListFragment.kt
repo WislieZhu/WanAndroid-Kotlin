@@ -40,7 +40,7 @@ class ShareAuthorArticleListFragment :
                 if (collect) {
                     articlesViewModel.unCollect(id)
                 } else {
-                    articlesViewModel.collect(articleInfo)
+                    articlesViewModel.collect(id)
                 }
             }
         }
@@ -58,6 +58,7 @@ class ShareAuthorArticleListFragment :
             setBackgroundColor(ContextCompat.getColor(hostActivity, R.color.purple_500))
             setNavigationIcon(R.mipmap.ic_back)
             title = author ?: ""
+            setTitleTextColor(ContextCompat.getColor(hostActivity, R.color.white))
             setNavigationOnClickListener {
                 findNav().navigateUp()
             }
@@ -83,17 +84,17 @@ class ShareAuthorArticleListFragment :
     override fun observeData() {
         super.observeData()
         //收藏
-        articlesViewModel.collectResultLiveData.observe(
+        articlesViewModel.collectLiveData.observe(
             viewLifecycleOwner
         ) { resultState ->
-            parseState(resultState, { articleInfo ->  //收藏成功
+            parseState(resultState, { articleId ->  //收藏成功
                 val list = adapter.snapshot().items
                 for (i in list.indices) {
-                    if (list[i].id == articleInfo.id) {
+                    if (list[i].id == articleId) {
                         list[i].collect = true
                         adapter.notifyItemChanged(i, Any())
                         App.instance().appViewModel.collectEventLiveData.value =
-                            CollectEvent(collect = true, articleInfo.id)
+                            CollectEvent(collect = true, articleId)
                         break
                     }
                 }
@@ -103,7 +104,7 @@ class ShareAuthorArticleListFragment :
         }
 
         //取消收藏
-        articlesViewModel.uncollectLiveData.observe(
+        articlesViewModel.unCollectLiveData.observe(
             viewLifecycleOwner
         ) { resultState ->
             parseState(resultState, { id ->

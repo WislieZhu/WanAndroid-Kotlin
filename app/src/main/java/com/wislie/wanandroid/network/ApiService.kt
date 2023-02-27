@@ -219,11 +219,13 @@ interface ApiService {
     @FormUrlEncoded
     suspend fun shareArticle(
         @Field("title") title: String,
-        @Field("content") content: String
-    ): ApiResponse<Any?>
+        @Field("link") content: String
+    ): ApiResponse<Any?> //分享文章
 
     @POST("lg/user_article/delete/{id}/json")
     suspend fun deleteShareArticle(
         @Path("id") id: Int
-    ): ApiResponse<Any?>
+    ): ApiResponse<Any?> //删除文章
+
+
 }

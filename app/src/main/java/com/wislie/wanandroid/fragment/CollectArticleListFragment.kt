@@ -75,7 +75,7 @@ class CollectArticleListFragment :
     override fun observeData() {
         super.observeData()
         //取消收藏
-        articlesViewModel.uncollectLiveData
+        articlesViewModel.unCollectLiveData
             .observe(viewLifecycleOwner) { resultState ->
                 parseState(resultState, { id ->
                     val list = adapter.snapshot().items

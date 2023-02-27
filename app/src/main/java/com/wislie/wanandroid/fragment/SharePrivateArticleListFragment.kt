@@ -13,6 +13,7 @@ import com.wislie.common.ext.addStateListener
 import com.wislie.common.ext.findNav
 import com.wislie.common.ext.init
 import com.wislie.common.ext.showEmptyCallback
+import com.wislie.wanandroid.App
 import com.wislie.wanandroid.R
 import com.wislie.wanandroid.adapter.LoadStateFooterAdapter
 import com.wislie.wanandroid.adapter.SharePrivateArticleAdapter
@@ -35,7 +36,7 @@ class SharePrivateArticleListFragment :
     private val adapter by lazy {
         SharePrivateArticleAdapter { articleInfo ->
             articleInfo?.run {
-               articlesViewModel.delShareArticleLiveData(this.id)
+                articlesViewModel.delShareArticleLiveData(this.id)
             }
         }
     }
@@ -47,11 +48,12 @@ class SharePrivateArticleListFragment :
             setBackgroundColor(ContextCompat.getColor(hostActivity, R.color.purple_500))
             setNavigationIcon(R.mipmap.ic_back)
             title = "我分享的文章"
+            setTitleTextColor(ContextCompat.getColor(hostActivity, R.color.white))
             inflateMenu(R.menu.add_menu)
             setOnMenuItemClickListener {
                 when (it.itemId) {
                     R.id.item_add -> { //添加
-//                        findNav().navigate(R.id.fragment_add_todo)
+                        findNav().navigate(R.id.fragment_share_article)
                     }
                 }
                 true
@@ -81,13 +83,12 @@ class SharePrivateArticleListFragment :
     override fun observeData() {
         super.observeData()
 
-        articlesViewModel.delShareArticleLiveData.observe(viewLifecycleOwner){
-                resultState ->
+        articlesViewModel.delShareArticleLiveData.observe(viewLifecycleOwner) { resultState ->
             parseState(resultState, { id ->  //删除
                 val list = adapter.snapshot().items
                 for (i in list.indices) {
                     if (list[i].id == id) {
-                        if(list.size == 1){
+                        if (list.size == 1) {
                             mBaseLoadService.showEmptyCallback()
                         }
                         articlesViewModel.removeFlowItem(list[i])
@@ -96,6 +97,11 @@ class SharePrivateArticleListFragment :
                 }
             })
         }
+        App.instance().appViewModel
+            .shareAddLiveData
+            .observe(viewLifecycleOwner) {
+                loadData()
+            }
     }
 
     override fun loadData() {

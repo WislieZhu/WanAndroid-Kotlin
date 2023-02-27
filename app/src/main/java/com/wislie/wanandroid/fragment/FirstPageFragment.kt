@@ -44,7 +44,7 @@ class FirstPageFragment : BaseViewModelFragment<BaseViewModel, FragmentToolbarLi
                 if (collect) {
                     articlesViewModel.unCollect(id)
                 } else {
-                    articlesViewModel.collect(articleInfo)
+                    articlesViewModel.collect(id)
                 }
             }
         }
@@ -55,6 +55,7 @@ class FirstPageFragment : BaseViewModelFragment<BaseViewModel, FragmentToolbarLi
         binding.tb.toolbar.run {
             setBackgroundColor(ContextCompat.getColor(hostActivity, R.color.purple_500))
             title = "玩Android"
+            setTitleTextColor(ContextCompat.getColor(hostActivity, R.color.white))
             inflateMenu(R.menu.first_page_menu)
             setOnMenuItemClickListener {
                 when (it.itemId) {
@@ -110,17 +111,17 @@ class FirstPageFragment : BaseViewModelFragment<BaseViewModel, FragmentToolbarLi
         }
 
         //收藏
-        articlesViewModel.collectResultLiveData.observe(
+        articlesViewModel.collectLiveData.observe(
             viewLifecycleOwner
         ) { resultState ->
-            parseState(resultState, { articleInfo ->  //收藏成功
+            parseState(resultState, { articleId ->  //收藏成功
                 val list = adapter.snapshot().items
                 for (i in list.indices) {
-                    if (list[i].id == articleInfo.id) {
+                    if (list[i].id == articleId) {
                         list[i].collect = true
                         adapter.notifyItemChanged(i, Any())
                         App.instance().appViewModel.collectEventLiveData.value =
-                            CollectEvent(collect = true, articleInfo.id)
+                            CollectEvent(collect = true, articleId)
                         break
                     }
                 }
@@ -130,7 +131,7 @@ class FirstPageFragment : BaseViewModelFragment<BaseViewModel, FragmentToolbarLi
         }
 
         //取消收藏
-        articlesViewModel.uncollectLiveData.observe(
+        articlesViewModel.unCollectLiveData.observe(
             viewLifecycleOwner
         ) { resultState ->
             parseState(resultState, { id ->

@@ -7,7 +7,6 @@ import com.wislie.common.ext.findNav
 import com.wislie.wanandroid.R
 import com.wislie.wanandroid.data.ArticleInfo
 import com.wislie.wanandroid.databinding.ItemSharePrivateArticleBinding
-import com.wislie.wanandroid.databinding.ItemWxArticleBinding
 import com.wislie.wanandroid.util.Settings
 import com.wislie.wanandroid.ext.startLogin
 import com.wislie.wanandroid.util.ArticleType
@@ -51,7 +50,7 @@ class SharePrivateArticleHolder(
         })
 
         binding.tvDelete.setOnClickListener {
-            if (!Settings.isLogined) {
+            if (!Settings.logined) {
                 it.startLogin()
                 return@setOnClickListener
             }

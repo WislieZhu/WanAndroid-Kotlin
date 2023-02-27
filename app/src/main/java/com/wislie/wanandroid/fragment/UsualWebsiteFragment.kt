@@ -33,6 +33,7 @@ class UsualWebsiteFragment : BaseViewModelFragment<BaseViewModel, FragmentToolba
             setNavigationIcon(R.mipmap.ic_back)
             setBackgroundColor(ContextCompat.getColor(hostActivity, R.color.purple_500))
             title = "常用网站"
+            setTitleTextColor(ContextCompat.getColor(hostActivity, R.color.white))
             setNavigationOnClickListener {
                 findNav().navigateUp()
             }

@@ -5,7 +5,12 @@ package com.wislie.wanandroid.activity
 import android.Manifest
 import android.os.Build
 import android.os.Bundle
+import android.os.Handler
+import android.os.Looper
+import android.util.Log
+import android.view.FrameMetrics
 import android.view.WindowManager
+import androidx.annotation.RequiresApi
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import com.wislie.common.base.BaseActivity
@@ -22,6 +27,7 @@ class MainActivity : BaseActivity<ActivityMainBinding>() {
             Manifest.permission.READ_EXTERNAL_STORAGE
         )
 
+    @RequiresApi(Build.VERSION_CODES.N)
     override fun onCreate(savedInstanceState: Bundle?) {
         //设置修改状态栏
         window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS)
@@ -45,6 +51,38 @@ class MainActivity : BaseActivity<ActivityMainBinding>() {
             this, permissions,
             100
         )
+
+//        Looper.getMainLooper().setMessageLogging()
+//        LooperPrinter
+
+       /* var sumFrameCost = 0L
+        var sumFrames = 0L
+        var lastDuration = 0L
+        var lastFrames = 0L
+        val frameIntervalNanos = 1 / windowManager.defaultDisplay.refreshRate * 1000000000
+        window.addOnFrameMetricsAvailableListener({ window, frameMetrics, dropCountSinceLastInvocation ->
+            val frameMetricsCopy = FrameMetrics(frameMetrics)
+            val vsyncTime = frameMetricsCopy.getMetric(FrameMetrics.VSYNC_TIMESTAMP)
+            val intentedVsyncTime = frameMetricsCopy.getMetric(FrameMetrics.INTENDED_VSYNC_TIMESTAMP)
+            val jitter = vsyncTime - intentedVsyncTime
+            val dropFrame: Int = (jitter / frameIntervalNanos).toInt()
+
+            // 不丢帧时正常帧也要算进去所以要+1
+            sumFrameCost += ((dropFrame + 1) * frameIntervalNanos / 1000000).toLong()
+            sumFrames += 1
+
+            val duration = sumFrameCost - lastDuration
+            val collectFrame = sumFrames - lastFrames
+
+            if (duration >= 200) {
+                val fps = 1000.0f * collectFrame / duration
+                Log.i("wislieZhu", ">>>>>>>fps->$fps")
+                lastFrames = sumFrames
+                lastDuration = sumFrameCost
+            }
+        }, Handler(Looper.getMainLooper()))*/
+
+
 
     }
 

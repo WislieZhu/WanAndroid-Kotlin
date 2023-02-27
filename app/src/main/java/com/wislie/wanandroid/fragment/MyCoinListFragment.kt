@@ -40,6 +40,7 @@ class MyCoinListFragment : BaseViewModelFragment<BaseViewModel, FragmentToolbarL
             setNavigationIcon(R.mipmap.ic_back)
             setBackgroundColor(ContextCompat.getColor(hostActivity, R.color.purple_500))
             title = "积分记录"
+            setTitleTextColor(ContextCompat.getColor(hostActivity, R.color.white))
             setNavigationOnClickListener {
                 findNav().navigateUp()
             }

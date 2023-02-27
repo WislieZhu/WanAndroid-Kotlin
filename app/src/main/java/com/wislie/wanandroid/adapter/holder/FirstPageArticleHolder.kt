@@ -32,7 +32,7 @@ class FirstPageArticleHolder(
         }
 
         binding.ivCollect.setOnClickListener { // 在onBindViewHolder中点击不合理
-            if (!Settings.isLogined) {
+            if (!Settings.logined) {
                 it.startLogin()
                 return@setOnClickListener
             }

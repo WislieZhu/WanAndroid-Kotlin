@@ -1,0 +1,59 @@
+plugins {
+    id 'java-library'
+    id 'org.jetbrains.kotlin.jvm'
+    id 'java-gradle-plugin'
+    id 'maven-publish'
+}
+
+java {
+    sourceCompatibility = JavaVersion.VERSION_1_8
+    targetCompatibility = JavaVersion.VERSION_1_8
+}
+
+repositories {
+    google()
+    mavenCentral()
+}
+
+dependencies {
+    implementation gradleApi()
+    implementation 'com.android.tools.build:gradle:7.2.0'
+
+    compileOnly 'org.ow2.asm:asm:9.3'
+    compileOnly 'org.ow2.asm:asm-util:9.3'
+    compileOnly 'org.ow2.asm:asm-commons:9.3'
+    compileOnly 'org.ow2.asm:asm-tree:9.3'
+}
+
+gradlePlugin {
+    plugins {
+        // 声明插件信息，这里的 methodTime 名字随意
+        methodClickPlugin {
+            // 插件ID
+            id = 'com.wislie.click.plugin'
+            // 插件的实现类
+            implementationClass = 'com.wislie.click.NoDoubleClickPlugin'
+        }
+    }
+}
+
+publishing {
+    publications {
+        // 这里myHub可以任意命名，是本地仓库名称
+        methodClickHub(MavenPublication) {
+            // 插件的组ID，建议设置为插件的包名
+            groupId = 'com.wislie.click.plugin'
+            // 插件在maven中的id，在通过classpath（groupId:artifactId:version）引用的时候需要填
+            artifactId = 'Maven'
+            version = '0.0.1'
+            // 组件类型，我们的插件是Java组件
+            from components.java
+        }
+    }
+    repositories {
+        maven {
+            // $rootDir 表示本项目的根目录
+            url = "$rootDir/repoNoDoubleClick"
+        }
+    }
+}
