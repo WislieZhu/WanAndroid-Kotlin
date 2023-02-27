@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    app:showAsAction="withText">
+
+    <item android:id="@+id/action_first_page"
+        android:title="@string/first_page"
+        android:orderInCategory="0"
+        android:icon="@mipmap/menu_main"
+        app:showAsAction="withText"/>
+
+    <item android:id="@+id/action_project"
+        android:title="@string/menu_project"
+        android:orderInCategory="1"
+        android:icon="@mipmap/menu_project"
+        app:showAsAction="withText"/>
+
+    <item android:id="@+id/action_system"
+        android:title="@string/menu_system"
+        android:orderInCategory="2"
+        android:icon="@mipmap/menu_project"
+        app:showAsAction="withText"/>
+
+    <item android:id="@+id/action_public"
+        android:title="@string/wechat_accounts"
+        android:icon="@mipmap/menu_public"
+        android:orderInCategory="3"
+        app:showAsAction="withText"/>
+
+    <item android:id="@+id/action_mine"
+        android:title="@string/mine"
+        android:icon="@mipmap/menu_me"
+        android:orderInCategory="4"
+        app:showAsAction="ifRoom"/>
+</menu>
+

@@ -1,0 +1,89 @@
+{
+  "formatVersion": "1.1",
+  "component": {
+    "group": "WanAndroid-Koltin",
+    "module": "asm_nodouble_click",
+    "version": "unspecified",
+    "attributes": {
+      "org.gradle.status": "release"
+    }
+  },
+  "createdBy": {
+    "gradle": {
+      "version": "7.4"
+    }
+  },
+  "variants": [
+    {
+      "name": "apiElements",
+      "attributes": {
+        "org.gradle.category": "library",
+        "org.gradle.dependency.bundling": "external",
+        "org.gradle.jvm.environment": "standard-jvm",
+        "org.gradle.jvm.version": 8,
+        "org.gradle.libraryelements": "jar",
+        "org.gradle.usage": "java-api",
+        "org.jetbrains.kotlin.platform.type": "jvm"
+      },
+      "dependencies": [
+        {
+          "group": "org.jetbrains.kotlin",
+          "module": "kotlin-stdlib-jdk8",
+          "version": {
+            "requires": "1.6.21"
+          }
+        }
+      ],
+      "files": [
+        {
+          "name": "Maven-0.0.1.jar",
+          "url": "Maven-0.0.1.jar",
+          "size": 16646,
+          "sha512": "95c5c0fc42423f619745008387692851926370f063548daef69fc74a8644e678accebd8bda8b0d868cf419fb69f908bdd625a36cb207604320d619442e91e822",
+          "sha256": "8905b2b451ed2ad544e9b55580ddc89f920746dcb1405a386c290bcfc26049b1",
+          "sha1": "cedbe52ff94ea7ba878489d306fe026c96254b2b",
+          "md5": "2edd8b8103bede5308affd5921d000f7"
+        }
+      ]
+    },
+    {
+      "name": "runtimeElements",
+      "attributes": {
+        "org.gradle.category": "library",
+        "org.gradle.dependency.bundling": "external",
+        "org.gradle.jvm.environment": "standard-jvm",
+        "org.gradle.jvm.version": 8,
+        "org.gradle.libraryelements": "jar",
+        "org.gradle.usage": "java-runtime",
+        "org.jetbrains.kotlin.platform.type": "jvm"
+      },
+      "dependencies": [
+        {
+          "group": "com.android.tools.build",
+          "module": "gradle",
+          "version": {
+            "requires": "7.2.0"
+          }
+        },
+        {
+          "group": "org.jetbrains.kotlin",
+          "module": "kotlin-stdlib-jdk8",
+          "version": {
+            "requires": "1.6.21"
+          }
+        }
+      ],
+      "files": [
+        {
+          "name": "Maven-0.0.1.jar",
+          "url": "Maven-0.0.1.jar",
+          "size": 16646,
+          "sha512": "95c5c0fc42423f619745008387692851926370f063548daef69fc74a8644e678accebd8bda8b0d868cf419fb69f908bdd625a36cb207604320d619442e91e822",
+          "sha256": "8905b2b451ed2ad544e9b55580ddc89f920746dcb1405a386c290bcfc26049b1",
+          "sha1": "cedbe52ff94ea7ba878489d306fe026c96254b2b",
+          "md5": "2edd8b8103bede5308affd5921d000f7"
+        }
+      ]
+    }
+  ]
+}

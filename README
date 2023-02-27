@@ -1,0 +1,584 @@
+1. 创建ArrayList实例visitTypeInsn->dup->init方法->newLocal局部变量->store
+2. 将每个局部变量填充到list实例, argTypes遍历,得到每个参数在局部变量表中的位置,调用list的add方法,之后pop
+3. 打印类名,方法名,参数类型 入参的descriptor,入参的值list所在位置，其他参数是visitLDC
+
+1.打印返回值
+根据类型dup/dup2
+转换成String类型
+2.打印类名，方法吗，返回参数类型，返回值
+
+特别注意:调用方法要注意是否是接口,如果是接口 true
+遍历时相加 需要用 type.size 而不是 type.sort
+type要注意清楚, 是method的type还是 return的type
+ldc 返回值是使用 ldc(returnType.descriptor)
+
+static方法替换: owner,methodName,methodDescriptor都要替换
+no-static方法替换: 加一个包装类，变成static方法，去调用该包装类的static方法即可
+方法体删除 owner,methodName,methodDescriptor比较后,根据返回类型mv.visitVarInsn, mv.visitInsn(Opcodes.XReturn), mv.visitEnd(),最后调用return null即可
+
+第一步的做法都是转换成字节码
+
+哪些方法被调用了: visitMethod 打印name,descriptor
+
+
+Class Transform
+
+
+
+java.util.function.Consumer<T>{
+     void accept(T t);
+}
+
+val methodBody = Consumer<MethodNode> { methodNode ->
+   //1
+  methodNode.visitVarInsn(Opcodes.ILOAD, 1)
+  methodNode.visitVarInsn(Opcodes.ILOAD, 2)
+  methodNode.visitInsn(Opcodes.IMUL)
+  methodNode.visitInsn(Opcodes.IRETURN)
+  methodNode.visitMaxs(2, 3)
+  methodNode.visitEnd()
+}
+//2 执行这个就回调用1以下的内容
+methodBody.accept(methodNode)
+
+
+自定义的继承MethodVisitor
+1.构造参数中传入methodNode
+2.visitEnd时强制将继承MethodVisitor对象转换成methodNode
+3.mn.accept(mv)
+自定义的继承MethodNode
+1.accept(mv)
+
+关于methodNode
+InsnList il = new InsnList()
+il.add(...)
+...
+il.add(...)
+methodNode.instructions.insert(i, il)
+
+
+apitree 不像api core一样，要考虑操作数栈的位置
+
+
+Internal Name -> java/lang/String
+Fully Qualified Class Name -> java.lang.String
+classWriter.visit 字段name使用是Internal Name
+ClassReader(String className) 中的className使用的是 Fully Qualified Class Name
+
+fieldWriter.visit 和
+methodWriter.visit  字段descriptor 类型描述符使用的是 ClassFile描述符
+boolean Z
+byte    B
+char    C
+int     I
+short   S
+float   F
+double  D
+long    J
+void    V
+String  Ljava/lang/String;
+Object  Ljava/lang/Object;
+byte[]  [B
+String[]   [Ljava/lang/String;
+Object[][] [[Ljava/lang/Object;
+
+int  add(int a, int b)      (II)I
+void test(int a, int b)     (II)V
+boolean compare(Object obj) (Ljava/lang/Object;)Z
+void main(String[] args)    ([Ljava/lang/String;)V
+
+visit(version,access,name,signature,superName,interfaces)
+visitField(access, name, descriptor, signature, value)
+visitMethod(access, name, descriptor, signature, exceptions)
+
+
+methodVisitor.visitVarInsn(ALOAD,0）
+methodVisitor.visitMethodInsn(INVOKESPECIAL, "java/lang/Object", "<init>", "()V", false)
+methodVisitor.visitInsn(RETURN)
+
+java编译器自动生成的默认编译器名称 <init>()
+cw.visitMethod(ACC_PUBLIC, "<init>", "()V", null, null)
+静态代码块,那么就会有一个<clinit>()方法
+cw.visitMethod(ACC_STATIC, "<clinit>", "()V", null, null)
+
+例:生成类或接口, 类静态变量,成员变量, 方法等
+cw.visit(version,access,name,signature,superName,interfaces)
+FieldVisitor fv1 = cw.visitField(access, name, descriptor, signature, value)
+fv1.visitEnd()
+
+MethodVisitor mv1 = cw.visitMethod(access, name, descriptor, signature, exceptions)
+mv1.visitEnd()
+byte[] bytes = cw.toByteArray()
+
+
+
+例:
+@MyTag(name = "tomcat", age = 10)
+int intValue = 100;
+1.创建FieldVisitor
+FieldVisitor fv1 = cw.visitField(ACC_PUBLIC | ACC_FINAL | ACC_STATIC, "intValue", "I", null, 100)
+2.创建AnnotationVisitor
+AnnotationVisitor av1 = fv1.visitAnnotation("包名/MyTag;",false)
+av1.visit("name","tomcat")
+av1.visit("age",10)
+av1.visitEnd()
+
+MethodVisitor
+
+visitInsn(final int opcode)
+visitIntInsn(final int opcode, final int operand)
+visitVarInsn(final int opcode, final int var)
+visitTypeInsn(final int opcode, final String type)
+visitFieldInsn(final int opcode, final String owner, final String name, final String descriptor)
+visitMethodInsn(final int opcode, final String owner, final String name, final String descriptor,
+                                final boolean isInterface)
+visitInvokeDynamicInsn(final String name, final String descriptor, final Handle bootstrapMethodHandle,
+                                       final Object... bootstrapMethodArguments)
+visitJumpInsn(final int opcode, final Label label)
+visitLabel(final Label label)
+visitLdcInsn(final Object value)
+visitIincInsn(final int var, final int increment)
+visitTableSwitchInsn(final int min, final int max, final Label dflt, final Label... labels)
+visitLookupSwitchInsn(final Label dflt, final int[] keys, final Label[] labels)
+visitMultiANewArrayInsn(final String descriptor, final int numDimensions)
+visitTryCatchBlock(final Label start, final Label end, final Label handler, final String type)
+
+本质 visitXxxInsn() 是组装instruction的内容
+1.mv.visitCode
+2.mv.visitXxxInsn
+3.mv.visitMaxs
+4.mv.visitEnd
+
+栈帧:
+局部变量表  是一个数组,索引从0开始
+操作数栈
+
+例:
+静态方法和非静态方法的区别:
+非静态方法：local variables(即局部变量表)索引为0的位置存在一个this变量
+静态方法: 不需要存储this
+public static int add(int a, int b) {
+    return a + b;
+}
+方法整体的Frame变化如下:
+add(II)I
+[int, int] []
+[int, int] [int]
+[int, int] [int, int]
+[int, int] [int]
+[] []
+
+public int add(int a, int b) {
+    return a + b;
+}
+方法整体的Frame变化如下:
+add(II)I
+[sample/HelloWorld, int, int] []
+[sample/HelloWorld, int, int] [int]
+[sample/HelloWorld, int, int] [int, int]
+[sample/HelloWorld, int, int] [int]
+[] []
+
+long和double类型:
+public long add(long a, long b) {
+    return a + b;
+}
+add(JJ)J
+[sample/HelloWorld, long, top, long, top] []
+[sample/HelloWorld, long, top, long, top] [long, top]
+[sample/HelloWorld, long, top, long, top] [long, top, long, top]
+[sample/HelloWorld, long, top, long, top] [long, top]
+[] []
+
+
+在.class文件中，构造方法的名字是<init>,从Instruction的角度来讲，调用构造方法会用到invokespecial指令
+
+例:
+public void test() {
+    GoodChild child = new GoodChild("Lucy", 8);
+}
+
+mv2.visitTypeInsn(NEW, "sample/GoodChild")
+mv2.visitInsn(DUP)
+mv2.visitLdcInsn("Lucy")
+mv2.visitIntInsn(BIPUSH, 8)
+mv2.visitMethodInsn(INVOKESPECIAL, "sample/GoodChild", "<init>", "(Ljava/lang/String;I)V", false);
+mv2.visitVarInsn(ASTORE, 1)
+mv2.visitInsn(RETURN)
+
+Frame变化情况:
+test()V
+[sample/HelloWorld] []
+[sample/HelloWorld] [uninitialized_sample/GoodChild]
+[sample/HelloWorld] [uninitialized_sample/GoodChild, uninitialized_sample/GoodChild]
+[sample/HelloWorld] [uninitialized_sample/GoodChild, uninitialized_sample/GoodChild, java/lang/String]
+[sample/HelloWorld] [uninitialized_sample/GoodChild, uninitialized_sample/GoodChild, java/lang/String, int]
+[sample/HelloWorld] [sample/GoodChild]
+[sample/HelloWorld, sample/GoodChild] []
+[] []
+
+例:
+public void test(int a, int b) {
+    int val = Math.max(a, b); // 对static方法进行调用
+    System.out.println(val);  // 对non-static方法进行调用
+}
+
+MethodVisitor mv2 = cw.visitMethod(ACC_PUBLIC, "test", "(II)V", null, null);
+mv2.visitCode();
+mv2.visitVarInsn(ILOAD, 1);
+mv2.visitVarInsn(ILOAD, 2);
+mv2.visitMethodInsn(INVOKESTATIC, "java/lang/Math", "max", "(II)I", false);
+mv2.visitVarInsn(ISTORE, 3);
+mv2.visitFieldInsn(GETSTATIC, "java/lang/System", "out", "Ljava/io/PrintStream;");
+mv2.visitVarInsn(ILOAD, 3);
+mv2.visitMethodInsn(INVOKEVIRTUAL, "java/io/PrintStream", "println", "(I)V", false);
+mv2.visitInsn(RETURN);
+mv2.visitMaxs(2, 4);
+mv2.visitEnd();
+
+Frame变化情况:
+test(II)V
+[sample/HelloWorld, int, int] []
+[sample/HelloWorld, int, int] [int]
+[sample/HelloWorld, int, int] [int, int]
+[sample/HelloWorld, int, int] [int]
+[sample/HelloWorld, int, int, int] []
+[sample/HelloWorld, int, int, int] [java/io/PrintStream]
+[sample/HelloWorld, int, int, int] [java/io/PrintStream, int]
+[sample/HelloWorld, int, int, int] []
+[] []
+
+例:
+public void test() {
+    System.out.println("This is a test method.");
+}
+
+public void printDate() {
+    Date now = new Date();
+    System.out.println(now);
+}
+
+MethodVisitor mv3 = cw.visitMethod(ACC_PUBLIC, "printDate", "()V", null, null);
+mv3.visitCode();
+mv3.visitTypeInsn(NEW, "java/util/Date");
+mv3.visitInsn(DUP);
+mv3.visitMethodInsn(INVOKESPECIAL, "java/util/Date", "<init>", "()V", false);
+mv3.visitVarInsn(ASTORE, 1);
+mv3.visitFieldInsn(GETSTATIC, "java/lang/System", "out", "Ljava/io/PrintStream;");
+mv3.visitVarInsn(ALOAD, 1);
+mv3.visitMethodInsn(INVOKEVIRTUAL, "java/io/PrintStream", "println", "(Ljava/lang/Object;)V", false);
+mv3.visitInsn(RETURN);
+mv3.visitMaxs(2, 2);
+mv3.visitEnd();
+
+
+mv.visitTypeInsn 创建对象
+mv.visitInsn(DUP) 创建完对象需要调用
+
+调用其他类的静态变量
+mv.visitFieldInsn(GETSTATIC,"java/lang/System", "out", "Ljava/io/PrintStream;")
+普通方法的调用
+INVOKEVIRTUAL
+构造方法的调用
+INVOKESPECIAL
+
+INVOKEDYNAMIC 应用场景：
+在创建Handle(int tag, String owner, String name, String descriptor, boolean isInterface)时,
+tag参数中使用；而该Handle实例会在MethodVisitor.visitInvokeDynamicInsn()方法使用到
+
+
+visitLabel 使用:
+1.定义Label类实例
+2.通过mv.visitLabel方法确定label的位置
+3.通过mv.visitJumpInsn与label建立联系
+
+
+ClassVisitor
+例:删除类的字段
+重写visitField: name和descriptor 如果相等, 返回null
+例:添加类的字段
+重写visitField：用来判断是否存在这个字段
+重写visitEnd: 不存在这个字段时, 先调用FieldVisitor fv = cv.visitField,再调用 fv.visitEnd
+
+例:删除类的方法
+重写visitMethod: name和descriptor 如果相等, 返回null
+例:添加类的方法
+重写visitMethod：用来判断是否存在这个字段
+重写visitEnd: 不存在这个字段时, 先调用MethodVisitor mv = cv.visitMethod,再调用 mv.visitCode, mv.visitXxxInsn, mv.visitEnd
+
+Type
+int getSort()
+String getClassName()
+String getInternalName()
+String getDescriptor()
+
+获取Type的方式
+1.通过descriptor
+Type t1 = Type.getMethodType("(II)I");
+Type t2 = Type.getType("Ljava/lang/String;");
+2.通过internal name
+Type t = Type.getObjectType("java/lang/String");
+3.通过java.lang.class对象
+Type t = Type.getType(String.class);
+4.通过静态字段
+Type t = Type.INT_TYPE;
+
+
+getArgumentTypes()
+用于获取“方法”接收的参数类型
+getReturnType()
+用于获取“方法”返回值的类型
+
+getSize()
+用于返回某一个类型所占用的slot空间的大小
+
+getOpcode()
+获取当前Type的opcode:
+int newOpcode = t.getOpcode(oldOpcode);
+
+
+if (mv != null && "<init>".equals(name)) {
+    // TODO: 添加“方法进入”时的代码
+}
+
+
+if (opcode == Opcodes.ATHROW || (opcode >= Opcodes.IRETURN && opcode <= Opcodes.RETURN)) {
+    // TODO: 添加“方法退出”时的代码
+}
+
+Lambda表达式在编译后会生成一个内部静态方法或内部实例方法
+
+
+Tree API的优势
+1.容易入手
+2.实现比较复杂的功能
+Core API的优势：
+1.执行效率高
+2.占用的内存空间少
+
+
+tree api
+//构建classNode,转换成byte数组
+1.创建classNode, 设置其version, access, name, signature, superName, interfaces等属性
+2.创建FieldNode，构造器中传入其属性, classNode添加fieldNode实例
+3.创建MethodNode，构造器中传入其属性, classNode添加methodNode实例
+4.创建ClassWriter, classNode.accept(classWriter), classWrite.toByteArray()
+
+//将byte数组转换成classNode
+int api = Opcodes.ASM9;
+ClassNode cn = new ClassNode(api);
+classReader cr = new ClassReader(bytes)
+cr.accept(cn, ClassReader.SKIP_FRAMES | ClassReader.SKIP_DEBUG);
+
+
+//构造methodNode
+MethodNode mn1 = new MethodNode(ACC_PUBLIC, "<init>", "()V", null, null);
+cn.methods.add(mn1);
+InsnList il = mn1.instructions;
+il.add(new VarInsnNode(ALOAD, 0));
+il.add(new MethodInsnNode(INVOKESPECIAL, "java/lang/Object", "<init>", "()V", false));
+il.add(new InsnNode(RETURN));
+
+//InsnList 是一个双向链表
+
+1.遍历InsnList
+InsnList instructions = cn.methods.get(0).instructions;
+for (AbstractInsnNode insn : instructions) {
+    ...
+}
+
+2.增加:开头
+insert(AbstractInsnNode insnNode)
+insert(InsnList insnList)
+
+3.增加:结尾
+add(AbstractInsnNode insnNode)
+add(InsnList insnList)
+
+4. 增加：插队
+insert(AbstractInsnNode previousInsn, AbstractInsnNode insnNode)
+insert(AbstractInsnNode previousInsn, InsnList insnList)
+insertBefore(AbstractInsnNode nextInsn, AbstractInsnNode insnNode)
+insertBefore(AbstractInsnNode nextInsn, InsnList insnList)
+
+5. 删除
+remove(AbstractInsnNode insnNode)
+removeAll(boolean mark)
+clear()
+
+6. 修改
+set(AbstractInsnNode oldInsnNode, AbstractInsnNode newInsnNode)
+
+7.查询
+contains(AbstractInsnNode insnNode)
+indexOf(AbstractInsnNode insnNode)
+
+
+AbstractInsnNode
+fields:
+opcode字段，记录当前指令是什么
+previousInsn和nextInsn字段，用来记录不同指令之间的关联关系
+index字段，用来记录当前指令在InsnList对象实例中索引值
+methods:
+int getOpcode()
+AbstractInsnNode getPrevious()
+AbstractInsnNode getNext()
+getType()方法，用来获取当前指令的类型,它具体的取值范围位于0~15之间，一共16个类别, INSN,INT_INSN  ...FRAME ,LINE
+accept(MethodVisitor)方法，用来将当前指令发送给下一个MethodVisitor对象实例
+
+MethodNode mn1 = new MethodNode(ACC_PUBLIC, "<init>", "()V", null, null);
+cn.methods.add(mn1);
+InsnList il = mn1.instructions;
+il.add(new VarInsnNode(ALOAD, 0));
+il.add(new MethodInsnNode(INVOKESPECIAL, "java/lang/Object", "<init>", "()V", false));
+il.add(new InsnNode(RETURN));
+
+MethodNode mn2 = new MethodNode(ACC_PUBLIC, "test", "()V", null, null);
+cn.methods.add(mn2);
+InsnList il = mn2.instructions;
+il.add(new FieldInsnNode(GETSTATIC, "java/lang/System", "out", "Ljava/io/PrintStream;"));
+il.add(new LdcInsnNode("Hello World"));
+il.add(new MethodInsnNode(INVOKEVIRTUAL, "java/io/PrintStream", "println", "(Ljava/lang/String;)V", false));
+il.add(new InsnNode(RETURN));
+
+
+
+匿名内部类 反编译
+public class Inner {
+
+    private void inner() {
+        Runnable runnable = new Runnable() {
+            @Override
+            public void run() {
+                System.out.println("Hello World!");
+            }
+        };
+    }
+
+}
+生成Inner$1.class、Inner.class两个类
+Inner$1.class： 实现Runnable接口
+Inner.class：初始化Inner$1.class实例
+
+Lambda表达式 反编译
+public class Lambda {
+
+    private void lambda() {
+        Runnable runnable = () -> System.out.println("Hello World!");
+    }
+
+}
+只生成Lambda.class
+匿名内部类声明的Runnable变量最终会指向一个具体的接口实现类,该类的run方法包含了要执行的代码块
+lambda语法声明的Runnable变量,这个操作对应xx等指令,Runnable要执行的代码块是在自动生成的静态方法lambda$lambda$0中
+在编译阶段，Lambda 表达式并不会生成相应的实现类，Lambda 语法的实现机制有别于匿名内部类
+
+我们无法直接 “看到” Lambda 表达式对应的代码块，因此也不能简单地通过签名信息就定位到目标方法
+
+1.该表达式包含一条 invokedynamic 指令，对应 ASM 中的 InvokeDynamicInsnNode
+2.invokedynamic 指令中标明了要生成的是 OnClickListener 对象，且包含一个 onClick 方法 （待会回头看看）
+3.invokedynamic 指令指向了字节码中的 BootstapMethod 区域，而 BootstapMethod 中已经标明了三个入参参数，
+    第二个参数指向的是编译期间自动生成的方法，当中就包含了 onClick 方法应该执行的代码块，
+    这三个参数就对应 InvokeDynamicInsnNode 的 bsmArgs 属性，所以通过 bsmArgs 我们就能够知道
+    onClick 方法最终要调用的方法的签名信息，通过向该方法插入需要的逻辑就可以实现插桩了
+总结:所以说，对于匿名内部类，我们的插桩思路是向 OnClickListener 接口的实现类的 onClick 方法插入代码；
+    对于 Lambda 表达式，我们的插桩思路可以改为向其自动生成的方法插入代码，两者的最终效果都是一样的
+
+
+core api-> tree api
+1.classReader 转换成 classNode
+ClassReader accept(final ClassVisitor classVisitor, final int parsingOptions)
+其中 ClassWriter和ClassNode都是ClassVisitor的子类
+2.classVisitor转换成classNode
+方式一: 这种方式适用于Android的asm
+步骤1: 继承ClassVisitor, 构造方法中接收外部传入的 nextClassVisitor
+步骤2: 重写visit方法, super.cv = ClassNode(), 这么做的目的是随着classNode调用了各种visit, 让 classNode 拥有了传入的类,方法，字段等信息
+步骤3: 重写super.visitEnd方法 super.cv 强转为ClassNode(即cn), 省略对methodNode的改在...,  cn.accept(nextClassVisitor)
+classNode.accept(classVisitor)的目的是 让classVisitor(即nextClassVisitor)拥有 classNode所具有的信息，
+从而真正达到改变字节码信息（如果accept之前对classNode有其他操作）
+方式二:
+步骤1:继承ClassVisitor, 构造方法中接收外部传入的 nextClassVisitor,作为成员变量, 创建classNode对象传入ClassVisitor构造器中
+步骤2:重写super.visitEnd方法,省略对methodNode的改在..., classNode.accept(nextClassVisitor);效果和方式一同等效果
+
+tree api -> core api
+ClassWriter cw = new ClassWriter(ClassWriter.COMPUTE_FRAMES);
+cn.accept(cw)
+让classWriter 拥有了classNode所具有的信息
+
+ClassReader --accept---> ClassNode --accept---> ClassWriter
+
+
+对RecyclerView的拦截
+View点击互不影响,保证View的独立性, 使用map就行
+view在形参中处于的位置
+
+
+invokeDynamic相关:
+https://www.bilibili.com/read/cv14253327
+
+
+
+匿名内部类 ok
+内部类
+静态内部类
+implement OnClickListener
+
+xml 设置 android:onClick=""
+
+lambda表达式 tv.setOnClickListener(v->{
+
+})
+
+asm地址 https://blog.51cto.com/lsieun/category2/p_4
+asm的要点回顾:
+.java文件经过Java编译器（javac）编译之后会生成一个.class文件;在.class文件中，存储的是字节码（ByteCode）数据
+ASM处理字节码的方式是“拆分－修改－合并”
+ASM能够做什么?
+父类：修改成一个新的父类
+接口：添加一个新的接口、删除已有的接口
+字段：添加一个新的字段、删除已有的字段
+方法：添加一个新的方法、删除已有的方法、修改已有的方法
+
+java8版本的lambda表达式是通过asm实现的
+ClassVisitor
+
+ClassWriter
+
+FieldVisitor
+
+FieldWriter
+
+MethodVisitor
+
+MethodWriter
+
+Label
+
+Opcodes
+
+ClassReader
+
+Type
+
+示例
+
+工具类
+
+
+flutter 学习课程
+https://zhuanlan.zhihu.com/p/581231184 知乎下有链接
+https://link.zhihu.com/?target=https%3A//www.bilibili.com/video/BV1Wd4y1y74o/
+
+
+1.整体过一遍
+2.怎么发布到上去
+
+Android提交库到github并生成依赖提供给其他项目引用
+https://blog.csdn.net/u012509843/article/details/125332663
+
+将插件打包并上传到本地文件仓库
+https://blog.csdn.net/devnn/article/details/106835734
+
+
+
+

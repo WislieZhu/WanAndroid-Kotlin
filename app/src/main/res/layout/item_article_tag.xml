@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<layout xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <data>
+        <variable
+            name="tag"
+            type="com.wislie.wanandroid.data.Tag" />
+    </data>
+
+    <TextView
+        android:id="@+id/tv_is_release"
+        android:text="@{tag.name}"
+        android:padding="@dimen/dp_3"
+        android:textColor="@android:color/holo_green_dark"
+        android:background="@drawable/shape_round_rect_green_dp_2"
+        android:layout_marginLeft="@dimen/dp_10"
+        android:textSize="11sp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
+</layout>

@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <!--原先Theme.AppCompat.NoActionBar-->
+    <style name="AppTheme" parent="Theme.MaterialComponents.Light.NoActionBar">
+        <item name="android:statusBarColor">?attr/colorPrimaryVariant</item>
+        <item name="colorPrimary">@color/purple_500</item>
+        <item name="colorPrimaryDark">@color/purple_500</item>
+        <item name="colorAccent">@color/purple_500
+        </item> <!-- 默认设置给colorControlActivated，一般是主要品牌颜色的明亮版本补充 -->
+
+
+    </style>
+
+
+
+
+
+    <!-- android12启动动画适配 -->
+    <!--<style name="MySplashTheme" parent="Theme.SplashScreen">
+        <item name="android:windowSplashScreenBackground">@color/purple_500</item>
+        <item name="android:windowSplashScreenAnimatedIcon">@mipmap/ic_launcher</item>
+        <item name="android:windowSplashScreenAnimationDuration">200</item>
+        <item name="android:windowSplashScreenIconBackgroundColor">@color/purple_500</item>
+        <item name="postSplashScreenTheme">@style/SplashActivityTheme</item> &lt;!&ndash; 必须 &ndash;&gt;
+        <item name="android:windowSplashScreenBrandingImage">@mipmap/ic_favorite</item>
+
+    </style>-->
+
+
+
+
+</resources>
+
