@@ -64,7 +64,7 @@ import androidx.navigation.plusAssign
  * fragments can use these helpers to navigate based on user interaction without creating a tight
  * coupling to the navigation host.
  */
-public open class NavHostFragment : Fragment(), NavHost {
+open class NavHostFragment : Fragment(), NavHost {
     private var navHostController: NavHostController? = null
     private var isPrimaryBeforeOnCreate: Boolean? = null
     private var viewParent: View? = null
@@ -88,7 +88,7 @@ public open class NavHostFragment : Fragment(), NavHost {
         }
 
     @CallSuper
-    public override fun onAttach(context: Context) {
+    override fun onAttach(context: Context) {
         super.onAttach(context)
         // TODO This feature should probably be a first-class feature of the Fragment system,
         // but it can stay here until we can add the necessary attr resources to
@@ -101,7 +101,7 @@ public open class NavHostFragment : Fragment(), NavHost {
     }
 
     @CallSuper
-    public override fun onCreate(savedInstanceState: Bundle?) {
+    override fun onCreate(savedInstanceState: Bundle?) {
         var context = requireContext()
         navHostController = NavHostController(context)
         navHostController!!.setLifecycleOwner(this)
@@ -206,7 +206,7 @@ public open class NavHostFragment : Fragment(), NavHost {
     }
 
     @CallSuper
-    public override fun onPrimaryNavigationFragmentChanged(isPrimaryNavigationFragment: Boolean) {
+    override fun onPrimaryNavigationFragmentChanged(isPrimaryNavigationFragment: Boolean) {
         if (navHostController != null) {
             navHostController?.enableOnBackPressed(isPrimaryNavigationFragment)
         } else {
@@ -227,7 +227,7 @@ public open class NavHostFragment : Fragment(), NavHost {
         return FragmentNavigator(requireContext(), childFragmentManager, containerId)
     }
 
-    public override fun onCreateView(
+    override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -258,7 +258,7 @@ public open class NavHostFragment : Fragment(), NavHost {
             // add(containerViewId, Fragment)
         }
 
-    public override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         check(view is ViewGroup) { "created host view $view is not a ViewGroup" }
         Navigation.setViewNavController(view, navHostController)
@@ -273,7 +273,7 @@ public open class NavHostFragment : Fragment(), NavHost {
     }
 
     @CallSuper
-    public override fun onInflate(
+    override fun onInflate(
         context: Context,
         attrs: AttributeSet,
         savedInstanceState: Bundle?
@@ -299,7 +299,7 @@ public open class NavHostFragment : Fragment(), NavHost {
     }
 
     @CallSuper
-    public override fun onSaveInstanceState(outState: Bundle) {
+    override fun onSaveInstanceState(outState: Bundle) {
         super.onSaveInstanceState(outState)
         val navState = navHostController!!.saveState()
         if (navState != null) {
@@ -313,7 +313,7 @@ public open class NavHostFragment : Fragment(), NavHost {
         }
     }
 
-    public override fun onDestroyView() {
+    override fun onDestroyView() {
         super.onDestroyView()
         viewParent?.let { it ->
             if (Navigation.findNavController(it) === navHostController) {
@@ -323,18 +323,18 @@ public open class NavHostFragment : Fragment(), NavHost {
         viewParent = null
     }
 
-    public companion object {
+    companion object {
         /**
          * @hide
          */
         @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
-        public const val KEY_GRAPH_ID: String = "android-support-nav:fragment:graphId"
+        const val KEY_GRAPH_ID: String = "android-support-nav:fragment:graphId"
 
         /**
          * @hide
          */
         @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
-        public const val KEY_START_DESTINATION_ARGS: String =
+        const val KEY_START_DESTINATION_ARGS: String =
             "android-support-nav:fragment:startDestinationArgs"
         private const val KEY_NAV_CONTROLLER_STATE =
             "android-support-nav:fragment:navControllerState"
@@ -355,7 +355,7 @@ public open class NavHostFragment : Fragment(), NavHost {
          * [NavHost] or is not within a NavHost.
          */
         @JvmStatic
-        public fun findNavController(fragment: Fragment): NavController {
+        fun findNavController(fragment: Fragment): NavController {
             var findFragment: Fragment? = fragment
             while (findFragment != null) {
                 if (findFragment is NavHostFragment) {
@@ -392,7 +392,7 @@ public open class NavHostFragment : Fragment(), NavHost {
          */
         @JvmOverloads
         @JvmStatic
-        public fun create(
+        fun create(
             @NavigationRes graphResId: Int,
             startDestinationArgs: Bundle? = null
         ): NavHostFragment {

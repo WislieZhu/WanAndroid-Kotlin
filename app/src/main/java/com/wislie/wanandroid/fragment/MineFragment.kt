@@ -109,7 +109,7 @@ class MineFragment : BaseViewModelFragment<MineStateViewModel, FragmentMineBindi
     }
 
     //修改每一个item, 点击author跳转, asm点击优化, 搜索按钮,
-    // 我的页面， tab字体大小和下划线太近, 拍照, 清除图标太大, 加载中一闪而过, Bundle传值
+    // 我的页面， tab字体大小和下划线太近, 拍照, 清除图标太大, 加载中一闪而过, fab从下滑动到上方太慢
     // 启动慢
     private fun takeCamera() {
 

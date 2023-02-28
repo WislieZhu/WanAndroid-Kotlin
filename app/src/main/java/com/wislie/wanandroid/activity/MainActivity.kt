@@ -3,10 +3,7 @@ package com.wislie.wanandroid.activity
 //import androidx.core.splashscreen.SplashScreen
 //import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import android.Manifest
-import android.os.Build
-import android.os.Bundle
-import android.os.Handler
-import android.os.Looper
+import android.os.*
 import android.util.Log
 import android.view.FrameMetrics
 import android.view.WindowManager
@@ -14,6 +11,8 @@ import androidx.annotation.RequiresApi
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import com.wislie.common.base.BaseActivity
+import com.wislie.common.test.TimeMonitorConfig
+import com.wislie.common.test.TimeMonitorManager
 import com.wislie.wanandroid.R
 import com.wislie.wanandroid.databinding.ActivityMainBinding
 
@@ -31,18 +30,17 @@ class MainActivity : BaseActivity<ActivityMainBinding>() {
         window.statusBarColor = ContextCompat.getColor(this, R.color.purple_500)
         //        installSplashScreen()
 
-
         super.onCreate(savedInstanceState)
 
-        val list = ArrayList<String>()
-        list.add("a")
-        test1(list)
 
 //        val listA = mutableListOf<String>()
 //        test2(listA)
 
 
-
+       /* binding.fragmentContainerView.viewTreeObserver.addOnGlobalLayoutListener {
+            TimeMonitorManager.instance?.getTimeMonitor(TimeMonitorConfig.TIME_MONITOR_ID_APPLICATION_START)
+                ?.recordingTimeTag("MainActivity-onCreate")
+        }*/
 
 
 //        Looper.getMainLooper().setMessageLogging()
@@ -75,21 +73,20 @@ class MainActivity : BaseActivity<ActivityMainBinding>() {
             }
         }, Handler(Looper.getMainLooper()))*/
 
+//
 
+    }
 
+    override fun onResume() {
+        super.onResume()
+        Debug.stopMethodTracing()
     }
 
 
     override fun getLayoutResId(): Int = R.layout.activity_main
 
 
-    private fun test1(list: MutableList<String>) {
 
-    }
-
-    private fun test2(list: ArrayList<String>) {
-
-    }
 
 //    Arraylist -> MutableList
 

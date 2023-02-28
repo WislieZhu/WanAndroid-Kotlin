@@ -5,6 +5,7 @@ package com.wislie.wanandroid
 import android.app.Application
 import android.content.Context
 import android.os.Build
+import android.os.Debug
 import android.util.Log
 import com.github.anrwatchdog.ANRWatchDog
 import com.kingja.loadsir.core.LoadSir
@@ -30,11 +31,19 @@ class App : Application() {
 
     override fun attachBaseContext(base: Context?) {
         super.attachBaseContext(base)
-        TimeMonitorManager.instance?.resetTimeMonitor(TimeMonitorConfig.TIME_MONITOR_ID_APPLICATION_START)
+//        TimeMonitorManager.instance?.resetTimeMonitor(TimeMonitorConfig.TIME_MONITOR_ID_APPLICATION_START)
     }
 
     override fun onCreate() {
         super.onCreate()
+
+        val file =  File(filesDir,"dmtrace.trace")
+//        Log.i("wislieZhu","文件路径=${file.path}")
+
+        Debug.startMethodTracing(file.path)
+
+//        TimeMonitorManager.instance?.getTimeMonitor(TimeMonitorConfig.TIME_MONITOR_ID_APPLICATION_START)
+//            ?.recordingTimeTag("Application-onCreate")
         instance = this
         Utils.init(this)
 
@@ -47,8 +56,7 @@ class App : Application() {
             .setDefaultCallback(LoadingCallback::class.java) //设置默认加载状态页
             .commit()
 
-        TimeMonitorManager.instance?.getTimeMonitor(TimeMonitorConfig.TIME_MONITOR_ID_APPLICATION_START)
-            ?.recordingTimeTag("Application-onCreate")
+
 
 
         /*if(Utils.isMainProcess(this)){
@@ -60,13 +68,14 @@ class App : Application() {
         }*/
 
         ANRWatchDog().start()
-
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+//        TimeMonitorManager.instance?.getTimeMonitor(TimeMonitorConfig.TIME_MONITOR_ID_APPLICATION_START)
+//            ?.recordingTimeTag("Application-onCreate2")
+        /*if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
             val file = File("/data/anr")
 //            Log.i("wislieZhu","file 是否存在 ${file.exists()}")
             val fileObserver =   ANRFileObserver(file)
             fileObserver.startWatching()
-        }
+        }*/
 
     }
 

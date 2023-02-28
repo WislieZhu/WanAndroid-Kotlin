@@ -25,7 +25,9 @@ import kotlinx.coroutines.launch
 class ProjectCategoryFragment :
     BaseViewModelFragment<BaseViewModel, FragmentListBinding>() {
 
+    var cid: Int? = null
     private val projectArticlesViewModel: ArticlesViewModel by viewModels()
+
     private val adapter by lazy {
         FirstPageArticleAdapter { articleInfo ->
             articleInfo?.run {
@@ -38,7 +40,6 @@ class ProjectCategoryFragment :
         }
     }
 
-    var cid: Int? = null
 
     override fun init(root: View) {
         super.init(root)
@@ -46,7 +47,7 @@ class ProjectCategoryFragment :
         registerLoadSir(binding.list.swipeRv) {
             adapter.refresh() //点击即刷新
         }
-        binding.list.swipeRefreshLayout.init{
+        binding.list.swipeRefreshLayout.init {
             adapter.refresh() //点击即刷新
         }
         binding.list.swipeRv.adapter = adapter
@@ -87,7 +88,7 @@ class ProjectCategoryFragment :
                         break
                     }
                 }
-            },  {
+            }, {
                 startLogin()
             })
         }

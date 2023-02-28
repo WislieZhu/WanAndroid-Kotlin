@@ -89,6 +89,7 @@ class FirstPageFragment : BaseViewModelFragment<BaseViewModel, FragmentToolbarLi
         )
         binding.list.swipeRv.addHeaderView(header.root)
         binding.list.fab.initFab(binding.list.swipeRv)
+
     }
 
     override fun observeData() {

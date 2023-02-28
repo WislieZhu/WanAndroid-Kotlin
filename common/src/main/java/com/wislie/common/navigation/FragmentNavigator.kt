@@ -90,7 +90,7 @@ open class FragmentNavigator(
         state.pop(popUpTo, savedState)
     }
 
-    public override fun createDestination(): Destination {
+    override fun createDestination(): Destination {
         return Destination(this)
     }
 
@@ -113,7 +113,7 @@ open class FragmentNavigator(
       {@link FragmentManager#setFragmentFactory(FragmentFactory)} to control
       instantiation of Fragments."""
     )
-    public open fun instantiateFragment(
+    open fun instantiateFragment(
         context: Context,
         fragmentManager: FragmentManager,
         className: String,
@@ -239,14 +239,14 @@ open class FragmentNavigator(
         }
     }
 
-    public override fun onSaveState(): Bundle? {
+    override fun onSaveState(): Bundle? {
         if (savedIds.isEmpty()) {
             return null
         }
         return bundleOf(KEY_SAVED_IDS to ArrayList(savedIds))
     }
 
-    public override fun onRestoreState(savedState: Bundle) {
+    override fun onRestoreState(savedState: Bundle) {
         val savedIds = savedState.getStringArrayList(KEY_SAVED_IDS)
         if (savedIds != null) {
             this.savedIds.clear()
@@ -293,7 +293,7 @@ open class FragmentNavigator(
          * destination
          * @return this [Destination]
          */
-        public fun setClassName(className: String): Destination {
+        fun setClassName(className: String): Destination {
             _className = className
             return this
         }
@@ -305,13 +305,13 @@ open class FragmentNavigator(
          *
          * @throws IllegalStateException when no Fragment class was set.
          */
-        public val className: String
+        val className: String
             get() {
                 checkNotNull(_className) { "Fragment class was not set" }
                 return _className as String
             }
 
-        public override fun toString(): String {
+        override fun toString(): String {
             val sb = StringBuilder()
             sb.append(super.toString())
             sb.append(" class=")
@@ -338,7 +338,7 @@ open class FragmentNavigator(
     /**
      * Extras that can be passed to FragmentNavigator to enable Fragment specific behavior
      */
-    public class Extras internal constructor(sharedElements: Map<View, String>) :
+    class Extras internal constructor(sharedElements: Map<View, String>) :
         Navigator.Extras {
         private val _sharedElements = LinkedHashMap<View, String>()
 
@@ -346,14 +346,14 @@ open class FragmentNavigator(
          * The map of shared elements associated with these Extras. The returned map
          * is an [unmodifiable][Map] copy of the underlying map and should be treated as immutable.
          */
-        public val sharedElements: Map<View, String>
+        val sharedElements: Map<View, String>
             get() = _sharedElements.toMap()
 
         /**
          * Builder for constructing new [Extras] instances. The resulting instances are
          * immutable.
          */
-        public class Builder {
+        class Builder {
             private val _sharedElements = LinkedHashMap<View, String>()
 
             /**
@@ -363,7 +363,7 @@ open class FragmentNavigator(
              * @param sharedElements Shared element pairs to add
              * @return this [Builder]
              */
-            public fun addSharedElements(sharedElements: Map<View, String>): Builder {
+            fun addSharedElements(sharedElements: Map<View, String>): Builder {
                 for ((view, name) in sharedElements) {
                     addSharedElement(view, name)
                 }
@@ -381,7 +381,7 @@ open class FragmentNavigator(
              * @return this [Builder]
              * @see FragmentTransaction.addSharedElement
              */
-            public fun addSharedElement(sharedElement: View, name: String): Builder {
+            fun addSharedElement(sharedElement: View, name: String): Builder {
                 _sharedElements[sharedElement] = name
                 return this
             }
@@ -391,7 +391,7 @@ open class FragmentNavigator(
              *
              * @return An immutable [Extras] instance.
              */
-            public fun build(): Extras {
+            fun build(): Extras {
                 return Extras(_sharedElements)
             }
         }

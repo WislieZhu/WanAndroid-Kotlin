@@ -18,7 +18,12 @@ class MainFragment : BaseFragment<FragmentMainBinding>() {
 
         val map = mutableMapOf<Int, Fragment>(
             0 to FirstPageFragment(),
+//            0 to TestFragment(),
             1 to ProjectFragment(),
+//            1 to TestFragment(),
+//            2 to TestFragment(),
+//            3 to TestFragment(),
+//            4 to TestFragment()
             2 to SquareFragment(),
             3 to WxAccountFragment(),
             4 to MineFragment(),

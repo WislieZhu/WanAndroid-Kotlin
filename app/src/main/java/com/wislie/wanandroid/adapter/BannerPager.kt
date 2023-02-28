@@ -15,7 +15,7 @@ import com.zhpan.bannerview.BaseBannerAdapter
 class BannerPager : BaseBannerAdapter<Banner, BannerViewHolder>() {
 
     override fun getLayoutId(viewType: Int): Int {
-        return R.layout.item_first_page_banner;
+        return R.layout.item_first_page_banner
     }
 
     override fun createViewHolder(itemView: View, viewType: Int): BannerViewHolder {
@@ -25,9 +25,7 @@ class BannerPager : BaseBannerAdapter<Banner, BannerViewHolder>() {
     override fun onBind(holder: BannerViewHolder, data: Banner, position: Int, pageSize: Int) {
         holder.bindData(data, position, pageSize)
         holder.itemView.setOnClickListener { v ->
-
-            val bundle = Bundle()
-            bundle?.run {
+            val bundle = Bundle().apply {
                 putInt(ARTICLE_TYPE, ArticleType.TYPE_WEBSITE)
                 putInt(ARTICLE_ID, data.id )
                 putString(ARTICLE_TITLE, data.title)
