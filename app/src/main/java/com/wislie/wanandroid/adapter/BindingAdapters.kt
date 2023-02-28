@@ -18,6 +18,7 @@ import androidx.core.graphics.drawable.DrawableCompat
 import androidx.databinding.BindingAdapter
 import androidx.databinding.DataBindingUtil
 import com.bumptech.glide.Glide
+import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions
 import com.google.android.material.textfield.TextInputEditText
 import com.google.android.material.textfield.TextInputLayout
 import com.wislie.common.ext.toHtml
@@ -106,6 +107,7 @@ fun bindFilePath(view: ImageView, filePath: String, error: Drawable) {
 fun bindEnvelopePic(view: ImageView, envelopePic: String?) {
     Glide.with(view.context)
         .load(envelopePic)
+        .transition(DrawableTransitionOptions.withCrossFade(500))
         .into(view)
 }
 

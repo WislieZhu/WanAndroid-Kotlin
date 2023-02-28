@@ -19,6 +19,12 @@ import com.wislie.common.util.Utils
 import com.wislie.wanandroid.anr.ANRFileObserver
 import com.wislie.wanandroid.viewmodel.AppViewModel
 import java.io.File
+import java.security.SecureRandom
+import java.security.cert.X509Certificate
+import javax.net.ssl.HttpsURLConnection
+import javax.net.ssl.SSLContext
+import javax.net.ssl.TrustManager
+import javax.net.ssl.X509TrustManager
 import kotlin.properties.ReadWriteProperty
 import kotlin.reflect.KProperty
 
@@ -56,7 +62,8 @@ class App : Application() {
             .setDefaultCallback(LoadingCallback::class.java) //设置默认加载状态页
             .commit()
 
-
+        //todo 没展示
+        handleSSLHandshake()
 
 
         /*if(Utils.isMainProcess(this)){
@@ -78,6 +85,29 @@ class App : Application() {
         }*/
 
     }
+
+    /**
+     * 忽略https的证书校验
+     */
+    private fun handleSSLHandshake() {
+        try {
+            val trustAllCerts = arrayOf<TrustManager>(object : X509TrustManager {
+                override fun getAcceptedIssuers(): Array<X509Certificate?> {
+                    return arrayOfNulls<X509Certificate>(0)
+                }
+
+                override fun checkClientTrusted(certs: Array<X509Certificate?>?, authType: String?) {}
+                override fun checkServerTrusted(certs: Array<X509Certificate?>?, authType: String?) {}
+            })
+            val sc = SSLContext.getInstance("TLS")
+            // trustAllCerts信任所有的证书
+            sc.init(null, trustAllCerts, SecureRandom())
+            HttpsURLConnection.setDefaultSSLSocketFactory(sc.socketFactory)
+            HttpsURLConnection.setDefaultHostnameVerifier { hostname, session -> true }
+        } catch (ignored: Exception) {
+        }
+    }
+
 
     //单例化的第三种方式：自定义一个非空且只能一次性赋值的委托属性
     companion object {

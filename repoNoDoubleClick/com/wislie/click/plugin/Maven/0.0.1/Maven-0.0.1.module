@@ -39,10 +39,10 @@
           "name": "Maven-0.0.1.jar",
           "url": "Maven-0.0.1.jar",
           "size": 16637,
-          "sha512": "75bdc1cefd6c92fc6ed2e67ed72e679c11e1ba3f97845e7b8207548ebcbcc5bf8681fccfb12397c006501a64c193557df6ef9b89f3b7fce8bfbe5746ac6dacb7",
-          "sha256": "5d686155c89a013aee6eb9728905a0bef4bf899f3fe142a99eecf1cad88d336d",
-          "sha1": "41f571dbf49ce857ba4782a5a448211b30b6405c",
-          "md5": "d8f5b21e71f0cb80f078ec20d8bb30ed"
+          "sha512": "0f5119e813724e52a80e599fe9f8854adb80ccabdebe37a95b52b194337639e33a32ace4a86af94a594f5938a8586fd173632af31a8047230baa93ae1e74b668",
+          "sha256": "0032d38270b66b321d9336dbb1084f176045b8d8a92157665bfea91362fd276e",
+          "sha1": "27c8a1f57b92ec2b88f7f5488e8c0437ec453da5",
+          "md5": "9951c856bbb194092b5ace60758a3cb5"
         }
       ]
     },
@@ -66,6 +66,34 @@
           }
         },
         {
+          "group": "org.ow2.asm",
+          "module": "asm",
+          "version": {
+            "requires": "9.3"
+          }
+        },
+        {
+          "group": "org.ow2.asm",
+          "module": "asm-util",
+          "version": {
+            "requires": "9.3"
+          }
+        },
+        {
+          "group": "org.ow2.asm",
+          "module": "asm-commons",
+          "version": {
+            "requires": "9.3"
+          }
+        },
+        {
+          "group": "org.ow2.asm",
+          "module": "asm-tree",
+          "version": {
+            "requires": "9.3"
+          }
+        },
+        {
           "group": "org.jetbrains.kotlin",
           "module": "kotlin-stdlib-jdk8",
           "version": {
@@ -78,10 +106,10 @@
           "name": "Maven-0.0.1.jar",
           "url": "Maven-0.0.1.jar",
           "size": 16637,
-          "sha512": "75bdc1cefd6c92fc6ed2e67ed72e679c11e1ba3f97845e7b8207548ebcbcc5bf8681fccfb12397c006501a64c193557df6ef9b89f3b7fce8bfbe5746ac6dacb7",
-          "sha256": "5d686155c89a013aee6eb9728905a0bef4bf899f3fe142a99eecf1cad88d336d",
-          "sha1": "41f571dbf49ce857ba4782a5a448211b30b6405c",
-          "md5": "d8f5b21e71f0cb80f078ec20d8bb30ed"
+          "sha512": "0f5119e813724e52a80e599fe9f8854adb80ccabdebe37a95b52b194337639e33a32ace4a86af94a594f5938a8586fd173632af31a8047230baa93ae1e74b668",
+          "sha256": "0032d38270b66b321d9336dbb1084f176045b8d8a92157665bfea91362fd276e",
+          "sha1": "27c8a1f57b92ec2b88f7f5488e8c0437ec453da5",
+          "md5": "9951c856bbb194092b5ace60758a3cb5"
         }
       ]
     }

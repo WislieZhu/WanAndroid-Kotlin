@@ -11,9 +11,11 @@ import com.wislie.common.ext.addStateListener
 import com.wislie.common.ext.init
 import com.wislie.wanandroid.App
 import com.wislie.wanandroid.R
-import com.wislie.wanandroid.adapter.FirstPageArticleAdapter
+import com.wislie.wanandroid.adapter.LoadStateFooterAdapter
+import com.wislie.wanandroid.adapter.ProjectArticleAdapter
 import com.wislie.wanandroid.data.CollectEvent
 import com.wislie.wanandroid.databinding.FragmentListBinding
+import com.wislie.wanandroid.ext.initFab
 import com.wislie.wanandroid.ext.startLogin
 import com.wislie.wanandroid.viewmodel.ArticlesViewModel
 import kotlinx.coroutines.flow.collectLatest
@@ -29,7 +31,7 @@ class ProjectCategoryFragment :
     private val projectArticlesViewModel: ArticlesViewModel by viewModels()
 
     private val adapter by lazy {
-        FirstPageArticleAdapter { articleInfo ->
+        ProjectArticleAdapter { articleInfo ->
             articleInfo?.run {
                 if (collect) {
                     projectArticlesViewModel.unCollect(id)
@@ -50,8 +52,12 @@ class ProjectCategoryFragment :
         binding.list.swipeRefreshLayout.init {
             adapter.refresh() //点击即刷新
         }
-        binding.list.swipeRv.adapter = adapter
+        binding.list.swipeRv.adapter = adapter.withLoadStateFooter(
+            footer = LoadStateFooterAdapter(
+                retry = { adapter.retry() })
+        )
         adapter.addStateListener(hostActivity, mBaseLoadService)
+        binding.list.fab.initFab(binding.list.swipeRv)
     }
 
     override fun observeData() {

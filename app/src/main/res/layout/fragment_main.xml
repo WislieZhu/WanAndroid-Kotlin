@@ -6,7 +6,7 @@
 
     </data>
 
-    <androidx.constraintlayout.widget.ConstraintLayout
+    <!--<androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
@@ -33,9 +33,9 @@
             android:id="@+id/mainViewpager" />
 
 
-    </androidx.constraintlayout.widget.ConstraintLayout>
+    </androidx.constraintlayout.widget.ConstraintLayout>-->
 
-    <!--<LinearLayout
+    <LinearLayout
         android:orientation="vertical"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
@@ -61,6 +61,6 @@
             android:showAsAction="always|withText" />
 
 
-    </LinearLayout>-->
+    </LinearLayout>
 
 </layout>
