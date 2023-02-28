@@ -19,6 +19,15 @@ class FirstPageArticleHolder(
     private var index = 0
 
     init {
+
+        binding.ivCollect.setOnClickListener { v-> // 在onBindViewHolder中点击不合理
+            if (!Settings.logined) {
+                v.startLogin()
+                return@setOnClickListener
+            }
+            collect.invoke(binding.articleInfo)
+        }
+
         binding.root.setOnClickListener { v ->
             val bundle = Bundle().apply {
                 putInt("type", ArticleType.TYPE_LIST_ARTICLE)
@@ -31,13 +40,7 @@ class FirstPageArticleHolder(
             v.findNav().navigate(R.id.fragment_web, bundle)
         }
 
-        binding.ivCollect.setOnClickListener { v-> // 在onBindViewHolder中点击不合理
-            if (!Settings.logined) {
-                v.startLogin()
-                return@setOnClickListener
-            }
-            collect.invoke(binding.articleInfo)
-        }
+
 
         binding.tvAuthor.setOnClickListener { v->
             val bundle = Bundle().apply {

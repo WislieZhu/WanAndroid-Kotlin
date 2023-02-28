@@ -38,18 +38,12 @@ class LoginFragment : BaseViewModelFragment<LoginStateViewModel, FragmentLoginBi
 
         binding.btnLogin.setOnClickListener { //登录
             when {
-                mViewModel?.account?.get()?.isEmpty() == true -> Toast.makeText(
-                    hostActivity, "请输入账号",
-                    Toast.LENGTH_SHORT
-                ).show()
-                mViewModel?.password?.get()?.isEmpty() == true -> Toast.makeText(
-                    hostActivity, "请输入密码",
-                    Toast.LENGTH_SHORT
-                ).show()
-                mViewModel?.password?.get()?.length ?: 0 < 6 -> Toast.makeText(
-                    hostActivity, "密码最少6位",
-                    Toast.LENGTH_SHORT
-                ).show()
+                mViewModel?.account?.get()?.isEmpty() == true ->
+                    hostActivity.showToast("请输入账号")
+                mViewModel?.password?.get()?.isEmpty() == true ->
+                    hostActivity.showToast("请输入密码")
+                mViewModel?.password?.get()?.length ?: 0 < 6 ->
+                    hostActivity.showToast("密码最少6位")
                 else -> loginViewModel.login(
                     mViewModel?.account?.get()!!,
                     mViewModel?.password?.get()!!

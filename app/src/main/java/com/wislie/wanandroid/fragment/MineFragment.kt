@@ -1,23 +1,25 @@
 package com.wislie.wanandroid.fragment
 
+import android.Manifest
+import android.app.Activity
 import android.os.Environment
 import android.util.Log
 import android.view.View
-import android.widget.Toast
+import androidx.activity.result.ActivityResult
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.fragment.app.viewModels
-import com.hjq.permissions.OnPermissionCallback
-import com.hjq.permissions.Permission
-import com.hjq.permissions.XXPermissions
-//import com.github.moduth.blockcanary.BlockCanaryInternals
-
+import com.bumptech.glide.Glide
 import com.wislie.common.base.BaseViewModelFragment
 import com.wislie.common.base.parseState
 import com.wislie.common.ext.findNav
+import com.wislie.common.util.CameraUtil
 import com.wislie.wanandroid.App
 import com.wislie.wanandroid.R
 import com.wislie.wanandroid.databinding.FragmentMineBinding
-import com.wislie.wanandroid.util.Settings
+import com.wislie.wanandroid.ext.loadImage
+import com.wislie.wanandroid.ext.requestPermission
 import com.wislie.wanandroid.ext.startDestination
+import com.wislie.wanandroid.util.Settings
 import com.wislie.wanandroid.viewmodel.CoinViewModel
 import com.wislie.wanandroid.viewmodel.LoginViewModel
 import com.wislie.wanandroid.viewmodel.MineStateViewModel
@@ -32,6 +34,31 @@ class MineFragment : BaseViewModelFragment<MineStateViewModel, FragmentMineBindi
 
     private val logoutViewModel: LoginViewModel by viewModels()
 
+    //拍照
+    private val takeCameraResultLauncher = registerForActivityResult(
+        ActivityResultContracts.StartActivityForResult()
+    ) { result: ActivityResult ->
+        if (result.resultCode == Activity.RESULT_OK) {
+            Settings.avatar?.run {
+                binding.ivCamera.loadImage(this)
+            }
+        }
+    }
+
+    //从相册中选取
+    private val pickFromAlbumResultLauncher = registerForActivityResult(
+        ActivityResultContracts.StartActivityForResult()
+    ) { result: ActivityResult ->
+        result.data?.data?.run {
+            val path = CameraUtil.getPath2uri(hostActivity, this)
+            path?.run {
+                Settings.avatar = this
+                binding.ivCamera.loadImage(this)
+            }
+        }
+    }
+
+
     override fun getLayoutResId(): Int {
         return R.layout.fragment_mine
     }
@@ -39,9 +66,6 @@ class MineFragment : BaseViewModelFragment<MineStateViewModel, FragmentMineBindi
     override fun init(root: View) {
         super.init(root)
         binding.mineViewModel = mViewModel
-
-
-
         binding.btnScore.setOnClickListener { //积分
 
             startDestination {
@@ -56,7 +80,6 @@ class MineFragment : BaseViewModelFragment<MineStateViewModel, FragmentMineBindi
         }
 
         binding.btnUrls.setOnClickListener {  //常用网站
-            log()
             findNav().navigate(R.id.fragment_usual_website)
         }
 
@@ -64,6 +87,7 @@ class MineFragment : BaseViewModelFragment<MineStateViewModel, FragmentMineBindi
             startDestination {
                 findNav().navigate(R.id.fragment_todo_list)
             }
+//            log()
         }
 
 
@@ -74,70 +98,53 @@ class MineFragment : BaseViewModelFragment<MineStateViewModel, FragmentMineBindi
         }
 
         binding.btnMyPic.setOnClickListener {  //头像
-
-
+            takeCamera()
         }
 
         binding.btnLogout.setOnClickListener { //退出登录
-            logoutViewModel.logout()
+//            logoutViewModel.logout()
+            pickFromAlbum()
         }
 
 
-//        binding.btnFaceRecognize.setOnClickListener { view ->//人脸识别 上传
-        /*PermissionX.init(this)
-            .permissions(
-                Manifest.permission.WRITE_EXTERNAL_STORAGE,
-                Manifest.permission.READ_EXTERNAL_STORAGE,
-                Manifest.permission.CAMERA
-            )
-            .request { allGranted, grantedList, deniedList ->
-
-
-            }*/
-//        }
-
-
     }
 
-    private fun takeCamera(){
-        XXPermissions
-            .with(context)
-            .permission(Permission.CAMERA)
-            .permission(Permission.MANAGE_EXTERNAL_STORAGE)
-            .request(object : OnPermissionCallback {
-                override fun onGranted(
-                    granted: List<String>,
-                    all: Boolean
-                ) {
-                    if (all) {
-                        startDestination {
+    //修改每一个item, 点击author跳转, asm点击优化, 搜索按钮, 我的页面， tab字体大小和下划线太近, 拍照, 清除图标太大, 加载中一闪而过, showToast, Bundle传值
+    private fun takeCamera() {
 
-                        }
-                    }
+        requestPermission(
+            hostActivity,
+            Manifest.permission.CAMERA,
+            Manifest.permission.WRITE_EXTERNAL_STORAGE,
+            Manifest.permission.READ_EXTERNAL_STORAGE
+        ) {
+            startDestination {
+                CameraUtil.takeCamera(hostActivity) { path ->
+                    Settings.avatar = path
+                }.run {
+                    takeCameraResultLauncher.launch(this)
                 }
-
-                override fun onDenied(
-                    denied: List<String>,
-                    never: Boolean
-                ) {
-                    if (never) {
-                        Toast.makeText(hostActivity,"拍照权限被永久拒绝授权，请手动授予拍照权限",Toast.LENGTH_SHORT).show()
-                        XXPermissions.startPermissionActivity(
-                            context,
-                            denied
-                        )
-                    } else {
-                        Toast.makeText(hostActivity,"获取拍照权限失败",Toast.LENGTH_SHORT).show()
-                    }
-                }
-            })
+            }
+        }
     }
 
+    private fun pickFromAlbum() {
+        requestPermission(
+            hostActivity,
+            Manifest.permission.READ_EXTERNAL_STORAGE
+        ) {
+            startDestination {
+                CameraUtil.selectFromAlbum().run {
+                    pickFromAlbumResultLauncher.launch(this)
+                }
+            }
+        }
+    }
 
 
     private fun log() {
         val path = Environment.getDataDirectory().absolutePath
-        Log.i("wislieZhu","path=$path")
+        Log.i("wislieZhu", "path=$path")
         try {
             Thread.sleep(8000) //Application Not Responding for at least 5000 ms
         } catch (e: InterruptedException) {
@@ -173,7 +180,6 @@ class MineFragment : BaseViewModelFragment<MineStateViewModel, FragmentMineBindi
                     }
                 })
             }
-
 
         App.instance()
             .appViewModel

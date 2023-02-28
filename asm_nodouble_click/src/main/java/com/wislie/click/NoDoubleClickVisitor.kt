@@ -80,7 +80,6 @@ class NoDoubleClickVisitor(
                 val nodeDesc = node.desc
                 if (nodeName == dynamicNode.name && nodeDesc.endsWith(dynamicNode.desc)) { //TODO 2.lambda表达式
                     invokeDynamicInsnNodeList.add(node)
-                    break
                 }
             }
         }

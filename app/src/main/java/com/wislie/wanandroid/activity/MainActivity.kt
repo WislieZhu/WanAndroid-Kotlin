@@ -21,11 +21,7 @@ import com.wislie.wanandroid.databinding.ActivityMainBinding
 class MainActivity : BaseActivity<ActivityMainBinding>() {
 
 
-    val permissions =
-        arrayOf(
-            Manifest.permission.WRITE_EXTERNAL_STORAGE,
-            Manifest.permission.READ_EXTERNAL_STORAGE
-        )
+
 
     @RequiresApi(Build.VERSION_CODES.N)
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -47,10 +43,7 @@ class MainActivity : BaseActivity<ActivityMainBinding>() {
 
 
 
-        ActivityCompat.requestPermissions(
-            this, permissions,
-            100
-        )
+
 
 //        Looper.getMainLooper().setMessageLogging()
 //        LooperPrinter
