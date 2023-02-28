@@ -7,7 +7,6 @@ import android.view.View
 import android.webkit.WebResourceRequest
 import android.webkit.WebView
 import android.widget.LinearLayout
-import android.widget.Toast
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.viewModels
 import com.just.agentweb.AgentWeb
@@ -18,13 +17,13 @@ import com.wislie.common.base.BaseViewModelFragment
 import com.wislie.common.base.parseState
 import com.wislie.common.ext.findNav
 import com.wislie.common.ext.marquee
+import com.wislie.common.ext.showToast
 import com.wislie.wanandroid.App
 import com.wislie.wanandroid.R
 import com.wislie.wanandroid.data.CollectEvent
 import com.wislie.wanandroid.databinding.FragmentWebBinding
 import com.wislie.wanandroid.ext.startLogin
-import com.wislie.wanandroid.util.ArticleType
-import com.wislie.wanandroid.util.Settings
+import com.wislie.wanandroid.util.*
 import com.wislie.wanandroid.viewmodel.ArticlesViewModel
 import com.wislie.wanandroid.widget.WebLayout
 
@@ -48,13 +47,13 @@ class WebFragment : BaseViewModelFragment<ArticlesViewModel, FragmentWebBinding>
     override fun init(root: View) {
         super.init(root)
         arguments?.run {
-            articleType = getInt("type")
-            articleId = getInt("id")
-            articleOriginId = getInt("originId")
-            articleTitle = getString("title")
-            articleAuthor = getString("author")
-            articleLink = getString("linkUrl")
-            articleCollect = getBoolean("collect")
+            articleType = getInt(ARTICLE_TYPE)
+            articleId = getInt(ARTICLE_ID)
+            articleOriginId = getInt(ARTICLE_ORIGIN_ID)
+            articleTitle = getString(ARTICLE_TITLE)
+            articleAuthor = getString(ARTICLE_AUTHOR)
+            articleLink = getString(ARTICLE_LINK)
+            articleCollect = getBoolean(ARTICLE_COLLECT)
         }
 
         binding.tb.toolbar.run {
@@ -198,7 +197,7 @@ class WebFragment : BaseViewModelFragment<ArticlesViewModel, FragmentWebBinding>
                 setCollectStatus(collect = true)
                 App.instance().appViewModel.collectEventLiveData.value =
                     CollectEvent(collect = true, id)
-                Toast.makeText(hostActivity, "收藏成功", Toast.LENGTH_SHORT).show()
+                hostActivity.showToast("收藏成功")
             },  {
                 startLogin()
             })
@@ -214,7 +213,7 @@ class WebFragment : BaseViewModelFragment<ArticlesViewModel, FragmentWebBinding>
                     App.instance().appViewModel.collectEventLiveData.value =
                         CollectEvent(collect = true, this.id)
                 }
-                Toast.makeText(hostActivity, "收藏成功", Toast.LENGTH_SHORT).show()
+                hostActivity.showToast("收藏成功")
             }, {
                 startLogin()
             })
@@ -229,7 +228,7 @@ class WebFragment : BaseViewModelFragment<ArticlesViewModel, FragmentWebBinding>
                         collect = false, id, author = articleAuthor,
                         link = articleLink, title = articleTitle
                     )
-                Toast.makeText(hostActivity, "已取消收藏", Toast.LENGTH_SHORT).show()
+                hostActivity.showToast("已取消收藏")
             }, {
                 startLogin()
             })
@@ -244,7 +243,7 @@ class WebFragment : BaseViewModelFragment<ArticlesViewModel, FragmentWebBinding>
                         App.instance().appViewModel.collectEventLiveData.value =
                             CollectEvent(collect = true, this.id)
                     }
-                    Toast.makeText(hostActivity, "收藏成功", Toast.LENGTH_SHORT).show()
+                    hostActivity.showToast("收藏成功")
                 })
             }
 
@@ -255,7 +254,7 @@ class WebFragment : BaseViewModelFragment<ArticlesViewModel, FragmentWebBinding>
                     setCollectStatus(collect = false)
                     App.instance().appViewModel.collectEventLiveData.value =
                         CollectEvent(collect = false, id)
-                    Toast.makeText(hostActivity, "已取消收藏", Toast.LENGTH_SHORT).show()
+                    hostActivity.showToast("已取消收藏")
                 })
             }
     }

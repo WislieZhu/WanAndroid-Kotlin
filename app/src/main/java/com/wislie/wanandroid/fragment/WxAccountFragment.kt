@@ -12,6 +12,7 @@ import com.wislie.wanandroid.adapter.MultiCategoryPagerAdapter
 import com.wislie.wanandroid.data.WxAccountInfo
 import com.wislie.wanandroid.databinding.FragmentWxAccountBinding
 import com.wislie.wanandroid.ext.setNavigator
+import com.wislie.wanandroid.util.ACCOUNT_ID
 import com.wislie.wanandroid.viewmodel.ArticlesViewModel
 import net.lucode.hackware.magicindicator.buildins.commonnavigator.CommonNavigator
 
@@ -63,7 +64,7 @@ class WxAccountFragment : BaseViewModelFragment<BaseViewModel, FragmentWxAccount
     private fun addChildFragment(fragments: MutableList<WxArticleFragment>, id: Int) {
         val childFrag = WxArticleFragment()
         val bundle = Bundle()
-        bundle.putInt("accountId", id)
+        bundle.putInt(ACCOUNT_ID, id)
         childFrag.arguments = bundle
         fragments.add(childFrag)
     }

@@ -6,7 +6,7 @@ import com.wislie.common.ext.findNav
 import com.wislie.wanandroid.R
 import com.wislie.wanandroid.data.UsualWebsite
 import com.wislie.wanandroid.databinding.ItemUsualWebsiteBinding
-import com.wislie.wanandroid.util.ArticleType
+import com.wislie.wanandroid.util.*
 
 class UsualWebsiteHolder(override val binding: ItemUsualWebsiteBinding) :
     BaseVHolder<UsualWebsite>(binding) {
@@ -14,12 +14,14 @@ class UsualWebsiteHolder(override val binding: ItemUsualWebsiteBinding) :
 
     init {
         binding.root.setOnClickListener { v ->
-            val bundle = Bundle()
-            bundle.putInt("type", ArticleType.TYPE_WEBSITE) //网址
-            bundle.putInt("id", binding.webInfo?.id ?: 0)
-            bundle.putString("linkUrl", binding.webInfo?.link ?: "")
-            bundle.putString("title", binding.webInfo?.name ?: "")
-            bundle.putBoolean("collect", false)
+            val bundle = Bundle().apply { //网址
+                putInt(ARTICLE_TYPE, ArticleType.TYPE_WEBSITE)
+                putInt(ARTICLE_ID, binding.webInfo?.id ?: 0)
+                putString(ARTICLE_TITLE, binding.webInfo?.name ?: "")
+                putString(ARTICLE_LINK, binding.webInfo?.link ?: "")
+                putBoolean(ARTICLE_COLLECT, false)
+            }
+
             v.findNav().navigate(R.id.fragment_web, bundle)
         }
 

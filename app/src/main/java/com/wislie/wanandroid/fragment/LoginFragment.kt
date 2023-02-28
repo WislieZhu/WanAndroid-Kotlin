@@ -2,12 +2,12 @@ package com.wislie.wanandroid.fragment
 
 import android.graphics.Color
 import android.view.View
-import android.widget.Toast
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.viewModels
 import com.wislie.common.base.BaseViewModelFragment
 import com.wislie.common.base.parseState
 import com.wislie.common.ext.findNav
+import com.wislie.common.ext.showToast
 import com.wislie.wanandroid.App
 import com.wislie.wanandroid.R
 import com.wislie.wanandroid.databinding.FragmentLoginBinding

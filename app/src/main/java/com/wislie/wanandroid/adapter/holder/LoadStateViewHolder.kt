@@ -26,10 +26,6 @@ class LoadStateViewHolder(parent: ViewGroup, var retry: () -> Unit) :
     fun bindState(loadState: LoadState) {
         when (loadState) {
             is LoadState.Error -> {
-
-
-                loadState.error
-
                 binding.tvNoMoreData.visibility = View.GONE
                 binding.btnRetry.visibility = View.VISIBLE
                 binding.llLoading.visibility = View.GONE

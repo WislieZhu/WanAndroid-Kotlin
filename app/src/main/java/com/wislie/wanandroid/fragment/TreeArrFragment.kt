@@ -10,6 +10,9 @@ import com.wislie.wanandroid.adapter.MultiCategoryPagerAdapter
 import com.wislie.wanandroid.data.TreeInfo
 import com.wislie.wanandroid.databinding.FragmentTreeArrBinding
 import com.wislie.wanandroid.ext.setNavigator
+import com.wislie.wanandroid.util.TREE_ID
+import com.wislie.wanandroid.util.TREE_INFO
+import com.wislie.wanandroid.util.TREE_TITLE
 import net.lucode.hackware.magicindicator.buildins.commonnavigator.CommonNavigator
 
 /**
@@ -25,9 +28,9 @@ class TreeArrFragment : BaseFragment<FragmentTreeArrBinding>() {
     override fun init(root: View) {
 
         arguments?.run {
-            articleId = getInt("cid")
-            title = getString("title")
-            treeInfoStr = getString("treeInfo")
+            articleId = getInt(TREE_ID)
+            title = getString(TREE_TITLE)
+            treeInfoStr = getString(TREE_INFO)
         }
 
         binding.ivBack.setOnClickListener {

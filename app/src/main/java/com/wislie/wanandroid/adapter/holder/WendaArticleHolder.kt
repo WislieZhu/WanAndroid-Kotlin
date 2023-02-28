@@ -6,9 +6,8 @@ import com.wislie.common.ext.findNav
 import com.wislie.wanandroid.R
 import com.wislie.wanandroid.data.ArticleInfo
 import com.wislie.wanandroid.databinding.ItemWendaArticleBinding
-import com.wislie.wanandroid.util.Settings
 import com.wislie.wanandroid.ext.startLogin
-import com.wislie.wanandroid.util.ArticleType
+import com.wislie.wanandroid.util.*
 
 class WendaArticleHolder(
     override val binding: ItemWendaArticleBinding,
@@ -17,12 +16,12 @@ class WendaArticleHolder(
     init {
         binding.root.setOnClickListener { v ->
             val bundle = Bundle().apply {
-                putInt("type", ArticleType.TYPE_LIST_ARTICLE)
-                putInt("id", binding.articleInfo?.id ?: 0)
-                putString("title", binding.articleInfo?.title)
-                putString("author", binding.articleInfo?.author)
-                putString("linkUrl", binding.articleInfo?.link)
-                putBoolean("collect", binding.articleInfo?.collect ?: false)
+                putInt(ARTICLE_TYPE, ArticleType.TYPE_LIST_ARTICLE)
+                putInt(ARTICLE_ID, binding.articleInfo?.id ?: 0)
+                putString(ARTICLE_TITLE, binding.articleInfo?.title)
+                putString(ARTICLE_AUTHOR, binding.articleInfo?.author)
+                putString(ARTICLE_LINK, binding.articleInfo?.link)
+                putBoolean(ARTICLE_COLLECT, binding.articleInfo?.collect ?: false)
             }
             v.findNav().navigate(R.id.fragment_web, bundle)
         }

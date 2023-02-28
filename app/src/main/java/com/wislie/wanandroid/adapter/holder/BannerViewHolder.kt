@@ -4,7 +4,6 @@ import android.view.View
 import android.widget.ImageView
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners
-import com.wislie.common.util.Utils
 import com.wislie.wanandroid.R
 import com.wislie.wanandroid.data.Banner
 import com.zhpan.bannerview.BaseViewHolder

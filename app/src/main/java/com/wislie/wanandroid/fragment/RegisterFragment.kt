@@ -2,12 +2,12 @@ package com.wislie.wanandroid.fragment
 
 import android.graphics.Color
 import android.view.View
-import android.widget.Toast
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.viewModels
 import com.wislie.common.base.BaseViewModelFragment
 import com.wislie.common.base.parseState
 import com.wislie.common.ext.findNav
+import com.wislie.common.ext.showToast
 import com.wislie.wanandroid.App
 import com.wislie.wanandroid.R
 import com.wislie.wanandroid.databinding.FragmentRegisterBinding
@@ -39,31 +39,16 @@ class RegisterFragment : BaseViewModelFragment<LoginStateViewModel, FragmentRegi
 
         binding.btnRegister.setOnClickListener {
             when {
-                mViewModel?.account?.get()?.isEmpty() == true -> Toast.makeText(
-                    hostActivity,
-                    "请输入账号",
-                    Toast.LENGTH_SHORT
-                ).show()
-                mViewModel?.password?.get()?.isEmpty() == true -> Toast.makeText(
-                    hostActivity,
-                    "请输入密码",
-                    Toast.LENGTH_SHORT
-                ).show()
-                mViewModel?.confirmPassword?.get()?.isEmpty() == true -> Toast.makeText(
-                    hostActivity,
-                    "请输入确认密码",
-                    Toast.LENGTH_SHORT
-                ).show()
-                mViewModel?.password?.get()?.length ?: 0 < 6 -> Toast.makeText(
-                    hostActivity,
-                    "密码最少6位",
-                    Toast.LENGTH_SHORT
-                ).show()
-                mViewModel?.password?.get() == mViewModel?.confirmPassword?.get() -> Toast.makeText(
-                    hostActivity,
-                    "两次输入的密码不一致",
-                    Toast.LENGTH_SHORT
-                ).show()
+                mViewModel?.account?.get()?.isEmpty() == true ->
+                    hostActivity.showToast("请输入账号")
+                mViewModel?.password?.get()?.isEmpty() == true ->
+                    hostActivity.showToast("请输入密码")
+                mViewModel?.confirmPassword?.get()?.isEmpty() == true ->
+                    hostActivity.showToast("请输入确认密码")
+                mViewModel?.password?.get()?.length ?: 0 < 6 ->
+                    hostActivity.showToast("密码最少6位")
+                mViewModel?.password?.get() == mViewModel?.confirmPassword?.get() ->
+                    hostActivity.showToast("两次输入的密码不一致")
                 else -> loginViewModel.register(
                     mViewModel?.account?.get()!!,
                     mViewModel?.password?.get()!!,

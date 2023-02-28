@@ -6,13 +6,12 @@ import com.wislie.common.ext.findNav
 import com.wislie.wanandroid.R
 import com.wislie.wanandroid.data.CollectWebsiteInfo
 import com.wislie.wanandroid.databinding.ItemWebsiteBinding
-import com.wislie.wanandroid.util.Settings
 import com.wislie.wanandroid.ext.startLogin
-import com.wislie.wanandroid.util.ArticleType
+import com.wislie.wanandroid.util.*
 
 class CollectWebsiteHolder(
     override val binding: ItemWebsiteBinding,
-    private val uncollect: (collectWebsiteInfo: CollectWebsiteInfo?) -> Unit
+    private val unCollect: (collectWebsiteInfo: CollectWebsiteInfo?) -> Unit
 ) :
     BaseVHolder<CollectWebsiteInfo>(binding) {
 
@@ -22,11 +21,11 @@ class CollectWebsiteHolder(
         binding.root.setOnClickListener { v ->
             val bundle = Bundle()
             bundle.run {
-                putInt("type", ArticleType.TYPE_WEBSITE)
-                putInt("id", binding.websiteInfo?.id ?: 0)
-                putString("title", binding.websiteInfo?.name ?: "")
-                putString("linkUrl", binding.websiteInfo?.link ?: "")
-                putBoolean("collect", true)
+                putInt(ARTICLE_TYPE, ArticleType.TYPE_WEBSITE)
+                putInt(ARTICLE_ID, binding.websiteInfo?.id ?: 0)
+                putString(ARTICLE_TITLE, binding.websiteInfo?.name ?: "")
+                putString(ARTICLE_LINK, binding.websiteInfo?.link ?: "")
+                putBoolean(ARTICLE_COLLECT, true)
             }
             v.findNav().navigate(R.id.fragment_web, bundle)
         }
@@ -36,7 +35,7 @@ class CollectWebsiteHolder(
                 it.startLogin()
                 return@setOnClickListener
             }
-            uncollect.invoke(binding.websiteInfo)
+            unCollect.invoke(binding.websiteInfo)
         }
     }
 

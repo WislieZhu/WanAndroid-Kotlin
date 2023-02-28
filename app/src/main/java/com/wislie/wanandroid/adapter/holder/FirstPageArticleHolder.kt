@@ -6,9 +6,8 @@ import com.wislie.common.ext.findNav
 import com.wislie.wanandroid.R
 import com.wislie.wanandroid.data.ArticleInfo
 import com.wislie.wanandroid.databinding.ItemFirstPageArticleBinding
-import com.wislie.wanandroid.util.Settings
 import com.wislie.wanandroid.ext.startLogin
-import com.wislie.wanandroid.util.ArticleType
+import com.wislie.wanandroid.util.*
 
 class FirstPageArticleHolder(
     override val binding: ItemFirstPageArticleBinding,
@@ -16,11 +15,10 @@ class FirstPageArticleHolder(
 ) :
     BaseVHolder<ArticleInfo>(binding) {
 
-    private var index = 0
 
     init {
 
-        binding.ivCollect.setOnClickListener { v-> // 在onBindViewHolder中点击不合理
+        binding.ivCollect.setOnClickListener { v->
             if (!Settings.logined) {
                 v.startLogin()
                 return@setOnClickListener
@@ -30,29 +28,26 @@ class FirstPageArticleHolder(
 
         binding.root.setOnClickListener { v ->
             val bundle = Bundle().apply {
-                putInt("type", ArticleType.TYPE_LIST_ARTICLE)
-                putInt("id", binding.articleInfo?.id ?: 0)
-                putString("title", binding.articleInfo?.title)
-                putString("author", binding.articleInfo?.author)
-                putString("linkUrl", binding.articleInfo?.link)
-                putBoolean("collect", binding.articleInfo?.collect ?: false)
+                putInt(ARTICLE_TYPE, ArticleType.TYPE_LIST_ARTICLE)
+                putInt(ARTICLE_ID, binding.articleInfo?.id ?: 0)
+                putString(ARTICLE_TITLE, binding.articleInfo?.title)
+                putString(ARTICLE_AUTHOR, binding.articleInfo?.author)
+                putString(ARTICLE_LINK, binding.articleInfo?.link)
+                putBoolean(ARTICLE_COLLECT, binding.articleInfo?.collect ?: false)
             }
             v.findNav().navigate(R.id.fragment_web, bundle)
         }
 
-
-
         binding.tvAuthor.setOnClickListener { v->
             val bundle = Bundle().apply {
-                putInt("id", binding.articleInfo?.id ?: -1)
-                putString("author", binding.articleInfo?.author)
+                putInt(ARTICLE_ID, binding.articleInfo?.id ?: -1)
+                putString(ARTICLE_AUTHOR, binding.articleInfo?.author)
             }
             v.findNav().navigate(R.id.fragment_share_author_article_list, bundle)
         }
     }
 
     override fun bind(data: ArticleInfo?, position: Int) {
-        this.index = position
         binding.articleInfo = data
         binding.executePendingBindings()
     }

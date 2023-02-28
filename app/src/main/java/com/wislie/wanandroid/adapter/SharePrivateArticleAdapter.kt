@@ -15,8 +15,13 @@ class SharePrivateArticleAdapter(val collect: (articleInfo: ArticleInfo?) -> Uni
     BaseAdapter<ArticleInfo, ItemSharePrivateArticleBinding, SharePrivateArticleHolder>(
         articleCallback
     ) {
+
+    private val mSlideHelper by lazy {
+        SlideHelper()
+    }
+
     override fun onCreateViewHolder(binding: ItemSharePrivateArticleBinding): SharePrivateArticleHolder {
-        return SharePrivateArticleHolder(SlideHelper(), binding, collect)
+        return SharePrivateArticleHolder(mSlideHelper, binding, collect)
     }
 
     override fun getItemLayoutId(): Int {

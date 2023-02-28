@@ -15,6 +15,7 @@ import com.wislie.wanandroid.adapter.WxArticleAdapter
 import com.wislie.wanandroid.data.CollectEvent
 import com.wislie.wanandroid.databinding.FragmentWxArticleBinding
 import com.wislie.wanandroid.ext.startLogin
+import com.wislie.wanandroid.util.ACCOUNT_ID
 import com.wislie.wanandroid.viewmodel.ArticlesViewModel
 import com.wislie.wanandroid.viewmodel.WxArticleStateViewModel
 import kotlinx.coroutines.flow.collectLatest
@@ -45,7 +46,7 @@ class WxArticleFragment :
     override fun init(root: View) {
         super.init(root)
         binding.wxArticleStateVm = mViewModel
-        accountId = arguments?.getInt("accountId")
+        accountId = arguments?.getInt(ACCOUNT_ID)
         registerLoadSir(binding.list.swipeRv) {
             adapter.refresh() //点击即刷新
         }

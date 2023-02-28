@@ -1,8 +1,6 @@
 package com.wislie.wanandroid.adapter.holder
 
 import android.os.Bundle
-import android.view.View
-import android.widget.Toast
 import com.d.lib.slidelayout.SlideLayout
 import com.d.lib.slidelayout.SlideLayout.OnStateChangeListener
 import com.wislie.common.base.BaseVHolder
@@ -10,7 +8,7 @@ import com.wislie.common.ext.findNav
 import com.wislie.wanandroid.R
 import com.wislie.wanandroid.data.ToDoInfo
 import com.wislie.wanandroid.databinding.ItemTodoBinding
-import com.wislie.wanandroid.util.SlideHelper
+import com.wislie.wanandroid.util.*
 
 /**
  * to do
@@ -50,13 +48,13 @@ class TodoHolder(
             }
             val bundle = Bundle().apply {
                 val todo = binding.todoInfo
-                putInt("id", todo?.id ?: -1)
-                putString("title", todo?.title)
-                putString("content", todo?.content)
-                putString("dateStr", todo?.dateStr)
-                putInt("status", todo?.status ?: 0)
-                putInt("type", todo?.type ?: 0)
-                putInt("priority", todo?.priority ?: 0)
+                putInt(TODO_ID, todo?.id ?: -1)
+                putString(TODO_TITLE, todo?.title)
+                putString(TODO_CONTENT, todo?.content)
+                putString(TODO_DATE, todo?.dateStr)
+                putInt(TODO_STATUS, todo?.status ?: 0)
+                putInt(TODO_TYPE, todo?.type ?: 0)
+                putInt(TODO_PRIORITY, todo?.priority ?: 0)
             }
             v.findNav().navigate(R.id.fragment_update_todo, bundle)
         }

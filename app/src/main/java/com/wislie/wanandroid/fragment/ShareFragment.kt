@@ -1,7 +1,6 @@
 package com.wislie.wanandroid.fragment
 
 import android.view.View
-import android.widget.Toast
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.viewModels
 import com.wislie.common.base.BaseViewModelFragment
@@ -10,6 +9,7 @@ import com.wislie.common.ext.findNav
 import com.wislie.wanandroid.App
 import com.wislie.wanandroid.R
 import com.wislie.wanandroid.databinding.FragmentShareBinding
+import com.wislie.common.ext.showToast
 import com.wislie.wanandroid.util.Settings
 import com.wislie.wanandroid.viewmodel.ArticlesViewModel
 import com.wislie.wanandroid.viewmodel.ShareStateViewModel
@@ -36,14 +36,10 @@ class ShareFragment : BaseViewModelFragment<ShareStateViewModel, FragmentShareBi
         binding.tvShareAuthor.text = Settings.nickname
         binding.btnCommit.setOnClickListener {
             when {
-                mViewModel?.title?.get().isNullOrEmpty() -> Toast.makeText(
-                    hostActivity, "请输入标题",
-                    Toast.LENGTH_SHORT
-                ).show()
-                mViewModel?.link?.get().isNullOrEmpty() -> Toast.makeText(
-                    hostActivity, "请输入链接",
-                    Toast.LENGTH_SHORT
-                ).show()
+                mViewModel?.title?.get().isNullOrEmpty() ->
+                    hostActivity.showToast("请输入标题")
+                mViewModel?.link?.get().isNullOrEmpty() ->
+                    hostActivity.showToast("请输入链接")
                 else -> {
                     articlesViewModel.shareArticle(
                         mViewModel?.title?.get()!!,

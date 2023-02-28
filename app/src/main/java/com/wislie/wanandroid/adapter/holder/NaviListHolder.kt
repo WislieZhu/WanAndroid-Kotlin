@@ -6,7 +6,7 @@ import com.wislie.common.ext.findNav
 import com.wislie.wanandroid.R
 import com.wislie.wanandroid.data.NaviInfo
 import com.wislie.wanandroid.databinding.ItemNaviBinding
-import com.wislie.wanandroid.util.ArticleType
+import com.wislie.wanandroid.util.*
 
 /**
  * 导航
@@ -22,12 +22,12 @@ class NaviListHolder(
                 val naviInfo = this
                 val articleInfo = naviInfo.articles[position]
                 val bundle = Bundle().apply {
-                    putInt("type", ArticleType.TYPE_LIST_ARTICLE)
-                    putInt("id", articleInfo.id)
-                    putString("title", articleInfo.title)
-                    putString("author", articleInfo.author)
-                    putString("linkUrl", articleInfo.link)
-                    putBoolean("collect", articleInfo.collect)
+                    putInt(ARTICLE_TYPE, ArticleType.TYPE_LIST_ARTICLE)
+                    putInt(ARTICLE_ID, articleInfo.id)
+                    putString(ARTICLE_TITLE, articleInfo.title)
+                    putString(ARTICLE_AUTHOR, articleInfo.author)
+                    putString(ARTICLE_LINK, articleInfo.link)
+                    putBoolean(ARTICLE_COLLECT, articleInfo.collect)
                 }
                 v.findNav().navigate(R.id.fragment_web, bundle)
             }

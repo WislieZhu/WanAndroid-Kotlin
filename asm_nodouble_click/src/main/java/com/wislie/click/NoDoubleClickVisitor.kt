@@ -15,7 +15,7 @@ class NoDoubleClickVisitor(
     override fun visitEnd() {
         forEachMethods()
         super.visitEnd()
-        nextClassVisitor?.run {
+        nextClassVisitor.run {
             cn.accept(this)
         }
     }

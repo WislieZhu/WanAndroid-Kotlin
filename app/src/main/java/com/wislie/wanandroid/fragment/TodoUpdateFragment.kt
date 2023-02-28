@@ -1,7 +1,6 @@
 package com.wislie.wanandroid.fragment
 
 import android.view.View
-import android.widget.Toast
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.viewModels
 import com.wislie.common.base.BaseViewModelFragment
@@ -11,6 +10,8 @@ import com.wislie.wanandroid.App
 import com.wislie.wanandroid.R
 import com.wislie.wanandroid.databinding.FragmentTodoBinding
 import com.wislie.wanandroid.ext.showCalendar
+import com.wislie.common.ext.showToast
+import com.wislie.wanandroid.util.*
 import com.wislie.wanandroid.viewmodel.TodoStateViewModel
 import com.wislie.wanandroid.viewmodel.TodoViewModel
 
@@ -25,20 +26,20 @@ class TodoUpdateFragment : BaseViewModelFragment<TodoStateViewModel, FragmentTod
     private var content: String? = null
     private var dateStr: String? = null
     private var status: Int = 0 //默认未完成
-    private var type: Int = 0
+    private var type: Int? = 0
     private var priority: Int? = null
 
     override fun init(root: View) {
         super.init(root)
         binding.todoStateVm = mViewModel
         arguments?.run {
-            id = getInt("id")
-            title = getString("title")
-            content = getString("content")
-            dateStr = getString("dateStr")
-            status = getInt("status")
-            type = getInt("type")
-            priority = getInt("priority")
+            id = getInt(TODO_ID)
+            title = getString(TODO_TITLE)
+            content = getString(TODO_CONTENT)
+            dateStr = getString(TODO_DATE)
+            status = getInt(TODO_STATUS)
+            type = getInt(TODO_TYPE)
+            priority = getInt(TODO_PRIORITY)
         }
 
         title?.run {
@@ -80,22 +81,14 @@ class TodoUpdateFragment : BaseViewModelFragment<TodoStateViewModel, FragmentTod
         binding.btnCommit.setOnClickListener {
             when {
                 id == null -> return@setOnClickListener
-                mViewModel?.title?.get().isNullOrEmpty() -> Toast.makeText(
-                    hostActivity, "请输入标题",
-                    Toast.LENGTH_SHORT
-                ).show()
-                mViewModel?.content?.get().isNullOrEmpty() -> Toast.makeText(
-                    hostActivity, "请输入内容",
-                    Toast.LENGTH_SHORT
-                ).show()
-                mViewModel?.date?.get().isNullOrEmpty() -> Toast.makeText(
-                    hostActivity, "请选择日期",
-                    Toast.LENGTH_SHORT
-                ).show()
-                mViewModel?.priority?.get() == null -> Toast.makeText(
-                    hostActivity, "请选择优先级",
-                    Toast.LENGTH_SHORT
-                ).show()
+                mViewModel?.title?.get().isNullOrEmpty() ->
+                    hostActivity.showToast("请输入标题")
+                mViewModel?.content?.get().isNullOrEmpty() ->
+                    hostActivity.showToast("请输入内容")
+                mViewModel?.date?.get().isNullOrEmpty() ->
+                    hostActivity.showToast("请选择日期")
+                mViewModel?.priority?.get() == null ->
+                    hostActivity.showToast("请选择优先级")
                 else -> {
                     todoViewModel.updateTodo(
                         id!!,

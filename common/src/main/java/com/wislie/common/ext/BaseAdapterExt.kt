@@ -2,7 +2,6 @@ package com.wislie.common.ext
 
 import android.content.Context
 import android.graphics.Color
-import android.widget.Toast
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.kingja.loadsir.core.LoadService
 import com.wislie.common.base.BaseAdapter
@@ -29,14 +28,14 @@ fun BaseAdapter<*, *, *>.addStateListener(
             }
             is State.Error -> {
                 loadService.showErrorCallback()
-                Toast.makeText(context, it.exception.errorMsg, Toast.LENGTH_SHORT).show()
+                context.showToast(it.exception.errorMsg)
             }
         }
     }
     setOnLoadMoreStateListener {
         when (it) {
             is State.Error -> {
-                Toast.makeText(context, it.exception.errorMsg, Toast.LENGTH_SHORT).show()
+                context.showToast(it.exception.errorMsg)
             }
             else -> {}
         }
@@ -45,7 +44,7 @@ fun BaseAdapter<*, *, *>.addStateListener(
     setOnPrependStateListener {
         when (it) {
             is State.Error -> {
-                Toast.makeText(context, it.exception.errorMsg, Toast.LENGTH_SHORT).show()
+                context.showToast(it.exception.errorMsg)
             }
             else -> {}
         }

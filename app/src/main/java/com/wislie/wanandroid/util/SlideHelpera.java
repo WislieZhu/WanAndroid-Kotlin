@@ -9,10 +9,10 @@ import java.util.List;
  * Help manage the slide
  * Created by D on 2017/5/30.
  */
-public class SlideHelper {
+public class SlideHelpera {
     private final List<SlideLayout> mSlides = new ArrayList<>();
 
-    public SlideHelper() {
+    public SlideHelpera() {
     }
 
     public void onStateChanged(SlideLayout layout, boolean open) {

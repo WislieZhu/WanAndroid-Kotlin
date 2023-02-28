@@ -6,9 +6,8 @@ import com.wislie.common.ext.findNav
 import com.wislie.wanandroid.R
 import com.wislie.wanandroid.data.ArticleInfo
 import com.wislie.wanandroid.databinding.ItemCollectArticleBinding
-import com.wislie.wanandroid.util.Settings
 import com.wislie.wanandroid.ext.startLogin
-import com.wislie.wanandroid.util.ArticleType
+import com.wislie.wanandroid.util.*
 
 /**
  * 收藏的文章
@@ -23,13 +22,13 @@ class CollectArticleHolder(
         binding.root.setOnClickListener { v ->
             val bundle = Bundle()
             bundle?.run {
-                putInt("type", ArticleType.TYPE_COLLECT_ARTICLE)
-                putInt("id", binding.articleInfo?.id ?: 0)
-                putInt("originId", binding.articleInfo?.originId ?: -1)
-                putString("title", binding.articleInfo?.title)
-                putString("author", binding.articleInfo?.author)
-                putString("linkUrl", binding.articleInfo?.link)
-                putBoolean("collect", true)
+                putInt(ARTICLE_TYPE, ArticleType.TYPE_COLLECT_ARTICLE)
+                putInt(ARTICLE_ID, binding.articleInfo?.id ?: 0)
+                putInt(ARTICLE_ORIGIN_ID, binding.articleInfo?.originId ?: -1)
+                putString(ARTICLE_TITLE, binding.articleInfo?.title)
+                putString(ARTICLE_AUTHOR, binding.articleInfo?.author)
+                putString(ARTICLE_LINK, binding.articleInfo?.link)
+                putBoolean(ARTICLE_COLLECT, true)
             }
             v.findNav().navigate(R.id.fragment_web, bundle)
         }

@@ -7,6 +7,9 @@ import com.wislie.common.ext.findNav
 import com.wislie.wanandroid.R
 import com.wislie.wanandroid.data.TreeInfo
 import com.wislie.wanandroid.databinding.ItemTreeBinding
+import com.wislie.wanandroid.util.TREE_ID
+import com.wislie.wanandroid.util.TREE_INFO
+import com.wislie.wanandroid.util.TREE_TITLE
 
 /**
  * 体系
@@ -20,22 +23,18 @@ class TreeListHolder(
         binding.flowlayoutSystem.setOnTagClickListener { v, position, _ ->
             binding.systemInfo?.run {
                 val systemInfo = this
-
                 systemInfo.children?.get(position)?.run {
-
                     val bundle = Bundle().apply {
-                        putInt("cid", id)
-                        putString("title", systemInfo.name)
+                        putInt(TREE_ID, id)
+                        putString(TREE_TITLE, systemInfo.name)
                         val gson = Gson()
                         val childrenStr = gson.toJson(systemInfo.children)
                         //转换成字符串
-                        putString("treeInfo", childrenStr)
+                        putString(TREE_INFO, childrenStr)
                     }
                     v.findNav().navigate(R.id.fragment_tree_category, bundle)
                 }
             }
-
-
             true
         }
     }

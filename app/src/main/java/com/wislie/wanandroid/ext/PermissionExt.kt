@@ -3,6 +3,7 @@ package com.wislie.wanandroid.ext
 import android.content.Context
 import com.hjq.permissions.OnPermissionCallback
 import com.hjq.permissions.XXPermissions
+import com.wislie.common.ext.showToast
 
 /**
  * 请求权限

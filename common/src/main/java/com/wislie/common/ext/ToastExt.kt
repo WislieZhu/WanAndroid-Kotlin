@@ -1,4 +1,4 @@
-package com.wislie.wanandroid.ext
+package com.wislie.common.ext
 
 import android.content.Context
 import android.widget.Toast

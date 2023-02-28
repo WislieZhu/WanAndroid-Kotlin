@@ -1,583 +1,653 @@
-1. 创建ArrayList实例visitTypeInsn->dup->init方法->newLocal局部变量->store
-2. 将每个局部变量填充到list实例, argTypes遍历,得到每个参数在局部变量表中的位置,调用list的add方法,之后pop
-3. 打印类名,方法名,参数类型 入参的descriptor,入参的值list所在位置，其他参数是visitLDC
-
-1.打印返回值
-根据类型dup/dup2
-转换成String类型
-2.打印类名，方法吗，返回参数类型，返回值
-
-特别注意:调用方法要注意是否是接口,如果是接口 true
-遍历时相加 需要用 type.size 而不是 type.sort
-type要注意清楚, 是method的type还是 return的type
-ldc 返回值是使用 ldc(returnType.descriptor)
-
-static方法替换: owner,methodName,methodDescriptor都要替换
-no-static方法替换: 加一个包装类，变成static方法，去调用该包装类的static方法即可
-方法体删除 owner,methodName,methodDescriptor比较后,根据返回类型mv.visitVarInsn, mv.visitInsn(Opcodes.XReturn), mv.visitEnd(),最后调用return null即可
-
-第一步的做法都是转换成字节码
-
-哪些方法被调用了: visitMethod 打印name,descriptor
 
 
-Class Transform
+这个项目争取用navigation的方式写一遍
+
+BaseNetworkApi
+1.提供可扩展的OkhttpClientBuilder作为形参的抽象方法
+2.提供可扩展的RetrofitBuilder作为形参的抽象方法
+3.创建okhttpClient
+4.接收Class<T>作为形参, 返回参数为T
+NetworkApi
+1.继承BaseNetworkApi
+2.重写setOkhttpClientBuilder：添加缓存目录, cookieJar, 公共拦截器, 缓存拦截器, 日志拦截器, 超时时间 连接、读、写
+3.重写setRetrofitBuilder: 添加gson转换
+ApiService
+创建ApiService懒汉式单例
 
 
 
-java.util.function.Consumer<T>{
-     void accept(T t);
+
+一.缓存拦截器 CacheInterceptor
+@Override public Response intercept(Chain chain) throws IOException {
+    Response cacheCandidate = cache != null
+        ? cache.get(chain.request())
+        : null;
+    //步骤1
+    CacheStrategy strategy = new CacheStrategy.Factory(now, chain.request(), cacheCandidate).get();
+
+    //如果有缓存，更新统计指标, 增加命中率
+    if (cache != null) {
+      cache.trackResponse(strategy);
+    }
+
+    //步骤4
+    //处理方式一
+    //如果当前没有网络且找不到缓存
+    if (networkRequest == null && cacheResponse == null) {
+        return new Response.Builder()
+          .request(chain.request())
+          .protocol(Protocol.HTTP_1_1)
+          .code(504)
+          .message("Unsatisfiable Request (only-if-cached)")
+          .body(Util.EMPTY_RESPONSE)
+          .sentRequestAtMillis(-1L)
+          .receivedResponseAtMillis(System.currentTimeMillis())
+          .build();
+    }
+
+    //步骤5
+    //处理方式二
+    //如果不使用网络请求，直接返回缓存的Response
+    if (networkRequest == null) {
+        return cacheResponse.newBuilder()
+          .cacheResponse(stripBody(cacheResponse))
+          .build();
+    }
+
+    //步骤6
+    //处理方式三
+    //本地有缓存,服务器返回状态码为HTTP_NOT_MODIFIED(304),使用缓存数据
+    if (cacheResponse != null) {
+        if (networkResponse.code() == HTTP_NOT_MODIFIED) {
+        Response response = cacheResponse.newBuilder()
+            .headers(combine(cacheResponse.headers(), networkResponse.headers()))
+            .sentRequestAtMillis(networkResponse.sentRequestAtMillis())
+            .receivedResponseAtMillis(networkResponse.receivedResponseAtMillis())
+            .cacheResponse(stripBody(cacheResponse))
+            .networkResponse(stripBody(networkResponse))
+            .build();
+        networkResponse.body().close();
+
+        // Update the cache after combining headers but before stripping the
+        // Content-Encoding header (as performed by initContentStream()).
+        cache.trackConditionalCacheHit();
+        cache.update(cacheResponse, response);
+        return response;
+        } else {
+        closeQuietly(cacheResponse.body());
+        }
+    }
+
+    //步骤7
+    //处理方式四
+    //如果服务器资源已经修改，使用网络响应返回的最新数据
+    Response response = networkResponse.newBuilder()
+        .cacheResponse(stripBody(cacheResponse))
+        .networkResponse(stripBody(networkResponse))
+        .build();
+
+    if (cache != null) {
+      if (HttpHeaders.hasBody(response) && CacheStrategy.isCacheable(response, networkRequest)) {
+        // Offer this request to the cache.
+        CacheRequest cacheRequest = cache.put(response);
+        return cacheWritingResponse(cacheRequest, response);
+      }
+
+      if (HttpMethod.invalidatesCache(networkRequest.method())) {
+        try {
+          cache.remove(networkRequest);
+        } catch (IOException ignored) {
+          // The cache cannot be written.
+        }
+      }
+    }
+    return response;
+
 }
 
-val methodBody = Consumer<MethodNode> { methodNode ->
-   //1
-  methodNode.visitVarInsn(Opcodes.ILOAD, 1)
-  methodNode.visitVarInsn(Opcodes.ILOAD, 2)
-  methodNode.visitInsn(Opcodes.IMUL)
-  methodNode.visitInsn(Opcodes.IRETURN)
-  methodNode.visitMaxs(2, 3)
-  methodNode.visitEnd()
-}
-//2 执行这个就回调用1以下的内容
-methodBody.accept(methodNode)
+public CacheStrategy get() {
+  //步骤2
+  CacheStrategy candidate = getCandidate();
 
+  if (candidate.networkRequest != null && request.cacheControl().onlyIfCached()) {
+    // We're forbidden from using the network and the cache is insufficient.
+    return new CacheStrategy(null, null);
+  }
 
-自定义的继承MethodVisitor
-1.构造参数中传入methodNode
-2.visitEnd时强制将继承MethodVisitor对象转换成methodNode
-3.mn.accept(mv)
-自定义的继承MethodNode
-1.accept(mv)
-
-关于methodNode
-InsnList il = new InsnList()
-il.add(...)
-...
-il.add(...)
-methodNode.instructions.insert(i, il)
-
-
-apitree 不像api core一样，要考虑操作数栈的位置
-
-
-Internal Name -> java/lang/String
-Fully Qualified Class Name -> java.lang.String
-classWriter.visit 字段name使用是Internal Name
-ClassReader(String className) 中的className使用的是 Fully Qualified Class Name
-
-fieldWriter.visit 和
-methodWriter.visit  字段descriptor 类型描述符使用的是 ClassFile描述符
-boolean Z
-byte    B
-char    C
-int     I
-short   S
-float   F
-double  D
-long    J
-void    V
-String  Ljava/lang/String;
-Object  Ljava/lang/Object;
-byte[]  [B
-String[]   [Ljava/lang/String;
-Object[][] [[Ljava/lang/Object;
-
-int  add(int a, int b)      (II)I
-void test(int a, int b)     (II)V
-boolean compare(Object obj) (Ljava/lang/Object;)Z
-void main(String[] args)    ([Ljava/lang/String;)V
-
-visit(version,access,name,signature,superName,interfaces)
-visitField(access, name, descriptor, signature, value)
-visitMethod(access, name, descriptor, signature, exceptions)
-
-
-methodVisitor.visitVarInsn(ALOAD,0）
-methodVisitor.visitMethodInsn(INVOKESPECIAL, "java/lang/Object", "<init>", "()V", false)
-methodVisitor.visitInsn(RETURN)
-
-java编译器自动生成的默认编译器名称 <init>()
-cw.visitMethod(ACC_PUBLIC, "<init>", "()V", null, null)
-静态代码块,那么就会有一个<clinit>()方法
-cw.visitMethod(ACC_STATIC, "<clinit>", "()V", null, null)
-
-例:生成类或接口, 类静态变量,成员变量, 方法等
-cw.visit(version,access,name,signature,superName,interfaces)
-FieldVisitor fv1 = cw.visitField(access, name, descriptor, signature, value)
-fv1.visitEnd()
-
-MethodVisitor mv1 = cw.visitMethod(access, name, descriptor, signature, exceptions)
-mv1.visitEnd()
-byte[] bytes = cw.toByteArray()
-
-
-
-例:
-@MyTag(name = "tomcat", age = 10)
-int intValue = 100;
-1.创建FieldVisitor
-FieldVisitor fv1 = cw.visitField(ACC_PUBLIC | ACC_FINAL | ACC_STATIC, "intValue", "I", null, 100)
-2.创建AnnotationVisitor
-AnnotationVisitor av1 = fv1.visitAnnotation("包名/MyTag;",false)
-av1.visit("name","tomcat")
-av1.visit("age",10)
-av1.visitEnd()
-
-MethodVisitor
-
-visitInsn(final int opcode)
-visitIntInsn(final int opcode, final int operand)
-visitVarInsn(final int opcode, final int var)
-visitTypeInsn(final int opcode, final String type)
-visitFieldInsn(final int opcode, final String owner, final String name, final String descriptor)
-visitMethodInsn(final int opcode, final String owner, final String name, final String descriptor,
-                                final boolean isInterface)
-visitInvokeDynamicInsn(final String name, final String descriptor, final Handle bootstrapMethodHandle,
-                                       final Object... bootstrapMethodArguments)
-visitJumpInsn(final int opcode, final Label label)
-visitLabel(final Label label)
-visitLdcInsn(final Object value)
-visitIincInsn(final int var, final int increment)
-visitTableSwitchInsn(final int min, final int max, final Label dflt, final Label... labels)
-visitLookupSwitchInsn(final Label dflt, final int[] keys, final Label[] labels)
-visitMultiANewArrayInsn(final String descriptor, final int numDimensions)
-visitTryCatchBlock(final Label start, final Label end, final Label handler, final String type)
-
-本质 visitXxxInsn() 是组装instruction的内容
-1.mv.visitCode
-2.mv.visitXxxInsn
-3.mv.visitMaxs
-4.mv.visitEnd
-
-栈帧:
-局部变量表  是一个数组,索引从0开始
-操作数栈
-
-例:
-静态方法和非静态方法的区别:
-非静态方法：local variables(即局部变量表)索引为0的位置存在一个this变量
-静态方法: 不需要存储this
-public static int add(int a, int b) {
-    return a + b;
-}
-方法整体的Frame变化如下:
-add(II)I
-[int, int] []
-[int, int] [int]
-[int, int] [int, int]
-[int, int] [int]
-[] []
-
-public int add(int a, int b) {
-    return a + b;
-}
-方法整体的Frame变化如下:
-add(II)I
-[sample/HelloWorld, int, int] []
-[sample/HelloWorld, int, int] [int]
-[sample/HelloWorld, int, int] [int, int]
-[sample/HelloWorld, int, int] [int]
-[] []
-
-long和double类型:
-public long add(long a, long b) {
-    return a + b;
-}
-add(JJ)J
-[sample/HelloWorld, long, top, long, top] []
-[sample/HelloWorld, long, top, long, top] [long, top]
-[sample/HelloWorld, long, top, long, top] [long, top, long, top]
-[sample/HelloWorld, long, top, long, top] [long, top]
-[] []
-
-
-在.class文件中，构造方法的名字是<init>,从Instruction的角度来讲，调用构造方法会用到invokespecial指令
-
-例:
-public void test() {
-    GoodChild child = new GoodChild("Lucy", 8);
+  return candidate;
 }
 
-mv2.visitTypeInsn(NEW, "sample/GoodChild")
-mv2.visitInsn(DUP)
-mv2.visitLdcInsn("Lucy")
-mv2.visitIntInsn(BIPUSH, 8)
-mv2.visitMethodInsn(INVOKESPECIAL, "sample/GoodChild", "<init>", "(Ljava/lang/String;I)V", false);
-mv2.visitVarInsn(ASTORE, 1)
-mv2.visitInsn(RETURN)
+//步骤3
+private CacheStrategy getCandidate() {
+  //找不到缓存，需要网络请求
+  if (cacheResponse == null) {
+    return new CacheStrategy(request, null);
+  }
 
-Frame变化情况:
-test()V
-[sample/HelloWorld] []
-[sample/HelloWorld] [uninitialized_sample/GoodChild]
-[sample/HelloWorld] [uninitialized_sample/GoodChild, uninitialized_sample/GoodChild]
-[sample/HelloWorld] [uninitialized_sample/GoodChild, uninitialized_sample/GoodChild, java/lang/String]
-[sample/HelloWorld] [uninitialized_sample/GoodChild, uninitialized_sample/GoodChild, java/lang/String, int]
-[sample/HelloWorld] [sample/GoodChild]
-[sample/HelloWorld, sample/GoodChild] []
-[] []
+  // 如果是https请求且缺少握手操作，需要网络请求
+  if (request.isHttps() && cacheResponse.handshake() == null) {
+    return new CacheStrategy(request, null);
+  }
 
-例:
-public void test(int a, int b) {
-    int val = Math.max(a, b); // 对static方法进行调用
-    System.out.println(val);  // 对non-static方法进行调用
+  // 判断网络请求该不该缓存下来，不该缓存则，需要网络请求
+  if (!isCacheable(cacheResponse, request)) {
+    return new CacheStrategy(request, null);
+  }
+
+
+  // 如果指定不缓存或者是可选择的请求，需要网络请求
+  CacheControl requestCaching = request.cacheControl();
+  if (requestCaching.noCache() || hasConditions(request)) {
+    return new CacheStrategy(request, null);
+  }
+
+  //上述需要网络请求返回的 CacheStrategy 第一个参数传入request
+
+  //如果缓存是不受影响的，CacheStrategy传入cacheResponse
+  CacheControl responseCaching = cacheResponse.cacheControl();
+  if (responseCaching.immutable()) {
+    return new CacheStrategy(null, cacheResponse);
+  }
+
+
+  //可以缓存，添加请求头信息
+  if (!responseCaching.noCache() && ageMillis + minFreshMillis < freshMillis + maxStaleMillis) {
+    Response.Builder builder = cacheResponse.newBuilder();
+    if (ageMillis + minFreshMillis >= freshMillis) {
+      builder.addHeader("Warning", "110 HttpURLConnection \"Response is stale\"");
+    }
+    long oneDayMillis = 24 * 60 * 60 * 1000L;
+    if (ageMillis > oneDayMillis && isFreshnessLifetimeHeuristic()) {
+      builder.addHeader("Warning", "113 HttpURLConnection \"Heuristic expiration\"");
+    }
+    return new CacheStrategy(null, builder.build());
+  }
+
+  ...
 }
 
-MethodVisitor mv2 = cw.visitMethod(ACC_PUBLIC, "test", "(II)V", null, null);
-mv2.visitCode();
-mv2.visitVarInsn(ILOAD, 1);
-mv2.visitVarInsn(ILOAD, 2);
-mv2.visitMethodInsn(INVOKESTATIC, "java/lang/Math", "max", "(II)I", false);
-mv2.visitVarInsn(ISTORE, 3);
-mv2.visitFieldInsn(GETSTATIC, "java/lang/System", "out", "Ljava/io/PrintStream;");
-mv2.visitVarInsn(ILOAD, 3);
-mv2.visitMethodInsn(INVOKEVIRTUAL, "java/io/PrintStream", "println", "(I)V", false);
-mv2.visitInsn(RETURN);
-mv2.visitMaxs(2, 4);
-mv2.visitEnd();
+综上述:
+一.如果当前没有网络且找不到缓存,返回504
+二.如果当前没有网络，有本地缓存,直接返回缓存的Response
+三.本地有缓存,服务器返回状态码为HTTP_NOT_MODIFIED(304),使用缓存数据
+四.如果服务器资源已经修改，使用网络响应返回的最新数据
 
-Frame变化情况:
-test(II)V
-[sample/HelloWorld, int, int] []
-[sample/HelloWorld, int, int] [int]
-[sample/HelloWorld, int, int] [int, int]
-[sample/HelloWorld, int, int] [int]
-[sample/HelloWorld, int, int, int] []
-[sample/HelloWorld, int, int, int] [java/io/PrintStream]
-[sample/HelloWorld, int, int, int] [java/io/PrintStream, int]
-[sample/HelloWorld, int, int, int] []
-[] []
+用代码表示
+class LogInterceptor : Interceptor {
+    override fun intercept(chain: Interceptor.Chain): Response {
 
-例:
-public void test() {
-    System.out.println("This is a test method.");
-}
+        val request = chain.request()
+        val response = chain.proceed(request)
 
-public void printDate() {
-    Date now = new Date();
-    System.out.println(now);
-}
+        //第一种情况:没有网络，也没有缓存， 返回504
+        if (response.cacheResponse() == null && !NetworkUtil.isNetworkAvailable(Utils.getApp())) {
+            Log.i("WislieZhu", "504")
+        }
+        //第二种情况:没有网络，本地有缓存,使用本地缓存
+        if (response.cacheResponse() != null && !NetworkUtil.isNetworkAvailable(Utils.getApp())) {
+            Log.i("WislieZhu", "从缓存中获取数据")
 
-MethodVisitor mv3 = cw.visitMethod(ACC_PUBLIC, "printDate", "()V", null, null);
-mv3.visitCode();
-mv3.visitTypeInsn(NEW, "java/util/Date");
-mv3.visitInsn(DUP);
-mv3.visitMethodInsn(INVOKESPECIAL, "java/util/Date", "<init>", "()V", false);
-mv3.visitVarInsn(ASTORE, 1);
-mv3.visitFieldInsn(GETSTATIC, "java/lang/System", "out", "Ljava/io/PrintStream;");
-mv3.visitVarInsn(ALOAD, 1);
-mv3.visitMethodInsn(INVOKEVIRTUAL, "java/io/PrintStream", "println", "(Ljava/lang/Object;)V", false);
-mv3.visitInsn(RETURN);
-mv3.visitMaxs(2, 2);
-mv3.visitEnd();
-
-
-mv.visitTypeInsn 创建对象
-mv.visitInsn(DUP) 创建完对象需要调用
-
-调用其他类的静态变量
-mv.visitFieldInsn(GETSTATIC,"java/lang/System", "out", "Ljava/io/PrintStream;")
-普通方法的调用
-INVOKEVIRTUAL
-构造方法的调用
-INVOKESPECIAL
-
-INVOKEDYNAMIC 应用场景：
-在创建Handle(int tag, String owner, String name, String descriptor, boolean isInterface)时,
-tag参数中使用；而该Handle实例会在MethodVisitor.visitInvokeDynamicInsn()方法使用到
-
-
-visitLabel 使用:
-1.定义Label类实例
-2.通过mv.visitLabel方法确定label的位置
-3.通过mv.visitJumpInsn与label建立联系
-
-
-ClassVisitor
-例:删除类的字段
-重写visitField: name和descriptor 如果相等, 返回null
-例:添加类的字段
-重写visitField：用来判断是否存在这个字段
-重写visitEnd: 不存在这个字段时, 先调用FieldVisitor fv = cv.visitField,再调用 fv.visitEnd
-
-例:删除类的方法
-重写visitMethod: name和descriptor 如果相等, 返回null
-例:添加类的方法
-重写visitMethod：用来判断是否存在这个字段
-重写visitEnd: 不存在这个字段时, 先调用MethodVisitor mv = cv.visitMethod,再调用 mv.visitCode, mv.visitXxxInsn, mv.visitEnd
-
-Type
-int getSort()
-String getClassName()
-String getInternalName()
-String getDescriptor()
-
-获取Type的方式
-1.通过descriptor
-Type t1 = Type.getMethodType("(II)I");
-Type t2 = Type.getType("Ljava/lang/String;");
-2.通过internal name
-Type t = Type.getObjectType("java/lang/String");
-3.通过java.lang.class对象
-Type t = Type.getType(String.class);
-4.通过静态字段
-Type t = Type.INT_TYPE;
-
-
-getArgumentTypes()
-用于获取“方法”接收的参数类型
-getReturnType()
-用于获取“方法”返回值的类型
-
-getSize()
-用于返回某一个类型所占用的slot空间的大小
-
-getOpcode()
-获取当前Type的opcode:
-int newOpcode = t.getOpcode(oldOpcode);
-
-
-if (mv != null && "<init>".equals(name)) {
-    // TODO: 添加“方法进入”时的代码
-}
-
-
-if (opcode == Opcodes.ATHROW || (opcode >= Opcodes.IRETURN && opcode <= Opcodes.RETURN)) {
-    // TODO: 添加“方法退出”时的代码
-}
-
-Lambda表达式在编译后会生成一个内部静态方法或内部实例方法
-
-
-Tree API的优势
-1.容易入手
-2.实现比较复杂的功能
-Core API的优势：
-1.执行效率高
-2.占用的内存空间少
-
-
-tree api
-//构建classNode,转换成byte数组
-1.创建classNode, 设置其version, access, name, signature, superName, interfaces等属性
-2.创建FieldNode，构造器中传入其属性, classNode添加fieldNode实例
-3.创建MethodNode，构造器中传入其属性, classNode添加methodNode实例
-4.创建ClassWriter, classNode.accept(classWriter), classWrite.toByteArray()
-
-//将byte数组转换成classNode
-int api = Opcodes.ASM9;
-ClassNode cn = new ClassNode(api);
-classReader cr = new ClassReader(bytes)
-cr.accept(cn, ClassReader.SKIP_FRAMES | ClassReader.SKIP_DEBUG);
-
-
-//构造methodNode
-MethodNode mn1 = new MethodNode(ACC_PUBLIC, "<init>", "()V", null, null);
-cn.methods.add(mn1);
-InsnList il = mn1.instructions;
-il.add(new VarInsnNode(ALOAD, 0));
-il.add(new MethodInsnNode(INVOKESPECIAL, "java/lang/Object", "<init>", "()V", false));
-il.add(new InsnNode(RETURN));
-
-//InsnList 是一个双向链表
-
-1.遍历InsnList
-InsnList instructions = cn.methods.get(0).instructions;
-for (AbstractInsnNode insn : instructions) {
-    ...
-}
-
-2.增加:开头
-insert(AbstractInsnNode insnNode)
-insert(InsnList insnList)
-
-3.增加:结尾
-add(AbstractInsnNode insnNode)
-add(InsnList insnList)
-
-4. 增加：插队
-insert(AbstractInsnNode previousInsn, AbstractInsnNode insnNode)
-insert(AbstractInsnNode previousInsn, InsnList insnList)
-insertBefore(AbstractInsnNode nextInsn, AbstractInsnNode insnNode)
-insertBefore(AbstractInsnNode nextInsn, InsnList insnList)
-
-5. 删除
-remove(AbstractInsnNode insnNode)
-removeAll(boolean mark)
-clear()
-
-6. 修改
-set(AbstractInsnNode oldInsnNode, AbstractInsnNode newInsnNode)
-
-7.查询
-contains(AbstractInsnNode insnNode)
-indexOf(AbstractInsnNode insnNode)
-
-
-AbstractInsnNode
-fields:
-opcode字段，记录当前指令是什么
-previousInsn和nextInsn字段，用来记录不同指令之间的关联关系
-index字段，用来记录当前指令在InsnList对象实例中索引值
-methods:
-int getOpcode()
-AbstractInsnNode getPrevious()
-AbstractInsnNode getNext()
-getType()方法，用来获取当前指令的类型,它具体的取值范围位于0~15之间，一共16个类别, INSN,INT_INSN  ...FRAME ,LINE
-accept(MethodVisitor)方法，用来将当前指令发送给下一个MethodVisitor对象实例
-
-MethodNode mn1 = new MethodNode(ACC_PUBLIC, "<init>", "()V", null, null);
-cn.methods.add(mn1);
-InsnList il = mn1.instructions;
-il.add(new VarInsnNode(ALOAD, 0));
-il.add(new MethodInsnNode(INVOKESPECIAL, "java/lang/Object", "<init>", "()V", false));
-il.add(new InsnNode(RETURN));
-
-MethodNode mn2 = new MethodNode(ACC_PUBLIC, "test", "()V", null, null);
-cn.methods.add(mn2);
-InsnList il = mn2.instructions;
-il.add(new FieldInsnNode(GETSTATIC, "java/lang/System", "out", "Ljava/io/PrintStream;"));
-il.add(new LdcInsnNode("Hello World"));
-il.add(new MethodInsnNode(INVOKEVIRTUAL, "java/io/PrintStream", "println", "(Ljava/lang/String;)V", false));
-il.add(new InsnNode(RETURN));
-
-
-
-匿名内部类 反编译
-public class Inner {
-
-    private void inner() {
-        Runnable runnable = new Runnable() {
-            @Override
-            public void run() {
-                System.out.println("Hello World!");
+        }
+        //第三种情况:访问服务器资源，返回的状态码为304,本地有缓存,使用本地缓存
+        if (response.cacheResponse() != null) {
+            response.networkResponse()?.let { networkResponse ->
+                if (networkResponse.code() == HttpURLConnection.HTTP_NOT_MODIFIED) {
+                    Log.i("WislieZhu", "从缓存中获取数据 code=${networkResponse.code()}")
+                }
             }
-        };
+        }
+        //第四种情况:访问服务器资源，资源发生变化,使用网络访问
+        response.networkResponse()?.let {networkResponse ->
+            if (networkResponse.code() != HttpURLConnection.HTTP_NOT_MODIFIED) {
+                Log.i("WislieZhu", "从网络中获取数据 code=${networkResponse.code()}")
+            }
+        }
+
+        return response
     }
-
 }
-生成Inner$1.class、Inner.class两个类
-Inner$1.class： 实现Runnable接口
-Inner.class：初始化Inner$1.class实例
 
-Lambda表达式 反编译
-public class Lambda {
+二.是否缓存
+public static boolean invalidatesCache(String method) {
+    return method.equals("POST")
+        || method.equals("PATCH")
+        || method.equals("PUT")
+        || method.equals("DELETE")
+        || method.equals("MOVE");     // WebDAV
+}
+如果请求的method 是post,patch,put,delete,move 那么okhttp不作缓存
 
-    private void lambda() {
-        Runnable runnable = () -> System.out.println("Hello World!");
+三.Response.Build中addHeader和header的区别
+
+List<String> namesAndValues = new ArrayList<>(20);
+addHeader:
+public Builder addHeader(String name, String value) {
+  headers.add(name, value);
+  return this;
+}
+public Builder add(String name, String value) {
+  checkName(name);
+  checkValue(value, name);
+  return addLenient(name, value);
+}
+Builder addLenient(String name, String value) {
+  namesAndValues.add(name);
+  namesAndValues.add(value.trim());
+  return this;
+}
+header:
+public Builder header(String name, String value) {
+  headers.set(name, value);
+  return this;
+}
+public Builder set(String name, String value) {
+  checkName(name);
+  checkValue(value, name);
+  removeAll(name);
+  addLenient(name, value);
+  return this;
+}
+public Builder removeAll(String name) {
+  for (int i = 0; i < namesAndValues.size(); i += 2) {
+    if (name.equalsIgnoreCase(namesAndValues.get(i))) {
+      namesAndValues.remove(i); // name
+      namesAndValues.remove(i); // value
+      i -= 2;
     }
-
+  }
+  return this;
 }
-只生成Lambda.class
-匿名内部类声明的Runnable变量最终会指向一个具体的接口实现类,该类的run方法包含了要执行的代码块
-lambda语法声明的Runnable变量,这个操作对应xx等指令,Runnable要执行的代码块是在自动生成的静态方法lambda$lambda$0中
-在编译阶段，Lambda 表达式并不会生成相应的实现类，Lambda 语法的实现机制有别于匿名内部类
 
-我们无法直接 “看到” Lambda 表达式对应的代码块，因此也不能简单地通过签名信息就定位到目标方法
-
-1.该表达式包含一条 invokedynamic 指令，对应 ASM 中的 InvokeDynamicInsnNode
-2.invokedynamic 指令中标明了要生成的是 OnClickListener 对象，且包含一个 onClick 方法 （待会回头看看）
-3.invokedynamic 指令指向了字节码中的 BootstapMethod 区域，而 BootstapMethod 中已经标明了三个入参参数，
-    第二个参数指向的是编译期间自动生成的方法，当中就包含了 onClick 方法应该执行的代码块，
-    这三个参数就对应 InvokeDynamicInsnNode 的 bsmArgs 属性，所以通过 bsmArgs 我们就能够知道
-    onClick 方法最终要调用的方法的签名信息，通过向该方法插入需要的逻辑就可以实现插桩了
-总结:所以说，对于匿名内部类，我们的插桩思路是向 OnClickListener 接口的实现类的 onClick 方法插入代码；
-    对于 Lambda 表达式，我们的插桩思路可以改为向其自动生成的方法插入代码，两者的最终效果都是一样的
-
-
-core api-> tree api
-1.classReader 转换成 classNode
-ClassReader accept(final ClassVisitor classVisitor, final int parsingOptions)
-其中 ClassWriter和ClassNode都是ClassVisitor的子类
-2.classVisitor转换成classNode
-方式一: 这种方式适用于Android的asm
-步骤1: 继承ClassVisitor, 构造方法中接收外部传入的 nextClassVisitor
-步骤2: 重写visit方法, super.cv = ClassNode(), 这么做的目的是随着classNode调用了各种visit, 让 classNode 拥有了传入的类,方法，字段等信息
-步骤3: 重写super.visitEnd方法 super.cv 强转为ClassNode(即cn), 省略对methodNode的改在...,  cn.accept(nextClassVisitor)
-classNode.accept(classVisitor)的目的是 让classVisitor(即nextClassVisitor)拥有 classNode所具有的信息，
-从而真正达到改变字节码信息（如果accept之前对classNode有其他操作）
-方式二:
-步骤1:继承ClassVisitor, 构造方法中接收外部传入的 nextClassVisitor,作为成员变量, 创建classNode对象传入ClassVisitor构造器中
-步骤2:重写super.visitEnd方法,省略对methodNode的改在..., classNode.accept(nextClassVisitor);效果和方式一同等效果
-
-tree api -> core api
-ClassWriter cw = new ClassWriter(ClassWriter.COMPUTE_FRAMES);
-cn.accept(cw)
-让classWriter 拥有了classNode所具有的信息
-
-ClassReader --accept---> ClassNode --accept---> ClassWriter
+四.本地缓存添加方式:
+客户端第一次请求网络时，服务器返回回复信息。如果数据正常的话，客户端缓存在本地的缓存目录。
+当客户端再次访问同一个地址时，客户端会检测本地有没有缓存，如果有缓存的话，数据是有没有过期，如果没有过期的话则直接运用缓存内容
+1.指定缓存目录
+Cache(File(Utils.getApp().cacheDir, "xx_network_cache")
+android 10.0及以上的需要做存储兼容适配, 为了适配不同的android版本, 使用cacheDir
+2.Cache-Control
+是由服务器返回的Response中添加的头信息，它的目的是告诉客户端是要从本地读取缓存还是直接从服务器摘取消息
+FORCE_NETWORK 强制使用网络请求
+FORCE_CACHE 只取本地的缓存
+private 客户端可以缓存
+public  客户端和代理服务器都可以缓存
+max-age=xxx 缓存数据在xxx秒后过期
 
 
-对RecyclerView的拦截
-View点击互不影响,保证View的独立性, 使用map就行
-view在形参中处于的位置
+五.addNetworkInterceptor和addInterceptor的区别
+addInterceptor
+1.有无网络都会被调用到
+2.addInterceptor() 方法添加的拦截器是放在最前面
+
+addNetworkInterceptor
+1.无网络时不会被调用
+2.在非 WebSocket 请求时，添加在 ConnectInterceptor 和 CallServerInterceptor 之间的, 也就是在发起请求和响应之间
+
+六.Http不同的状态码
+1XX Informational(信息性状态码) 接收的请求正在处理
+2XX Success(成功状态码) 请求正常处理完毕
+3XX Redirection(重定向状态码) 需要进行附加操作以完成请求
+4XX ClientError(客户端错误状态码) 服务器无法处理请求
+5XX ServerError(服务端错误状态码) 服务器处理请求出错
+ 200: '服务器成功返回请求的数据。'
+ 201: '新建或修改数据成功。'
+ 202: '一个请求已经进入后台排队（异步任务）。'
+ 204: '删除数据成功。'
+ 400: '发出的请求有错误，服务器没有进行新建或修改数据的操作。'
+ 401: '用户没有权限（令牌、用户名、密码错误）。'
+ 403: '用户得到授权，但是访问是被禁止的。'
+ 404: '发出的请求针对的是不存在的记录，服务器没有进行操作。'
+ 406: '请求的格式不可得。'
+ 410: '请求的资源被永久删除，且不会再得到的。'
+ 422: '当创建一个对象时，发生一个验证错误。'
+ 500: '服务器发生错误，请检查服务器。'
+ 502: '网关错误。'
+ 503: '服务不可用，服务器暂时过载或维护。'
+ 504: '网关超时。'
+
+七.GET请求与Post请求区别
+ post:
+ post请求会把前端html表单中的所有数据放到Request body，用户无法直接观察到
+ post请求不会缓存
+ post请求不会把数据直接暴露在URL键值对中，所以适合处理敏感数据，如密码、金额等
+ post请求没有参数长度的限制，所以支持更多更大的数据包
+ post请求接受参数数据类型没有限制
+ get:
+ get请求把参数数据队列加到前端html提交表单的action属性所指的URL中，值和表单内各个字段一一对应，在URL中可以看到
+ get请求会把数据直接暴露在URL键值对中，所以不适合处理敏感数据，如密码、金额等
+ get请求可被缓存，浏览器回退时则是无害的，因为已被缓存，不会再次重复提交请求
+ get请求只接受参数数据类型为ASCII字符
+ get请求会限制参数长度，如超出限制长度则无法发出请求
+
+综上述:
+post请求只应当用于处理数据(传送数据)，而不适用于获取数据;
+get请求只应当用于取回数据(获取数据)，而不适用于传送数据;
+
+待理解的问题
+1.没看出addNetworkInterceptor重定向的问题
+2.拦截器的添加顺序
+3.okhttp是长连接还是短连接
 
 
-invokeDynamic相关:
-https://www.bilibili.com/read/cv14253327
+1.文件存储适配
+
+
+协程
+delay() 非阻塞
+
+GlobalScope启动的协程无法使进程保持活动状态，它们就像守护线程, 当主线程的执行完, 协程作用域GlobalScope内的函数也会执行完
+协程是轻量级的，不像线程一样容易发生内存不足
+可以抽取launch内部的代码块作为一个独立的函数，需要声明为挂起函数
+runBlocking 是一个普通函数, runBlocking方法会阻塞当前线程, coroutineScope是一个挂起函数
+协程取消 job.cancel, cancelAndJoin的结合
 
 
 
-匿名内部类 ok
-内部类
-静态内部类
-implement OnClickListener
-
-xml 设置 android:onClick=""
-
-lambda表达式 tv.setOnClickListener(v->{
-
-})
-
-asm地址 https://blog.51cto.com/lsieun/category2/p_4
-asm的要点回顾:
-.java文件经过Java编译器（javac）编译之后会生成一个.class文件;在.class文件中，存储的是字节码（ByteCode）数据
-ASM处理字节码的方式是“拆分－修改－合并”
-ASM能够做什么?
-父类：修改成一个新的父类
-接口：添加一个新的接口、删除已有的接口
-字段：添加一个新的字段、删除已有的字段
-方法：添加一个新的方法、删除已有的方法、修改已有的方法
-
-java8版本的lambda表达式是通过asm实现的
-ClassVisitor
-
-ClassWriter
-
-FieldVisitor
-
-FieldWriter
-
-MethodVisitor
-
-MethodWriter
-
-Label
-
-Opcodes
-
-ClassReader
-
-Type
-
-示例
-
-工具类
+继续看okhttp
+https://juejin.cn/post/6844903752424488974
 
 
-flutter 学习课程
-https://zhuanlan.zhihu.com/p/581231184 知乎下有链接
-https://link.zhihu.com/?target=https%3A//www.bilibili.com/video/BV1Wd4y1y74o/
+------性能优化------
+冷启动：后台没有我们的进程了(手动干掉或者系统回收了)，点击桌面的app应用图标启动
 
 
-1.整体过一遍
-2.怎么发布到上去
 
-Android提交库到github并生成依赖提供给其他项目引用
-https://blog.csdn.net/u012509843/article/details/125332663
+一定要尝试:一半布局一半compose-ui
 
-将插件打包并上传到本地文件仓库
-https://blog.csdn.net/devnn/article/details/106835734
+databinding中lib和app的包名不能一致
+
+
+1.主页
+请求到数据
+将数据显示到recyclerview
+点击存在问题
+刷新和加载更多, 还有分页，空白页
+asm点击次数控制
+
+FATAL EXCEPTION: main
+Process: com.wislie.wanandroid, PID: 20592
+retrofit2.HttpException: HTTP 504 Unsatisfiable Request (only-if-cached)
+
+1.状态栏
+
+
+
+
+https://github.com/hongyangAndroid/FlowLayout
+
+
+android 启动动画
+1.依赖
+2.主题适配
+android11及以下
+<!-- android11及以下的启动动画适配 -->
+<style name="MySplashTheme" parent="Theme.SplashScreen">
+    <item name="windowSplashScreenBackground">@color/purple_500</item>
+    <item name="windowSplashScreenAnimatedIcon">@mipmap/ic_launcher</item>
+    <item name="windowSplashScreenAnimationDuration">200</item>
+    <item name="postSplashScreenTheme">@style/SplashAppTheme</item> <!-- 必须 -->
+</style>
+
+<style name="SplashAppTheme" parent="Theme.MaterialComponents.DayNight.NoActionBar">
+    <item name="colorPrimary">@color/purple_500</item>
+    <item name="colorPrimaryDark">@color/purple_500</item>
+    <item name="colorAccent">@color/purple_500</item>
+</style>
+
+android12及以上
+<!-- android12启动动画适配 -->
+<style name="MySplashTheme" parent="Theme.SplashScreen">
+    <item name="android:windowSplashScreenBackground">@color/purple_500</item>
+    <item name="android:windowSplashScreenAnimatedIcon">@mipmap/ic_launcher</item>
+    <item name="android:windowSplashScreenAnimationDuration">200</item>
+    <item name="android:windowSplashScreenIconBackgroundColor">@color/purple_500</item>
+    <item name="postSplashScreenTheme">@style/SplashAppTheme</item> <!-- 必须 -->
+</style>
+
+<style name="SplashAppTheme" parent="Theme.MaterialComponents.DayNight.NoActionBar">
+    <item name="colorPrimary">@color/purple_500</item>
+    <item name="colorPrimaryDark">@color/purple_500</item>
+    <item name="colorAccent">@color/purple_500</item>
+</style>
+
+3.启动的activity
+需要在super.onCreate方法前调用 installSplashScreen()
+
+
+LeakCanary的工作原理
+将activity包装到weakreference中,如果weakreference包装过的activity被回收，该weakreference引用会被放到ReferenceQueue中, 监测ReferenceQueue检查activity是否能够被回收
+常见的内存泄漏:
+1.fragment
+第一点:Fragment.onDestroyView() 的时候没有去清除和view相关的变量
+第二点:将activity对象作为Context
+第三点:注册之后忘记 解除注册(比如rxjava, 广播)
+
+
+
+
+1.click只能点击一次
+2.底部虚拟导航栏
+3.还有没有网络的提示
+4.navigation 传参
+5.没有网络的情况下加载列表, 有没有报错的提示
+6.网址列表错误的时候一直显示加载中
+7.网址列表其中一个取消收藏，刷新后原本应该3个item, 结果只展示2个item
+
+
+解决的问题有:
+1.那个页面加载，那个页面消失
+2.PageDataAdapter 数据的修改
+3.Paging3接口分页 有时初始的currentPage = 0 有时 currentPage = 1
+4.Paging3加载中,加载更多,请重试没展示, 很大可能是布局写的文字默认和背景色一样，要根据bind时的LoadState做处理
+
+
+
+自主看源码:
+1.TextView 跑马灯实现原理
+
+
+
+
+
+
+目标是没有网络点击不动 哈哈哈
+
+
+PagingDataAdapter
+https://mp.weixin.qq.com/s?__biz=MzA5MzI3NjE2MA==&mid=2650253490&idx=1&sn=2e82553e9d835b6544591abb9dc855b5&chksm=886359ddbf14d0cb8d18bd053ade2f1131e76cac930e27068cef881d3cc4b689734a6a2ce22c&scene=27
+
+
+
+
+
+模拟器install apk的时候 提示 目标计算机拒绝连接
+解决办法：1.w+r, 切换到sdk下的platform-tools目录
+        2.adb kill-server
+        3.adb start-server
+
+
+@BindingAdapter(value = ["checkChange"])
+fun checkChange(checkbox: CheckBox, listener: CompoundButton.OnCheckedChangeListener) {
+    checkbox.setOnCheckedChangeListener(listener)
+}
+xml中
+<CheckBox
+bind:checkChange="@{click.onCheckedChangeListener}"/>
+kotlin中
+inner class ProxyClick {
+    var onCheckedChangeListener =
+                CompoundButton.OnCheckedChangeListener { buttonView, isChecked ->
+                    mViewModel.isShowPwd.set(isChecked)
+                }
+}
+
+
+////////////////////
+
+@BindingAdapter(value = ["noRepeatClick"])
+@JvmStatic
+fun setOnClick(view: View, clickListener: () -> Unit) {
+    clickListener.invoke()
+}
+xml中
+<TextView
+    bind:noRepeatClick="@{()-> click.login()}"/>
+kotlin中
+inner class ProxyClick {
+    fun login() {
+
+    }
+}
+
+BindingAdapter的value的元素a
+xml标签中的bind:b
+a和b必须一致
+
+BindingAdapter的 clickListener: () -> Unit
+xml中的()-> click.login()
+两者也一致
+
+BindingAdapter不支持有形参的高阶函数
+TextInputEditText:
+
+TextInputLayout:
+1.改变startIcon的颜色
+setStartIconTintList(ColorStateList.valueOf(color))
+2.改变endIcon的颜色
+setEndIconTintList(ColorStateList.valueOf(color))
+3.控制endIcon是否可见
+textInputLayout.isEndIconVisible = true/false
+
+
+
+navigation的fragment返回问题
+fragmentA->fragmentB->fragmentC->fragmentD
+当前处于fragmentD
+1.返回fragmentC
+findNav().navigateUp()
+2.返回fragmentB
+findNav().popBackStack(R.id.fragment_b, false)
+fragment_b 是 fragmentB在nav中的id
+2.返回fragmentA
+findNav().popBackStack(R.id.fragment_b, true)
+
+
+1.拍照预览画面没出来
+TextureView.setSurfaceTextureListener的onSurfaceTextureAvailable回调没走
+原因: 清单文件中当前Activity没加硬件加速
+2.前置摄像头和后置摄像头区别
+Surface.ROTATION_0 的值不一样
+CameraCharacteristics.LENS_FACING_BACK: 90
+CameraCharacteristics.LENS_FACING_FRONT:270
+
+
+LoadStateAdapter
+https://www.cnblogs.com/mymy-android/p/14896898.html#tag5
+
+
+
+1.android点击 弄成插件
+2.会到第一页的速度过慢
+
+kotlin
+Sequences 序列的原理:
+    Sequences 提升性能的关键在于多个操作共享同一个 Iterator 迭代器，只需要一次循环就可以完成数据操作
+扩展函数的原理：
+    扩展函数的语义是在不修改类 / 不继承类的情况下，向一个类添加新函数或者新属性。本质是静态函数，静态函数的第一个参数是接收者类型，调用扩展时不会创建适配对象或者任何运行时的额外消耗
+apply、with 的 lambda 参数是 T 的扩展函数，因此在 lambda 内使用 this 引用接收者对象，而 let 的 lambda 参数是参数为 T 的高阶函数
+委托机制的原理：
+    Kotlin 委托的语法关键字是 by，其本质上是面向编译器的语法糖，三种委托（类委托、对象委托和局部变量委托）在编译时都会转化为 “无糖语法”.
+    例如类委托：编译器会实现基础接口的所有方法，并直接委托给基础对象来处理。例如对象委托和局部变量委托：在编译时会生成辅助属性（prop$degelate），
+    而属性 / 变量的 getter() 和 setter() 方法只是简单地委托给辅助属性的 getValue() 和 setValue() 处理
+中缀函数： 声明 infix 关键字的函数是中缀函数，调用中缀函数时可以省略圆点以及圆括号等程序符号，让语句更自然
+Array 和 IntArray 的区别： Array 相当于引用类型数组 Integer[]，IntArray 相当于数值类型数组 int[]
+Byte、Short、Int、Long、Float、Double、Char 和 Boolean 大多数情况下，它们在编译后会变成基本数据类型，类型参数会被编译为引用类型
+Kotlin 不存在隐式类型转换，即时是低级类型也需要显式转换为高级类型
+
+init 函数执行顺序： 主构造函数 > init > 次级构造函数
+内部类： Kotlin 默认为静态内部类，如果想访问类中的成员方法和属性，需要添加 inner 关键字称为非静态内部类
+data 关键字原理： data 关键字用于定义数据类型，编译器会自动从主构造函数中提取属性并生成一系列函数：equals()/hashCode()、toString()、componentN()、copy()
+sealed 关键字原理： 密封类用来表示受限的类继承结构，密封类可以有子类，但是所有子类都必须内嵌在该密封类中
+object 与 companion object 的区别
+    object 有两层语义：静态匿名内部类 + 单例对象
+    companion object 是伴生对象，一个类只能有一个，代表了类的静态成员（函数 / 属性）
+lambda 表达式本质上是「可以作为值传递的代码块」
+lambda 表达式的种类
+    1、普通 Lambda 表达式：例如 ()->R
+    2、带接收者对象的 Lambda 表达式：例如 T.()->R
+inline 内联函数的原理
+    1.内联函数的参数如果是 lambda 表达式，则该参数默认也是 inline 的。lambda 表达式也会被固化的函数调用位置，
+    从而减少了为 lambda 表达式创建匿名内部类对象的开销。当 lambda 表达式被经常调用时，可以减少内存开销
+    2.减少入栈出栈过程（次要优点）： 内联函数的函数体被固化到函数调用位置，执行过程中减少了栈帧创建、入栈和出栈过程。
+    需要注意：如果函数体太大就不适合使用内联函数了，因为会大幅度增加字节码大小
+
+databinding 布局中 include 嵌套layout, 如果要要使用嵌套layout的子控件(假设childId)，需要
+1.设置include 嵌套layout的 id  (假设includeLayoutId)
+2.嵌套layout 也改造成databinding格式
+3.activity/fragment中引用 layout的子控件  binding.includeLayoutId.childId
+
+todo:
+kotlin中 ArrayList与MutableList
+MutableList 默认是 ArrayList
+1.webFragment收藏与不收藏 反复请求, 前一页的变化
+2.收藏页 取消收藏时, 首页的变化
+3.收藏的文章列表  取消收藏后展示不对
+4.有些不需要没有更多，加载中这些,只需要加载 比如体系，导航列表
+5.bottom navigation 文字和图标同时变色
+上述已搞定
+1.我的(有很多东西需要改进)
+2.每一个列表的item 对照改进
+3.asm onclick 拦截
+4.背景色改变
+5.换肤
+6.error相关的统一处理
+
+
+
+Paging 生命周期
+PagingSource->Pager->Flow<PagingData>->PagingDataAdapter
+
+
+
+6.
+编辑收藏的文章，支持站内，站外  lg/collect/user_article/update/ 文章 id/json
+编辑收藏网站 lg/collect/updatetool/json
+7.搜索 article/query/0/json
+12.个人信息接口  user/lg/userinfo/json
+13.问答评论列表 wenda/comments/问答id/json
+14.未读消息数量 message/lg/count_unread/json
+ 已读消息列表 message/lg/readed_list/页码/json
+ 未读消息列表 message/lg/unread_list/页码/json
+17.工具列表 tools/list/json
+18.教程列表 chapter/547/sublist/json
+单个教程下所有文章列表 list/0/json?cid=549&order_type=1
+
+
+
+2月份计划
+1.协程和Flow
+2.Android适配方案
+3.线程
+其他: 如kotlin版玩Android, compose ui基础，巩固ASM等
+内存抖动等知识
+https://juejin.cn/post/6844904099998089230#heading-71
+
+
+3月份计划
+
+1.compose ui版玩Android
+2.APT
+3.android开源库理解和手写
+其他:flutter基础, 设计模式, 单元测试等
+
+
+
+4月份计划
+
+1.flutter版玩Android
+
+2.Android知识点整体复习完
+
+3.算法了解
 
 
 

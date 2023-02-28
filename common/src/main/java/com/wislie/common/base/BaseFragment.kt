@@ -5,13 +5,13 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
 import androidx.databinding.ViewDataBinding
 import androidx.fragment.app.Fragment
 import com.wislie.common.ext.dismissLoading
 import com.wislie.common.ext.showLoading
+import com.wislie.common.ext.showToast
 import com.wislie.common.util.noleakdialog.NoLeakNiceDialog
 
 
@@ -65,8 +65,7 @@ fun <R> BaseFragment<*>.parseStateNoLogin(
             success.invoke(resultState.data)
         }
         is ResultState.Error -> {
-            Toast.makeText(hostActivity, "${resultState.exception.errorMsg}", Toast.LENGTH_SHORT)
-                .show()
+            hostActivity.showToast("${resultState.exception.errorMsg}")
         }
         is ResultState.Loading -> {
             if (resultState.isShownDialog) {
@@ -90,8 +89,7 @@ fun <R> BaseFragment<*>.parseState(
             success.invoke(resultState.data)
         }
         is ResultState.Error -> {
-            Toast.makeText(hostActivity, "${resultState.exception.errorMsg}", Toast.LENGTH_SHORT)
-                .show()
+            hostActivity.showToast("${resultState.exception.errorMsg}")
             if (resultState.errorCode == -1001) {
                 login?.invoke()
                 return
@@ -118,8 +116,7 @@ fun <R> BaseFragment<*>.parseListState(
             success.invoke(resultState.data, resultState.position)
         }
         is ResultState.Error -> {
-            Toast.makeText(hostActivity, "${resultState.exception.errorMsg}", Toast.LENGTH_SHORT)
-                .show()
+            hostActivity.showToast("${resultState.exception.errorMsg}")
             if (resultState.errorCode == -1001) {
                 login?.invoke()
             }
