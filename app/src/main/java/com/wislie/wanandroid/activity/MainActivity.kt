@@ -79,7 +79,7 @@ class MainActivity : BaseActivity<ActivityMainBinding>() {
 
     override fun onResume() {
         super.onResume()
-        Debug.stopMethodTracing()
+//        Debug.stopMethodTracing()
     }
 
 

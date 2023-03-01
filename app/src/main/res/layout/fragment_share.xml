@@ -27,7 +27,7 @@
             android:textColor="@color/color_666"
             android:textSize="15sp"
             android:textStyle="bold"
-            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/tb" />
 
         <EditText
@@ -44,7 +44,7 @@
             android:padding="@dimen/dp_5"
             android:textColor="@android:color/white"
             android:textSize="15sp"
-            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/tv_title"
             app:editTextChange="@{shareStateVm.onTitleEditTextChangeListener}"/>
 
@@ -58,7 +58,7 @@
             android:textColor="@color/color_666"
             android:textSize="15sp"
             android:textStyle="bold"
-            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/et_title" />
 
         <EditText
@@ -76,7 +76,7 @@
             android:padding="@dimen/dp_5"
             android:textColor="@android:color/white"
             android:textSize="15sp"
-            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/tv_link"
             app:editTextChange="@{shareStateVm.onLinkEditTextChangeListener}"/>
 
@@ -90,7 +90,7 @@
             android:textColor="@color/color_666"
             android:textSize="15sp"
             android:textStyle="bold"
-            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/et_article_link" />
 
         <TextView
@@ -106,7 +106,7 @@
             android:padding="@dimen/dp_5"
             android:textColor="@android:color/white"
             android:textSize="15sp"
-            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/tv_share_author_title" />
 
 

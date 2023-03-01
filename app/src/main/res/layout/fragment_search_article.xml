@@ -19,7 +19,7 @@
             android:layout_marginLeft="@dimen/dp_20"
             app:layout_constraintTop_toTopOf="parent"
             android:layout_marginTop="?attr/actionBarSize"
-            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/hot_key_flowlayout"
             android:textSize="18sp"
             android:paddingTop="@dimen/dp_20"
@@ -42,7 +42,7 @@
 
         <TextView
             android:layout_marginLeft="@dimen/dp_20"
-            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/hot_key_flowlayout"
             android:textSize="18sp"
             android:text="搜索历史"
@@ -65,7 +65,7 @@
 
         <com.yanzhenjie.recyclerview.SwipeRecyclerView
             android:id="@+id/rv_search_history"
-            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/tv_search_history_title"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"

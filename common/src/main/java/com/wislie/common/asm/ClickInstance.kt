@@ -2,14 +2,14 @@ package com.wislie.common.asm
 
 import android.util.Log
 import android.view.View
+import java.util.*
 
 
 object ClickInstance {
 
-//    private const val duration: Long = 3000
 
     private val clickMap by lazy {
-        mutableMapOf<View,Long>()
+        WeakHashMap<View,Long>()
     }
 
     @JvmStatic
@@ -22,7 +22,7 @@ object ClickInstance {
 
         val lastClickMills = clickMap[view]
         val now = System.currentTimeMillis()
-        if (lastClickMills == null || now - lastClickMills >= 3000) {
+        if (lastClickMills == null || now - lastClickMills >= 1500) {
             clickMap[view] = now
             Log.i("wislieZhu","点击了")
             return true

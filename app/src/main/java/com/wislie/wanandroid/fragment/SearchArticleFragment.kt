@@ -3,9 +3,6 @@ package com.wislie.wanandroid.fragment
 import android.text.TextUtils
 import android.view.LayoutInflater
 import android.view.View
-import android.widget.EditText
-import android.widget.ImageView
-import androidx.appcompat.widget.Toolbar
 import androidx.core.content.ContextCompat
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.lifecycleScope
@@ -57,12 +54,11 @@ class SearchArticleFragment : BaseViewModelFragment<BaseViewModel, FragmentSearc
             }
             inflateMenu(R.menu.first_page_menu)
 
-            val closeIv = findViewById<ImageView>(R.id.iv_close)
             setOnMenuItemClickListener {
                 when (it.itemId) {
                     R.id.home_search -> {
                         //输入的内容
-                        val inputSearchContent = binding.tb.etInputContent.toString()
+                        val inputSearchContent = binding.tb.etInputContent.text.toString()
                         if (!TextUtils.isEmpty(inputSearchContent)) {
                             //插入搜索的内容
                             insertSearchKey(inputSearchContent)
@@ -73,16 +69,16 @@ class SearchArticleFragment : BaseViewModelFragment<BaseViewModel, FragmentSearc
             }
             binding.tb.etInputContent.addTextListener(etAfterTextChanged = { editable ->
                 editable?.run {
-                    closeIv.visibility = if (this.isEmpty()) {
+                    binding.tb.ivClose.visibility = if (this.isEmpty()) {
                         View.INVISIBLE
                     } else {
                         View.VISIBLE
                     }
                 }
             })
-            closeIv.setOnClickListener {
+            binding.tb.ivClose.setOnClickListener {
                 binding.tb.etInputContent.setText("")
-                closeIv.visibility = View.INVISIBLE
+                binding.tb.ivClose.visibility = View.INVISIBLE
             }
         }
         binding.rvSearchHistory.adapter = adapter

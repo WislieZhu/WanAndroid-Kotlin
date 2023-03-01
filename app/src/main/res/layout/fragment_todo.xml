@@ -28,7 +28,7 @@
             android:textColor="@color/color_666"
             android:textSize="15sp"
             android:textStyle="bold"
-            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/tb" />
 
         <EditText
@@ -46,7 +46,7 @@
             android:text="@{todoStateVm.title}"
             android:textColor="@android:color/white"
             android:textSize="15sp"
-            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/tv_title"
             app:editTextChange="@{todoStateVm.onTitleEditTextChangeListener}"/>
 
@@ -60,7 +60,7 @@
             android:textColor="@color/color_666"
             android:textSize="15sp"
             android:textStyle="bold"
-            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/et_title" />
 
         <EditText
@@ -79,7 +79,7 @@
             android:padding="@dimen/dp_5"
             android:textColor="@android:color/white"
             android:textSize="15sp"
-            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/tv_content"
             app:editTextChange="@{todoStateVm.onContentEditTextChangeListener}"/>
 
@@ -93,7 +93,7 @@
             android:textColor="@color/color_666"
             android:textSize="15sp"
             android:textStyle="bold"
-            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/et_content" />
 
         <TextView
@@ -111,7 +111,7 @@
             android:padding="@dimen/dp_5"
             android:textColor="@android:color/white"
             android:textSize="15sp"
-            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/tv_complete_date" />
 
         <TextView
@@ -124,7 +124,7 @@
             android:textColor="@color/color_666"
             android:textSize="15sp"
             android:textStyle="bold"
-            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/tv_choose_date" />
 
         <RadioGroup
@@ -135,7 +135,7 @@
             android:layout_marginTop="@dimen/dp_5"
             android:layout_marginRight="@dimen/dp_30"
             android:orientation="horizontal"
-            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/tv_type_level"
             app:todoType="@{todoStateVm.type}"
             app:checkedChange="@{todoStateVm.onTypeCheckedChangeListener}">
@@ -168,7 +168,7 @@
             android:textColor="@color/color_666"
             android:textSize="15sp"
             android:textStyle="bold"
-            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/rb_type" />
 
         <RadioGroup
@@ -179,7 +179,7 @@
             android:layout_marginTop="@dimen/dp_5"
             android:layout_marginRight="@dimen/dp_30"
             android:orientation="horizontal"
-            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/tv_priority_level"
             app:todoPriority="@{todoStateVm.priority}"
             app:checkedChange="@{todoStateVm.onPriorityCheckedChangeListener}">

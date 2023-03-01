@@ -29,6 +29,7 @@ versions.blockcanary = "1.5.0"
 versions.calendarview="3.7.1"
 versions.slidelayout="1.0.4"
 versions.XXPermissions="16.2"
+versions.ARTIFACT="1.0.1"
 
 def retrofit = [:]
 retrofit.runtime="com.squareup.retrofit2:retrofit:$versions.retrofit"
@@ -134,5 +135,8 @@ deps.slidelayout = slidelayout
 
 def XXPermissions = "com.github.getActivity:XXPermissions:$versions.XXPermissions"
 deps.XXPermissions = XXPermissions
+
+def ARTIFACT = "com.bytedance.boost_multidex:boost_multidex:$versions.ARTIFACT"
+deps.ARTIFACT = ARTIFACT
 
 deps.baseUrl = "https://www.wanandroid.com/"

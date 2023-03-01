@@ -17,6 +17,7 @@ import com.wislie.wanandroid.R
 import com.wislie.wanandroid.databinding.FragmentMineBinding
 import com.wislie.wanandroid.ext.loadImage
 import com.wislie.wanandroid.ext.requestPermission
+import com.wislie.wanandroid.ext.showCamera
 import com.wislie.wanandroid.ext.startDestination
 import com.wislie.wanandroid.util.Settings
 import com.wislie.wanandroid.viewmodel.CoinViewModel
@@ -39,7 +40,7 @@ class MineFragment : BaseViewModelFragment<MineStateViewModel, FragmentMineBindi
     ) { result: ActivityResult ->
         if (result.resultCode == Activity.RESULT_OK) {
             Settings.avatar?.run {
-                binding.ivCamera.loadImage(this)
+                binding.ivAvatar.loadImage(this@MineFragment, this)
             }
         }
     }
@@ -52,7 +53,7 @@ class MineFragment : BaseViewModelFragment<MineStateViewModel, FragmentMineBindi
             val path = CameraUtil.getPath2uri(hostActivity, this)
             path?.run {
                 Settings.avatar = this
-                binding.ivCamera.loadImage(this)
+                binding.ivAvatar.loadImage(this@MineFragment, this)
             }
         }
     }
@@ -65,24 +66,38 @@ class MineFragment : BaseViewModelFragment<MineStateViewModel, FragmentMineBindi
     override fun init(root: View) {
         super.init(root)
         binding.mineViewModel = mViewModel
-        binding.btnScore.setOnClickListener { //积分
+
+
+        Settings.avatar?.run {
+            binding.ivAvatar.loadImage(this@MineFragment, this)
+        }
+
+        binding.ivAvatar.setOnClickListener { //我的头像
+            showCamera({
+                takeCamera() //拍照
+            }, {
+                pickFromAlbum() //从相册选取照片
+            })
+        }
+
+        binding.clScore.setOnClickListener { //积分
 
             startDestination {
                 findNav().navigate(R.id.fragment_coin_rank)
             }
         }
 
-        binding.btnCollect.setOnClickListener { //我的收藏
+        binding.clCollect.setOnClickListener { //我的收藏
             startDestination {
                 findNav().navigate(R.id.fragment_collect)
             }
         }
 
-        binding.btnUrls.setOnClickListener {  //常用网站
+        binding.clWebsite.setOnClickListener {  //常用网站
             findNav().navigate(R.id.fragment_usual_website)
         }
 
-        binding.btnTodo.setOnClickListener { //todo列表
+        binding.clTodo.setOnClickListener { //todo列表
             startDestination {
                 findNav().navigate(R.id.fragment_todo_list)
             }
@@ -90,29 +105,28 @@ class MineFragment : BaseViewModelFragment<MineStateViewModel, FragmentMineBindi
         }
 
 
-        binding.btnMyArticle.setOnClickListener { //我分享的文章
+        binding.clMyShare.setOnClickListener { //我分享的文章
             startDestination {
                 findNav().navigate(R.id.fragment_share_private_article_list)
             }
         }
 
-        binding.btnMyPic.setOnClickListener {  //头像
+        /*binding.btnMyPic.setOnClickListener {  //头像
             takeCamera()
-        }
+        }*/
 
-        binding.btnLogout.setOnClickListener { //退出登录
-//            logoutViewModel.logout()
-            pickFromAlbum()
+        binding.clSetting.setOnClickListener { //退出登录
+            logoutViewModel.logout()
+//            pickFromAlbum()
         }
 
 
     }
 
     //修改每一个item, 点击author跳转, asm点击优化, 搜索按钮,
-    // 我的页面， tab字体大小和下划线太近, 拍照, 清除图标太大, 加载中一闪而过, fab从下滑动到上方太慢
+    // 我的页面，  拍照,  加载中一闪而过, fab从下滑动到上方太慢, 导航item amp; 需要清除掉
     // 启动慢
     private fun takeCamera() {
-
         requestPermission(
             hostActivity,
             Manifest.permission.CAMERA,
@@ -169,6 +183,8 @@ class MineFragment : BaseViewModelFragment<MineStateViewModel, FragmentMineBindi
 
         //1.从未登录->登录, 如何感知到登录了, 而且是全局感知
 
+
+//        http://www.wanandroid.com/blogimgs/589f3b01-d9d5-41b0-aeff-604b900aacd1.png
 
     }
 

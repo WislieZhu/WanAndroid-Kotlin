@@ -26,7 +26,7 @@
             android:textColor="@color/purple_500"
             android:textSize="15sp"
             android:textStyle="bold"
-            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
         <com.zhy.view.flowlayout.TagFlowLayout

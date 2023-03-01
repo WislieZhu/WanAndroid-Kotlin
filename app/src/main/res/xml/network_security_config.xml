@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <network-security-config>
-    <base-config cleartextTrafficPermitted="false" />
+    <!-- cleartextTrafficPermitted="true" http格式的图片也能加载 -->
+    <base-config cleartextTrafficPermitted="true" />
     <debug-overrides cleartextTrafficPermitted="true">
         <trust-anchors>
             <!--信任所有的系统证书-->

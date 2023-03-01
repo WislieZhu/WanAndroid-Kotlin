@@ -623,6 +623,19 @@ PagingSource->Pager->Flow<PagingData>->PagingDataAdapter
 
 
 
+启动优化:
+1.使用adb 命令查看耗时情况
+adb shell am start -W [packageName]/[packageName.MainActivity]
+adb shell am start -W com.wislie.wanandroid/com.wislie.wanandroid.activity.MainActivity
+2.生成.trace文件, 用profiler分析
+TopDown: 调用方耗时
+BottomUp：被调用方耗时
+Flame Chart 火焰图
+3.减少启动页的布局层次
+需要学习的优化方案:
+1.ContentProvider
+
+
 2月份计划
 1.协程和Flow
 2.Android适配方案
@@ -631,6 +644,9 @@ PagingSource->Pager->Flow<PagingData>->PagingDataAdapter
 内存抖动等知识
 https://juejin.cn/post/6844904099998089230#heading-71
 
+
+二月份playAndroid写了一些, 争取三月份前3天搞定; 协程有学习,但是还讲不出子丑寅卯, Android适配方案一点没看, 线程也是
+接下来每天都要有实质性的进展
 
 3月份计划
 

@@ -7,6 +7,7 @@ import android.content.Context
 import android.os.Build
 import android.os.Debug
 import android.util.Log
+//import com.bytedance.boost_multidex.BoostMultiDex
 import com.github.anrwatchdog.ANRWatchDog
 import com.kingja.loadsir.core.LoadSir
 import com.tencent.mmkv.MMKV
@@ -19,12 +20,7 @@ import com.wislie.common.util.Utils
 import com.wislie.wanandroid.anr.ANRFileObserver
 import com.wislie.wanandroid.viewmodel.AppViewModel
 import java.io.File
-import java.security.SecureRandom
-import java.security.cert.X509Certificate
-import javax.net.ssl.HttpsURLConnection
-import javax.net.ssl.SSLContext
-import javax.net.ssl.TrustManager
-import javax.net.ssl.X509TrustManager
+
 import kotlin.properties.ReadWriteProperty
 import kotlin.reflect.KProperty
 
@@ -37,16 +33,17 @@ class App : Application() {
 
     override fun attachBaseContext(base: Context?) {
         super.attachBaseContext(base)
+//        BoostMultiDex.install(base)
 //        TimeMonitorManager.instance?.resetTimeMonitor(TimeMonitorConfig.TIME_MONITOR_ID_APPLICATION_START)
     }
 
     override fun onCreate() {
         super.onCreate()
 
-        val file =  File(filesDir,"dmtrace.trace")
+//        val file =  File(filesDir,"dmtrace.trace")
 //        Log.i("wislieZhu","文件路径=${file.path}")
 
-        Debug.startMethodTracing(file.path)
+//        Debug.startMethodTracing(file.path)
 
 //        TimeMonitorManager.instance?.getTimeMonitor(TimeMonitorConfig.TIME_MONITOR_ID_APPLICATION_START)
 //            ?.recordingTimeTag("Application-onCreate")
@@ -62,8 +59,6 @@ class App : Application() {
             .setDefaultCallback(LoadingCallback::class.java) //设置默认加载状态页
             .commit()
 
-        //todo 没展示
-        handleSSLHandshake()
 
 
         /*if(Utils.isMainProcess(this)){
@@ -84,28 +79,6 @@ class App : Application() {
             fileObserver.startWatching()
         }*/
 
-    }
-
-    /**
-     * 忽略https的证书校验
-     */
-    private fun handleSSLHandshake() {
-        try {
-            val trustAllCerts = arrayOf<TrustManager>(object : X509TrustManager {
-                override fun getAcceptedIssuers(): Array<X509Certificate?> {
-                    return arrayOfNulls<X509Certificate>(0)
-                }
-
-                override fun checkClientTrusted(certs: Array<X509Certificate?>?, authType: String?) {}
-                override fun checkServerTrusted(certs: Array<X509Certificate?>?, authType: String?) {}
-            })
-            val sc = SSLContext.getInstance("TLS")
-            // trustAllCerts信任所有的证书
-            sc.init(null, trustAllCerts, SecureRandom())
-            HttpsURLConnection.setDefaultSSLSocketFactory(sc.socketFactory)
-            HttpsURLConnection.setDefaultHostnameVerifier { hostname, session -> true }
-        } catch (ignored: Exception) {
-        }
     }
 
 

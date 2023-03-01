@@ -104,8 +104,12 @@ dependencies {
 
     implementation deps.XXPermissions
 
+//    implementation deps.ARTIFACT
+
 //    debugApi deps.blockcanary.android
 //    releaseApi deps.blockcanary.no_op
 
     implementation 'com.github.anrwatchdog:anrwatchdog:1.4.0'
+
+
 }

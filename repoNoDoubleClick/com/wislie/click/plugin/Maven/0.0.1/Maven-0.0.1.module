@@ -39,10 +39,10 @@
           "name": "Maven-0.0.1.jar",
           "url": "Maven-0.0.1.jar",
           "size": 16637,
-          "sha512": "0f5119e813724e52a80e599fe9f8854adb80ccabdebe37a95b52b194337639e33a32ace4a86af94a594f5938a8586fd173632af31a8047230baa93ae1e74b668",
-          "sha256": "0032d38270b66b321d9336dbb1084f176045b8d8a92157665bfea91362fd276e",
-          "sha1": "27c8a1f57b92ec2b88f7f5488e8c0437ec453da5",
-          "md5": "9951c856bbb194092b5ace60758a3cb5"
+          "sha512": "9b7a76e99c4669e6719eceb9bd95c5519a5bd545e019e4914fbd46ccb8bb2036e4f9863a0a1c4573c3e6b35eabe4a3d4b4c9a087d4a5f3567145370b1a14711d",
+          "sha256": "8803c6db53288bf0866ff603e6de41ae1134890b98fa51fc1b9a689f309663a7",
+          "sha1": "c4b9b06adb3e035d058ea7fb0453590a90f49ba4",
+          "md5": "fe2a3a4d0fadbdf892933588e2781658"
         }
       ]
     },
@@ -106,10 +106,10 @@
           "name": "Maven-0.0.1.jar",
           "url": "Maven-0.0.1.jar",
           "size": 16637,
-          "sha512": "0f5119e813724e52a80e599fe9f8854adb80ccabdebe37a95b52b194337639e33a32ace4a86af94a594f5938a8586fd173632af31a8047230baa93ae1e74b668",
-          "sha256": "0032d38270b66b321d9336dbb1084f176045b8d8a92157665bfea91362fd276e",
-          "sha1": "27c8a1f57b92ec2b88f7f5488e8c0437ec453da5",
-          "md5": "9951c856bbb194092b5ace60758a3cb5"
+          "sha512": "9b7a76e99c4669e6719eceb9bd95c5519a5bd545e019e4914fbd46ccb8bb2036e4f9863a0a1c4573c3e6b35eabe4a3d4b4c9a087d4a5f3567145370b1a14711d",
+          "sha256": "8803c6db53288bf0866ff603e6de41ae1134890b98fa51fc1b9a689f309663a7",
+          "sha1": "c4b9b06adb3e035d058ea7fb0453590a90f49ba4",
+          "md5": "fe2a3a4d0fadbdf892933588e2781658"
         }
       ]
     }

@@ -20,6 +20,8 @@
             android:layout_width="180dp"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
+            android:maxLines="1"
+            android:ellipsize="end"
             android:background="@null"
             android:hint="请输入搜索关键字"
             android:lines="1"

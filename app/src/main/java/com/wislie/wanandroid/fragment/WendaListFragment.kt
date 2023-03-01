@@ -12,6 +12,7 @@ import com.wislie.wanandroid.App
 import com.wislie.wanandroid.adapter.LoadStateFooterAdapter
 import com.wislie.wanandroid.adapter.WendaArticleAdapter
 import com.wislie.wanandroid.data.CollectEvent
+import com.wislie.wanandroid.databinding.FragmentListBinding
 import com.wislie.wanandroid.databinding.FragmentToolbarListBinding
 import com.wislie.wanandroid.ext.startLogin
 import com.wislie.wanandroid.viewmodel.ArticlesViewModel
@@ -21,7 +22,7 @@ import kotlinx.coroutines.launch
 /**
  * 问答
  */
-class WendaListFragment : BaseViewModelFragment<BaseViewModel, FragmentToolbarListBinding>() {
+class WendaListFragment : BaseViewModelFragment<BaseViewModel, FragmentListBinding>() {
 
     private val articlesViewModel: ArticlesViewModel by viewModels()
 
@@ -152,7 +153,7 @@ class WendaListFragment : BaseViewModelFragment<BaseViewModel, FragmentToolbarLi
     }
 
     override fun getLayoutResId(): Int {
-        return R.layout.fragment_toolbar_list
+        return R.layout.fragment_list
     }
 }
 

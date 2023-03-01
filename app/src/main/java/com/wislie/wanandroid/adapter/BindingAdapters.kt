@@ -91,17 +91,7 @@ fun bindCollect(view: ImageView, isCollect: Boolean) { //首页的文章标题
     view.setImageDrawable(tintDrawable)
 }
 
-/*<ImageView
-app:filePath="@{venue.imageUrl}"
-app:error="@{@drawable/venueError}" />*/
 
-@BindingAdapter(value = ["filePath", "error"])
-fun bindFilePath(view: ImageView, filePath: String, error: Drawable) {
-    Glide.with(view.context)
-        .load(filePath)
-        .error(error)
-        .into(view)
-}
 
 @BindingAdapter(value = ["envelopePic"])
 fun bindEnvelopePic(view: ImageView, envelopePic: String?) {
@@ -124,7 +114,7 @@ fun bindUserName(view: TextView, username: String?) {
 
 @BindingAdapter("coinCount")
 fun bindCoinCount(view: TextView, coinCount: Int?) {
-    view.text = coinCount?.toString() ?: "--"
+    view.text = "积分:"+coinCount?.toString() ?: "--"
 }
 
 @BindingAdapter("rank")

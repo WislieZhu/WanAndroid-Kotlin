@@ -33,7 +33,7 @@ inline fun BaseFragment<*>.clearSearchHistory(crossinline confirm: () -> Unit) {
             }
             loadingDialog?.run {
                 if (!this.isAdded) {
-                    setLayout(R.layout.layout_clear_search_history)
+                    setLayout(R.layout.dialog_clear_search_history)
                     setGravity(Gravity.CENTER)
                     setMargin(30)
                     setOutCancel(true)
@@ -65,6 +65,9 @@ inline fun BaseFragment<*>.clearSearchHistory(crossinline confirm: () -> Unit) {
     }
 }
 
+/**
+ * 展示日历
+ */
 inline fun BaseFragment<*>.showCalendar(crossinline confirm: (Int, Int, Int) -> Unit) {
     val frag = this
     activity?.let {
@@ -141,3 +144,55 @@ inline fun BaseFragment<*>.showCalendar(crossinline confirm: (Int, Int, Int) -> 
         }
     }
 }
+
+/**
+ * 拍照相册选取
+ */
+inline fun BaseFragment<*>.showCamera(crossinline takePicture: () -> Unit, crossinline selectPicture: () -> Unit) {
+    val frag = this
+    activity?.let {
+        if (!it.isFinishing) {
+            if (loadingDialog === null) {
+                loadingDialog = NoLeakNiceDialog.init()
+            }
+            loadingDialog?.run {
+                if (!this.isAdded) {
+                    setLayout(R.layout.dialog_choose_camera)
+                    setGravity(Gravity.BOTTOM)
+                    setOutCancel(true)
+                    setConvertListener(object : NoLeakViewConvertListener() {
+                        override fun convertView(holder: ViewHolder?, dialog: BNiceDialog?) {
+                            holder?.run {
+                                this.setOnClickListener(
+                                    R.id.tv_camera
+                                ) {
+                                    takePicture.invoke()
+                                    dialog?.run {
+                                        dismiss()
+                                    }
+                                }
+                                this.setOnClickListener(
+                                    R.id.tv_album
+                                ) {
+                                    selectPicture.invoke()
+                                    dialog?.run {
+                                        dismiss()
+                                    }
+                                }
+                                this.setOnClickListener(
+                                    R.id.tv_cancel
+                                ) {
+                                    dialog?.run {
+                                        dismiss()
+                                    }
+                                }
+                            }
+                        }
+                    })
+                    loadingDialog?.show(it.supportFragmentManager, frag.javaClass.simpleName)
+                }
+            }
+        }
+    }
+}
+
