@@ -15,10 +15,7 @@ import com.wislie.common.util.CameraUtil
 import com.wislie.wanandroid.App
 import com.wislie.wanandroid.R
 import com.wislie.wanandroid.databinding.FragmentMineBinding
-import com.wislie.wanandroid.ext.loadImage
-import com.wislie.wanandroid.ext.requestPermission
-import com.wislie.wanandroid.ext.showCamera
-import com.wislie.wanandroid.ext.startDestination
+import com.wislie.wanandroid.ext.*
 import com.wislie.wanandroid.util.Settings
 import com.wislie.wanandroid.viewmodel.CoinViewModel
 import com.wislie.wanandroid.viewmodel.LoginViewModel
@@ -40,7 +37,7 @@ class MineFragment : BaseViewModelFragment<MineStateViewModel, FragmentMineBindi
     ) { result: ActivityResult ->
         if (result.resultCode == Activity.RESULT_OK) {
             Settings.avatar?.run {
-                binding.ivAvatar.loadImage(this@MineFragment, this)
+                binding.ivAvatar.loadCircleImage(this@MineFragment, this)
             }
         }
     }
@@ -53,7 +50,7 @@ class MineFragment : BaseViewModelFragment<MineStateViewModel, FragmentMineBindi
             val path = CameraUtil.getPath2uri(hostActivity, this)
             path?.run {
                 Settings.avatar = this
-                binding.ivAvatar.loadImage(this@MineFragment, this)
+                binding.ivAvatar.loadCircleImage(this@MineFragment, this)
             }
         }
     }
@@ -69,8 +66,9 @@ class MineFragment : BaseViewModelFragment<MineStateViewModel, FragmentMineBindi
 
 
         Settings.avatar?.run {
-            binding.ivAvatar.loadImage(this@MineFragment, this)
+            binding.ivAvatar.loadCircleImage(this@MineFragment, Settings.avatar)
         }
+
 
         binding.ivAvatar.setOnClickListener { //我的头像
             showCamera({
@@ -133,12 +131,11 @@ class MineFragment : BaseViewModelFragment<MineStateViewModel, FragmentMineBindi
             Manifest.permission.WRITE_EXTERNAL_STORAGE,
             Manifest.permission.READ_EXTERNAL_STORAGE
         ) {
-            startDestination {
-                CameraUtil.takeCamera(hostActivity) { path ->
-                    Settings.avatar = path
-                }.run {
-                    takeCameraResultLauncher.launch(this)
-                }
+
+            CameraUtil.takeCamera(hostActivity) { path ->
+                Settings.avatar = path
+            }.run {
+                takeCameraResultLauncher.launch(this)
             }
         }
     }
@@ -146,12 +143,12 @@ class MineFragment : BaseViewModelFragment<MineStateViewModel, FragmentMineBindi
     private fun pickFromAlbum() {
         requestPermission(
             hostActivity,
+            Manifest.permission.WRITE_EXTERNAL_STORAGE,
             Manifest.permission.READ_EXTERNAL_STORAGE
         ) {
-            startDestination {
-                CameraUtil.selectFromAlbum().run {
-                    pickFromAlbumResultLauncher.launch(this)
-                }
+
+            CameraUtil.selectFromAlbum().run {
+                pickFromAlbumResultLauncher.launch(this)
             }
         }
     }

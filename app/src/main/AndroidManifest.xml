@@ -37,7 +37,7 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         tools:targetApi="31"
-
+        android:requestLegacyExternalStorage="true"
         android:name="com.wislie.wanandroid.App">
         <activity
             android:name=".activity.MainActivity"
