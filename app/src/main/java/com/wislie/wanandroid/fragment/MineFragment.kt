@@ -36,9 +36,7 @@ class MineFragment : BaseViewModelFragment<MineStateViewModel, FragmentMineBindi
         ActivityResultContracts.StartActivityForResult()
     ) { result: ActivityResult ->
         if (result.resultCode == Activity.RESULT_OK) {
-            Settings.avatar?.run {
-                binding.ivAvatar.loadCircleImage(this@MineFragment, this)
-            }
+            loadAvatar()
         }
     }
 
@@ -47,11 +45,8 @@ class MineFragment : BaseViewModelFragment<MineStateViewModel, FragmentMineBindi
         ActivityResultContracts.StartActivityForResult()
     ) { result: ActivityResult ->
         result.data?.data?.run {
-            val path = CameraUtil.getPath2uri(hostActivity, this)
-            path?.run {
-                Settings.avatar = this
-                binding.ivAvatar.loadCircleImage(this@MineFragment, this)
-            }
+            Settings.avatar = CameraUtil.getPath2uri(hostActivity, this)
+            loadAvatar()
         }
     }
 
@@ -63,13 +58,7 @@ class MineFragment : BaseViewModelFragment<MineStateViewModel, FragmentMineBindi
     override fun init(root: View) {
         super.init(root)
         binding.mineViewModel = mViewModel
-
-
-        Settings.avatar?.run {
-            binding.ivAvatar.loadCircleImage(this@MineFragment, Settings.avatar)
-        }
-
-
+        loadAvatar()
         binding.ivAvatar.setOnClickListener { //我的头像
             showCamera({
                 takeCamera() //拍照
@@ -109,6 +98,12 @@ class MineFragment : BaseViewModelFragment<MineStateViewModel, FragmentMineBindi
             }
         }
 
+        binding.clMineInfo.setOnClickListener { v ->
+
+            if (!Settings.logined)
+                v.findNav().navigate(R.id.fragment_login)
+        }
+
         /*binding.btnMyPic.setOnClickListener {  //头像
             takeCamera()
         }*/
@@ -119,6 +114,11 @@ class MineFragment : BaseViewModelFragment<MineStateViewModel, FragmentMineBindi
         }
 
 
+    }
+
+    private fun loadAvatar() {
+        val avatar = Settings.avatar ?: ""
+        binding.ivAvatar.loadCircleImage(this@MineFragment, avatar)
     }
 
     //修改每一个item, 点击author跳转, asm点击优化, 搜索按钮,

@@ -2,6 +2,8 @@ package com.wislie.wanandroid.datasource
 
 import androidx.paging.PagingSource
 import androidx.paging.PagingState
+import com.wislie.common.network.AppException
+import com.wislie.common.network.ExceptionHandle
 import com.wislie.common.wrapper.ApiResponse
 import com.wislie.wanandroid.data.ArticleInfo
 import com.wislie.wanandroid.data.ShareAuthorInfo
@@ -36,7 +38,7 @@ class ShareAuthorArticlePagingSource(private val block: (Long) -> ApiResponse<Sh
                         nextKey = nextPage
                     )
                 } else {
-                    LoadResult.Error(Exception(articleListResp.errorMsg))
+                    LoadResult.Error(AppException(articleListResp.errorCode,articleListResp.errorMsg))
                 }
             } catch (e: java.lang.Exception) {
                 LoadResult.Error(e)

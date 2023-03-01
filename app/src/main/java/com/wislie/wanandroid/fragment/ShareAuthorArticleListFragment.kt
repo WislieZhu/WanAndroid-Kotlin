@@ -19,6 +19,8 @@ import com.wislie.wanandroid.data.CollectEvent
 import com.wislie.wanandroid.databinding.FragmentToolbarListBinding
 import com.wislie.wanandroid.ext.initFab
 import com.wislie.wanandroid.ext.startLogin
+import com.wislie.wanandroid.util.ARTICLE_AUTHOR
+import com.wislie.wanandroid.util.ARTICLE_USER_ID
 import com.wislie.wanandroid.viewmodel.ArticlesViewModel
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
@@ -32,7 +34,7 @@ class ShareAuthorArticleListFragment :
     private val articlesViewModel: ArticlesViewModel by viewModels()
 
     private var author: String? = null
-    private var articleId: Int? = null
+    private var userId: Int? = null
 
     private val adapter by lazy {
         FirstPageArticleAdapter { articleInfo ->
@@ -50,8 +52,8 @@ class ShareAuthorArticleListFragment :
         super.init(root)
 
         arguments?.run {
-            author = getString("author")
-            articleId = getInt("id")
+            author = getString(ARTICLE_AUTHOR)
+            userId = getInt(ARTICLE_USER_ID)
         }
 
         binding.tb.toolbar.run {
@@ -169,7 +171,7 @@ class ShareAuthorArticleListFragment :
     }
 
     override fun loadData() {
-        articleId?.run {
+        userId?.run {
             val id = this
             lifecycleScope.launch {
                 articlesViewModel

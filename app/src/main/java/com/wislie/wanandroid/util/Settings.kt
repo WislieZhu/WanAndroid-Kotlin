@@ -8,5 +8,5 @@ object Settings {
 
     var nickname: String by Pref("") //用户名
 
-    var avatar: String by Pref("") //头像
+    var avatar: String? by Pref("") //头像
 }

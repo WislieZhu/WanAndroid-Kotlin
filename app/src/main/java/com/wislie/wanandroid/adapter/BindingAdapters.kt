@@ -92,7 +92,6 @@ fun bindCollect(view: ImageView, isCollect: Boolean) { //首页的文章标题
 }
 
 
-
 @BindingAdapter(value = ["envelopePic"])
 fun bindEnvelopePic(view: ImageView, envelopePic: String?) {
     Glide.with(view.context)
@@ -114,12 +113,14 @@ fun bindUserName(view: TextView, username: String?) {
 
 @BindingAdapter("coinCount")
 fun bindCoinCount(view: TextView, coinCount: Int?) {
-    view.text = "积分:"+coinCount?.toString() ?: "--"
+    val coin = coinCount ?: "--"
+    view.text = "积分:$coin"
 }
 
 @BindingAdapter("rank")
 fun bindRank(view: TextView, rank: String?) {
-    view.text = rank ?: "--"
+    val rk = rank ?: "--"
+    view.text = "排名:$rk"
 }
 
 @BindingAdapter("myCoinCount")
@@ -226,6 +227,7 @@ fun bindTodoStatus(view: ImageView, status: Int?) {
         }
     }
 }
+
 @BindingAdapter("todoStatusVisible")
 fun bindTodoStatusVisible(view: TextView, status: Int?) {
     status?.run {

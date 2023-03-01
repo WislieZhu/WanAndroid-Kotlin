@@ -13,13 +13,13 @@ class Pref<T>(private val defaultValue: T) : ReadWriteProperty<Any?, T> {
 
     override fun getValue(thisRef: Any?, property: KProperty<*>): T {
         return when (defaultValue) {
-            is ByteArray -> pref.decodeBytes(property.name)
-            is String -> pref.decodeString(property.name)
-            is Boolean -> pref.decodeBool(property.name)
-            is Int -> pref.decodeInt(property.name)
-            is Float -> pref.decodeFloat(property.name)
-            is Double -> pref.decodeDouble(property.name)
-            is Long -> pref.decodeLong(property.name)
+            is ByteArray -> pref.decodeBytes(property.name, defaultValue)
+            is String -> pref.decodeString(property.name, defaultValue)
+            is Boolean -> pref.decodeBool(property.name, defaultValue)
+            is Int -> pref.decodeInt(property.name, defaultValue)
+            is Float -> pref.decodeFloat(property.name, defaultValue)
+            is Double -> pref.decodeDouble(property.name, defaultValue)
+            is Long -> pref.decodeLong(property.name, defaultValue)
             is Int? -> pref.decodeInt(property.name)
             is String? -> pref.decodeString(property.name)
             is Parcelable -> pref.decodeParcelable(property.name, defaultValue.javaClass)

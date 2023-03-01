@@ -40,7 +40,7 @@ class FirstPageArticleHolder(
 
         binding.tvAuthor.setOnClickListener { v->
             val bundle = Bundle().apply {
-                putInt(ARTICLE_ID, binding.articleInfo?.id ?: -1)
+                putInt(ARTICLE_USER_ID, binding.articleInfo?.userId ?: -1)
                 putString(ARTICLE_AUTHOR, binding.articleInfo?.author)
             }
             v.findNav().navigate(R.id.fragment_share_author_article_list, bundle)

@@ -2,6 +2,7 @@ package com.wislie.wanandroid.datasource
 
 import androidx.paging.PagingSource
 import androidx.paging.PagingState
+import com.wislie.common.network.AppException
 import com.wislie.common.wrapper.ApiPageResponse
 import com.wislie.common.wrapper.ApiResponse
 import kotlinx.coroutines.Dispatchers
@@ -41,7 +42,7 @@ class BasePagingSource<T : Any>(
                     }
                     LoadResult.Page(articleListResp.data?.datas ?: listOf(), null, nextPage)
                 } else {
-                    LoadResult.Error(Exception(articleListResp.errorMsg))
+                    LoadResult.Error(AppException(articleListResp.errorCode,articleListResp.errorMsg))
                 }
             } catch (e: java.lang.Exception) {
                 LoadResult.Error(e)
