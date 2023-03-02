@@ -88,7 +88,7 @@ class FirstPageFragment : BaseViewModelFragment<BaseViewModel, FragmentToolbarLi
             R.layout.item_first_page_header, binding.list.swipeRv, false
         )
         binding.list.swipeRv.addHeaderView(header.root)
-        binding.list.fab.initFab(binding.list.swipeRv)
+        binding.list.fab.initFab(hostActivity,binding.list.swipeRv)
 
     }
 
