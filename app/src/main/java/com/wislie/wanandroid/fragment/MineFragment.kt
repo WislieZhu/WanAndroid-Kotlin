@@ -104,13 +104,9 @@ class MineFragment : BaseViewModelFragment<MineStateViewModel, FragmentMineBindi
                 v.findNav().navigate(R.id.fragment_login)
         }
 
-        /*binding.btnMyPic.setOnClickListener {  //头像
-            takeCamera()
-        }*/
 
         binding.clSetting.setOnClickListener { //退出登录
             logoutViewModel.logout()
-//            pickFromAlbum()
         }
 
 

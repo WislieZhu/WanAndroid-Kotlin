@@ -5,7 +5,9 @@
 
     </data>
 
-    <androidx.constraintlayout.widget.ConstraintLayout
+
+    <LinearLayout
+        android:orientation="vertical"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
@@ -13,8 +15,13 @@
             android:id="@+id/tb"
             layout="@layout/include_toolbar" />
 
-        <include
-            android:id="@+id/list"
-            layout="@layout/include_margin_list" />
-    </androidx.constraintlayout.widget.ConstraintLayout>
+            <!--<include
+                android:id="@+id/list"
+                layout="@layout/include_margin_list" />-->
+
+            <include
+                android:id="@+id/list"
+                layout="@layout/include_list" />
+
+    </LinearLayout>
 </layout>
