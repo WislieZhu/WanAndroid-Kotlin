@@ -9,7 +9,7 @@ import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import com.wislie.common.base.*
 import com.wislie.wanandroid.R
-import com.wislie.wanandroid.adapter.FirstPageArticleAdapter
+import com.wislie.wanandroid.adapter.CommonArticleAdapter
 import com.wislie.common.ext.addStateListener
 import com.wislie.common.ext.findNav
 import com.wislie.common.ext.init
@@ -39,7 +39,7 @@ class FirstPageFragment : BaseViewModelFragment<BaseViewModel, FragmentToolbarLi
     private val articlesViewModel: ArticlesViewModel by viewModels()
 
     private val adapter by lazy {
-        FirstPageArticleAdapter { articleInfo ->
+        CommonArticleAdapter { articleInfo ->
             articleInfo?.run {
                 if (collect) {
                     articlesViewModel.unCollect(id)
@@ -88,7 +88,7 @@ class FirstPageFragment : BaseViewModelFragment<BaseViewModel, FragmentToolbarLi
             R.layout.item_first_page_header, binding.list.swipeRv, false
         )
         binding.list.swipeRv.addHeaderView(header.root)
-        binding.list.fab.initFab(binding.list.swipeRv)
+        binding.list.fab.initFab(hostActivity,binding.list.swipeRv)
 
     }
 

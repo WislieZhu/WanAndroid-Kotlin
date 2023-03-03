@@ -9,11 +9,10 @@ import com.wislie.common.ext.addStateListener
 import com.wislie.wanandroid.R
 import com.wislie.common.ext.init
 import com.wislie.wanandroid.App
+import com.wislie.wanandroid.adapter.CommonArticleAdapter
 import com.wislie.wanandroid.adapter.LoadStateFooterAdapter
-import com.wislie.wanandroid.adapter.WendaArticleAdapter
 import com.wislie.wanandroid.data.CollectEvent
 import com.wislie.wanandroid.databinding.FragmentListBinding
-import com.wislie.wanandroid.databinding.FragmentToolbarListBinding
 import com.wislie.wanandroid.ext.startLogin
 import com.wislie.wanandroid.viewmodel.ArticlesViewModel
 import kotlinx.coroutines.flow.collectLatest
@@ -27,7 +26,7 @@ class WendaListFragment : BaseViewModelFragment<BaseViewModel, FragmentListBindi
     private val articlesViewModel: ArticlesViewModel by viewModels()
 
     private val adapter by lazy {
-        WendaArticleAdapter { articleInfo ->
+        CommonArticleAdapter { articleInfo ->
             articleInfo?.run {
                 if (collect) {
                     articlesViewModel.unCollect(id)

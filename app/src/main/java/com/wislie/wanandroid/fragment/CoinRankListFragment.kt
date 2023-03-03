@@ -68,7 +68,7 @@ class CoinRankListFragment : BaseViewModelFragment<BaseViewModel, FragmentToolba
                     retry = { adapter.retry() })
             )
         adapter.addStateListener(hostActivity, mBaseLoadService)
-        binding.list.fab.initFab(binding.list.swipeRv)
+        binding.list.fab.initFab(hostActivity, binding.list.swipeRv)
     }
 
     override fun loadData() {

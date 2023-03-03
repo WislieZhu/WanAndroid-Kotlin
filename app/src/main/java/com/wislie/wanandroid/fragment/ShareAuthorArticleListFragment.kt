@@ -13,7 +13,7 @@ import com.wislie.common.ext.findNav
 import com.wislie.common.ext.init
 import com.wislie.wanandroid.App
 import com.wislie.wanandroid.R
-import com.wislie.wanandroid.adapter.FirstPageArticleAdapter
+import com.wislie.wanandroid.adapter.CommonArticleAdapter
 import com.wislie.wanandroid.adapter.LoadStateFooterAdapter
 import com.wislie.wanandroid.data.CollectEvent
 import com.wislie.wanandroid.databinding.FragmentToolbarListBinding
@@ -37,7 +37,7 @@ class ShareAuthorArticleListFragment :
     private var userId: Int? = null
 
     private val adapter by lazy {
-        FirstPageArticleAdapter { articleInfo ->
+        CommonArticleAdapter { articleInfo ->
             articleInfo?.run {
                 if (collect) {
                     articlesViewModel.unCollect(id)
@@ -80,7 +80,7 @@ class ShareAuthorArticleListFragment :
                     retry = { adapter.retry() })
             )
         adapter.addStateListener(hostActivity, mBaseLoadService)
-        binding.list.fab.initFab(binding.list.swipeRv)
+        binding.list.fab.initFab(hostActivity,binding.list.swipeRv)
     }
 
     override fun observeData() {

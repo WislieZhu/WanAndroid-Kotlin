@@ -13,8 +13,8 @@ import com.wislie.common.ext.findNav
 import com.wislie.common.ext.init
 import com.wislie.wanandroid.App
 import com.wislie.wanandroid.R
+import com.wislie.wanandroid.adapter.CommonArticleAdapter
 import com.wislie.wanandroid.adapter.LoadStateFooterAdapter
-import com.wislie.wanandroid.adapter.SearchArticleResultAdapter
 import com.wislie.wanandroid.data.CollectEvent
 import com.wislie.wanandroid.databinding.FragmentToolbarListBinding
 import com.wislie.wanandroid.ext.startLogin
@@ -33,7 +33,7 @@ class SearchArticleResultFragment :
     private val searchViewModel: SearchViewModel by viewModels()
     private val articlesViewModel: ArticlesViewModel by viewModels()
     private val adapter by lazy {
-        SearchArticleResultAdapter { articleInfo ->
+        CommonArticleAdapter { articleInfo ->
             articleInfo?.run {
                 if (collect) {
                     articlesViewModel.unCollect(id)

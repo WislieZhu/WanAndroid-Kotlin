@@ -166,6 +166,11 @@ public final class Utils {
         return displayMetrics.widthPixels;
     }
 
+    public static int getScreenHeight(Context context) {
+        DisplayMetrics displayMetrics = context.getResources().getDisplayMetrics();
+        return displayMetrics.heightPixels;
+    }
+
     public static ColorStateList getOneColorStateList(Context context, int colorPrimary) {
         int[] colors = new int[]{getColor(context, colorPrimary)};
         int[][] states =  new int[1][1];

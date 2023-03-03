@@ -25,7 +25,7 @@ class TreeListFragment : BaseViewModelFragment<BaseViewModel, FragmentListBindin
 
     private val articlesViewModel: ArticlesViewModel by viewModels()
 
-    private val adapter: TreeListAdapter by lazy {
+    private val adapter by lazy {
         TreeListAdapter()
     }
 
