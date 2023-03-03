@@ -293,3 +293,11 @@ fun bindRadioButtonPriority(radioGroup: RadioGroup, priority: Int?) {
         }
     }
 }
+
+@BindingAdapter("htmlStr")
+fun converterHtmlStr(view: TextView, htmlStr: String?) {
+    htmlStr?.run {
+        // 1、将小于号转化成 &lt;
+       view.text = this.toHtml()
+    }
+}

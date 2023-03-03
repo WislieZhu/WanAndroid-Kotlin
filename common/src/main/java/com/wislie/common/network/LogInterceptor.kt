@@ -34,7 +34,7 @@ class LogInterceptor : Interceptor {
         //第四种情况:访问服务器资源，资源发生变化,使用网络访问
         response.networkResponse()?.let {networkResponse ->
             if (networkResponse.code() != HttpURLConnection.HTTP_NOT_MODIFIED) {
-                Log.i("WislieZhu", "从网络中获取数据 code=${networkResponse.code()}")
+                Log.i("WislieZhu", "从网络中获取数据 code=${networkResponse.code()} ")
             }
         }
 

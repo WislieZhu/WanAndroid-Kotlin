@@ -10,10 +10,12 @@
     <androidx.coordinatorlayout.widget.CoordinatorLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent">
+
         <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
             android:id="@+id/swipe_refresh_layout"
             android:layout_width="match_parent"
             android:layout_height="match_parent">
+
             <com.yanzhenjie.recyclerview.SwipeRecyclerView
                 android:id="@+id/swipe_rv"
                 android:layout_width="match_parent"
@@ -24,16 +26,16 @@
 
         <com.google.android.material.floatingactionbutton.FloatingActionButton
             android:id="@+id/fab"
-            android:layout_gravity="bottom|right"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_gravity="bottom|right"
             android:layout_margin="15dp"
-            tools:visibility="visible"
+            android:src="@mipmap/fab_up"
             android:visibility="invisible"
             app:backgroundTint="@color/purple_500"
-            app:tint="@color/white"
             app:elevation="5dp"
             app:fabSize="mini"
-            android:src="@mipmap/fab_up" />
+            app:tint="@color/white"
+            tools:visibility="visible" />
     </androidx.coordinatorlayout.widget.CoordinatorLayout>
 </layout>

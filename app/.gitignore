@@ -33,4 +33,8 @@ google-services.json
 *.hprof
 
 .DS_Store
-bianhaifang.properties
+
+
+debug/
+release/
+priguardMapping.txt

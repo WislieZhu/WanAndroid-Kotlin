@@ -1,6 +1,7 @@
 package com.wislie.wanandroid.fragment
 
 import android.graphics.Color
+import android.util.Log
 import android.view.View
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.viewModels
@@ -62,12 +63,14 @@ class LoginFragment : BaseViewModelFragment<LoginStateViewModel, FragmentLoginBi
         super.observeData()
         loginViewModel.loginInfoResultLiveData
             .observe(viewLifecycleOwner) { resultState ->
+                Log.i("wislieZhu","11111111111111")
                 parseState(resultState, { userInfo ->
+                    Log.i("wislieZhu","登录的用户信息:$userInfo")
                     userInfo?.run {
                         App.instance().appViewModel.userInfoLiveData.value = this
                         Settings.nickname = this.nickname
+                        Settings.logined = true
                     }
-                    Settings.logined = true
                     findNav().navigateUp()
                 })
             }

@@ -34,7 +34,6 @@ class NoDoubleClickVisitor(
 
     private fun forEachMethods() {
         for (mn in cn.methods){
-
             if (mn.instructions.size() == 0) continue
             //先搞onClick
             filterOnClickMethods(mn)

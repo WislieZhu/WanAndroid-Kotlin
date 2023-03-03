@@ -1,6 +1,7 @@
 package com.wislie.wanandroid.fragment
 
 import android.text.TextUtils
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import androidx.core.content.ContextCompat

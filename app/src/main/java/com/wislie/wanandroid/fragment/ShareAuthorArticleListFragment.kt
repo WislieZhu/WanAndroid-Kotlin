@@ -16,7 +16,7 @@ import com.wislie.wanandroid.R
 import com.wislie.wanandroid.adapter.CommonArticleAdapter
 import com.wislie.wanandroid.adapter.LoadStateFooterAdapter
 import com.wislie.wanandroid.data.CollectEvent
-import com.wislie.wanandroid.databinding.FragmentToolbarListBinding
+import com.wislie.wanandroid.databinding.FragmentShareAuthorArticleListBinding
 import com.wislie.wanandroid.ext.initFab
 import com.wislie.wanandroid.ext.startLogin
 import com.wislie.wanandroid.util.ARTICLE_AUTHOR
@@ -29,7 +29,7 @@ import kotlinx.coroutines.launch
  * 分享者的文章列表
  */
 class ShareAuthorArticleListFragment :
-    BaseViewModelFragment<BaseViewModel, FragmentToolbarListBinding>() {
+    BaseViewModelFragment<BaseViewModel, FragmentShareAuthorArticleListBinding>() {
 
     private val articlesViewModel: ArticlesViewModel by viewModels()
 
@@ -70,7 +70,7 @@ class ShareAuthorArticleListFragment :
         registerLoadSir(binding.list.swipeRv) {
             adapter.refresh() //点击即刷新
         }
-        binding.list.swipeRefreshLayout.init{
+        binding.list.swipeRefreshLayout.init {
             adapter.refresh() //点击即刷新
         }
 
@@ -80,7 +80,7 @@ class ShareAuthorArticleListFragment :
                     retry = { adapter.retry() })
             )
         adapter.addStateListener(hostActivity, mBaseLoadService)
-        binding.list.fab.initFab(hostActivity,binding.list.swipeRv)
+        binding.list.fab.initFab(hostActivity, binding.list.swipeRv)
     }
 
     override fun observeData() {
@@ -100,7 +100,7 @@ class ShareAuthorArticleListFragment :
                         break
                     }
                 }
-            },  {
+            }, {
                 startLogin()
             })
         }
@@ -168,6 +168,12 @@ class ShareAuthorArticleListFragment :
                 }
             }
 
+        articlesViewModel.coinInfoLiveData
+            .observe(viewLifecycleOwner) { coin ->
+                coin?.run {
+                    binding.coin = this
+                }
+            }
     }
 
     override fun loadData() {
@@ -188,7 +194,7 @@ class ShareAuthorArticleListFragment :
     }
 
     override fun getLayoutResId(): Int {
-        return R.layout.fragment_toolbar_list
+        return R.layout.fragment_share_author_article_list
     }
 
 }

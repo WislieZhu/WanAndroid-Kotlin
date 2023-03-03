@@ -1,5 +1,6 @@
 package com.wislie.common.base
 
+import android.util.Log
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -59,6 +60,7 @@ fun <T> BaseViewModel.request(
                 block()
             }
         }.onSuccess { result ->
+            Log.i("wislieZhu"," result=$result")
             if (isShowDialog) {
                 liveData.value = ResultState.Loading(loadingMessage, false)
             }
@@ -69,6 +71,7 @@ fun <T> BaseViewModel.request(
                     ResultState.Error(AppException(result.errorCode,result.errorMsg), result.errorCode)
             }
         }.onFailure { error ->
+            Log.i("wislieZhu"," result errorMsg=${ExceptionHandle.handleException(error).errorMsg} errorCode=${ExceptionHandle.handleException(error).errCode}")
             if (isShowDialog) {
                 liveData.value = ResultState.Loading(loadingMessage, false)
             }

@@ -25,17 +25,17 @@ class NaviListFragment : BaseViewModelFragment<BaseViewModel, FragmentListBindin
 
     private val articlesViewModel: ArticlesViewModel by viewModels()
 
-    private val adapter: NaviListAdapter by lazy {
+    private val adapter by lazy {
         NaviListAdapter()
     }
 
     override fun init(root: View) {
         super.init(root)
         registerLoadSir(binding.list.swipeRv) {
-            adapter.refresh() //点击即刷新
+            loadData() //点击即刷新
         }
-        binding.list.swipeRefreshLayout.init{
-            adapter.refresh() //点击即刷新
+        binding.list.swipeRefreshLayout.init {
+            loadData() //点击即刷新
         }
         binding.list.swipeRv.adapter = adapter
         adapter.addStateListener(hostActivity, mBaseLoadService)
@@ -57,7 +57,7 @@ class NaviListFragment : BaseViewModelFragment<BaseViewModel, FragmentListBindin
                         adapter.submitData(pagingData)
                     }
                 }
-            }, { 
+            }, {
                 mBaseLoadService.showErrorCallback()
             })
             if (binding.list.swipeRefreshLayout.isRefreshing) {
@@ -73,14 +73,14 @@ class NaviListFragment : BaseViewModelFragment<BaseViewModel, FragmentListBindin
                 val list = adapter.snapshot().items
                 if (userInfo == null) { //用户未登录
                     for (i in list.indices) {
-                        for(article in list[i].articles){
+                        for (article in list[i].articles) {
                             article.collect = false
                         }
                     }
                     adapter.notifyItemRangeChanged(0, list.size, Any())
                 } else { //用户已登录
                     for (i in list.indices) {
-                        for(article in list[i].articles){
+                        for (article in list[i].articles) {
                             if (article.id in userInfo.collectIds) {
                                 article.collect = true
                             }
@@ -99,8 +99,11 @@ class NaviListFragment : BaseViewModelFragment<BaseViewModel, FragmentListBindin
                 val list = adapter.snapshot().items
                 for (i in list.indices) {    //收藏列表的id 与 首页列表的id 不是同一个
 
-                    for(article in list[i].articles){
-                        if ((article.id == id || (TextUtils.equals(article.title, collectEvent.title) &&
+                    for (article in list[i].articles) {
+                        if ((article.id == id || (TextUtils.equals(
+                                article.title,
+                                collectEvent.title
+                            ) &&
                                     TextUtils.equals(article.link, collectEvent.link) &&
                                     TextUtils.equals(
                                         article.author,

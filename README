@@ -595,11 +595,10 @@ MutableList 默认是 ArrayList
 5.bottom navigation 文字和图标同时变色
 上述已搞定
 1.我的(有很多东西需要改进)
-2.每一个列表的item 对照改进
-3.asm onclick 拦截
-4.背景色改变
-5.换肤
-6.error相关的统一处理
+2.asm onclick 拦截
+3.背景色改变
+4.换肤
+
 
 
 
@@ -670,17 +669,12 @@ https://juejin.cn/post/6844904099998089230#heading-71
 
 
 
-项目,
-
-firstpage, 广场, 公众号， 点击作者（头部多了积分），搜索结果, 搜索作者
-
-收藏和项目有点类似, 但没有左下角的tab
-
-分享
 
 
 
 
 
+马士兵的深入理解 java 虚拟机和唐朔飞计算机组成原理
 
-
+安装apk
+adb install E:\android_workspace\wanAndroid\WanAndroid-Kotlin\app\release\app-release.apk

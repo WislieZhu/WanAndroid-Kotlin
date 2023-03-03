@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<layout xmlns:android="http://schemas.android.com/apk/res/android">
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <data>
         <variable
@@ -9,7 +10,7 @@
     </data>
 
     <TextView
-        android:text="@{articleInfo.title}"
+        app:htmlStr="@{articleInfo.title}"
         android:padding="@dimen/dp_5"
         android:textColor="@color/white"
         android:background="@drawable/shape_round_rect_purple"

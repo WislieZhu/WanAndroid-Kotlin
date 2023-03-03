@@ -1,6 +1,7 @@
 package com.wislie.wanandroid.viewmodel
 
 import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.viewModelScope
 import androidx.paging.Pager
 import androidx.paging.PagingConfig
 import com.wislie.common.base.BaseViewModel
@@ -9,6 +10,7 @@ import com.wislie.common.base.request
 import com.wislie.wanandroid.data.*
 import com.wislie.wanandroid.datasource.*
 import com.wislie.wanandroid.network.apiService
+import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
 
 class ArticlesViewModel : BaseViewModel() {
@@ -326,6 +328,10 @@ class ArticlesViewModel : BaseViewModel() {
         }, naviListLiveData)
     }
 
+    val coinInfoLiveData by lazy {
+        MutableLiveData<Coin?>()
+    }
+
     /**
      * 分享者的文章列表
      */
@@ -335,7 +341,12 @@ class ArticlesViewModel : BaseViewModel() {
             pagingSourceFactory = {
                 ShareAuthorArticlePagingSource { currentPage ->
                     runBlocking {
-                        apiService.getShareAuthorArticles(id, currentPage)
+                        apiService.getShareAuthorArticles(id, currentPage).apply {
+                            val response = this
+                            viewModelScope.launch { //liveData setValue 需要在主线程操作
+                                coinInfoLiveData.value = response.data?.coinInfo
+                            }
+                        }
                     }
                 }
             })
@@ -363,7 +374,7 @@ class ArticlesViewModel : BaseViewModel() {
         MutableLiveData<ResultState<Int>>()
     }
 
-    fun delShareArticleLiveData(id:Int) {
+    fun delShareArticleLiveData(id: Int) {
         request({
             apiService.deleteShareArticle(id)
         }, {
@@ -382,9 +393,9 @@ class ArticlesViewModel : BaseViewModel() {
         MutableLiveData<ResultState<Any?>>()
     }
 
-    fun shareArticle(title:String, link:String){
+    fun shareArticle(title: String, link: String) {
         request({
-            apiService.shareArticle(title,link)
+            apiService.shareArticle(title, link)
         }, shareArticleLiveData)
     }
 }

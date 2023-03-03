@@ -35,15 +35,16 @@ class MineFragment : BaseViewModelFragment<MineStateViewModel, FragmentMineBindi
     private val takeCameraResultLauncher = registerForActivityResult(
         ActivityResultContracts.StartActivityForResult()
     ) { result: ActivityResult ->
-        if (result.resultCode == Activity.RESULT_OK) {
-            loadAvatar()
-        }
+        if (result.resultCode != Activity.RESULT_OK) return@registerForActivityResult
+        loadAvatar()
     }
 
     //从相册中选取
     private val pickFromAlbumResultLauncher = registerForActivityResult(
         ActivityResultContracts.StartActivityForResult()
     ) { result: ActivityResult ->
+
+        if (result.resultCode != Activity.RESULT_OK) return@registerForActivityResult
         result.data?.data?.run {
             Settings.avatar = CameraUtil.getPath2uri(hostActivity, this)
             loadAvatar()
@@ -99,16 +100,13 @@ class MineFragment : BaseViewModelFragment<MineStateViewModel, FragmentMineBindi
         }
 
         binding.clMineInfo.setOnClickListener { v ->
-
             if (!Settings.logined)
                 v.findNav().navigate(R.id.fragment_login)
         }
 
-
         binding.clSetting.setOnClickListener { //退出登录
             logoutViewModel.logout()
         }
-
 
     }
 
@@ -117,9 +115,8 @@ class MineFragment : BaseViewModelFragment<MineStateViewModel, FragmentMineBindi
         binding.ivAvatar.loadCircleImage(this@MineFragment, avatar)
     }
 
-    //修改每一个item, 点击author跳转, asm点击优化, 搜索按钮,
-    // 我的页面，  拍照,  加载中一闪而过, fab从下滑动到上方太慢, 导航item amp; 需要清除掉
-    // 启动慢
+    // asm点击优化, 搜索按钮
+    // 启动慢, navigation 跳转修改, 设置
     private fun takeCamera() {
         requestPermission(
             hostActivity,
@@ -195,6 +192,7 @@ class MineFragment : BaseViewModelFragment<MineStateViewModel, FragmentMineBindi
             .appViewModel
             .userInfoLiveData
             .observe(viewLifecycleOwner) { userInfo ->
+                Log.i("wislieZhu","mine 登录的用户信息:$userInfo")
                 userInfo?.run {
                     coinViewModel.getCoin()
                 }

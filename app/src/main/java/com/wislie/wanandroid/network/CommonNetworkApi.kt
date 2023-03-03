@@ -39,11 +39,11 @@ class CommonNetworkApi : AbstractNetworkApi() {
             connectTimeout(10, TimeUnit.SECONDS)
             readTimeout(5, TimeUnit.SECONDS)
             writeTimeout(5, TimeUnit.SECONDS)
-            if (BuildConfig.DEBUG) {
+//            if (BuildConfig.DEBUG) {
                 val loggingInterceptor: HttpLoggingInterceptor =
                     HttpLoggingInterceptor().setLevel(HttpLoggingInterceptor.Level.BODY)
                 addNetworkInterceptor(loggingInterceptor)
-            }
+//            }
         }
 
     }

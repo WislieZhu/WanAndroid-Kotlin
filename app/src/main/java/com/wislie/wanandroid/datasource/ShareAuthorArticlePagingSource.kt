@@ -11,7 +11,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 
 /**
- * 文章分页
+ * 分享者的文章分页
  */
 class ShareAuthorArticlePagingSource(private val block: (Long) -> ApiResponse<ShareAuthorInfo?>) :
     PagingSource<Long, ArticleInfo>() {
