@@ -28,13 +28,13 @@ fun requestPermission(context: Context, vararg permissions: String, grantedActio
                 never: Boolean
             ) {
                 if (never) {
-                    context.showToast("拍照权限被永久拒绝授权，请手动授予拍照权限")
+                    context.showToast("拍照权限被永久拒绝授权，请手动授予权限")
                     XXPermissions.startPermissionActivity(
                         context,
                         denied
                     )
                 } else {
-                    context.showToast("获取拍照权限失败")
+                    context.showToast("获取权限失败")
                 }
             }
         })

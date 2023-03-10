@@ -4,7 +4,6 @@ package com.wislie.wanandroid.network
 import com.franmontiel.persistentcookiejar.PersistentCookieJar
 import com.franmontiel.persistentcookiejar.cache.SetCookieCache
 import com.franmontiel.persistentcookiejar.persistence.SharedPrefsCookiePersistor
-import com.wislie.common.BuildConfig
 import com.wislie.common.network.*
 import com.wislie.common.util.Utils
 import okhttp3.Cache

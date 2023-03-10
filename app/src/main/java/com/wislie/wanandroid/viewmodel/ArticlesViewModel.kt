@@ -399,3 +399,4 @@ class ArticlesViewModel : BaseViewModel() {
         }, shareArticleLiveData)
     }
 }
+

@@ -6,19 +6,22 @@
 
     </data>
 
-    <FrameLayout
+    <LinearLayout
+        android:orientation="vertical"
         android:background="@color/purple_500"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
         <Button
-            android:id="@+id/btn_test"
-            android:layout_gravity="center"
-            android:text="测试"
+            android:id="@+id/btn_test_xc"
+            android:text="协程_多个任务顺序"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content" />
 
+        <Button
+            android:id="@+id/btn_xc_not_block"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
 
-
-    </FrameLayout>
+    </LinearLayout>
 </layout>

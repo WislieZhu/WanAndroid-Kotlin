@@ -9,4 +9,6 @@ object Settings {
     var nickname: String by Pref("") //用户名
 
     var avatar: String? by Pref("") //头像
+
+    var deviceId: String by Pref("") //设备Id
 }

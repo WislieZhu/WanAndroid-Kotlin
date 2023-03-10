@@ -20,7 +20,7 @@ class ArticlePagingSource : PagingSource<Long, ArticleInfo>() {
         return withContext(Dispatchers.IO) {
             val currentPage = params.key ?: 0
             try {
-                val articleListResp = apiService.getArticleList(currentPage)
+                val articleListResp = apiService.getArticleList(currentPage) //哪个在前面哪个先执行
                 if (currentPage == 0L) {
                     //置顶的文章列表
                     val topArticleListResp = apiService.getTopArticleList()

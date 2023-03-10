@@ -1,6 +1,5 @@
 package com.wislie.common.base
 
-import android.util.Log
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -19,8 +18,8 @@ open class BaseViewModel : ViewModel() {
     /**
      * PagingDataAdapter 删除item 摘自https://blog.csdn.net/haha223545/article/details/121040837
      */
-    private val mTempRemoveFlow = MutableStateFlow(mutableListOf<Any>())
-    val mRemovedFlow: Flow<MutableList<Any>> get() = mTempRemoveFlow
+    private val _removeFlow = MutableStateFlow(mutableListOf<Any>())
+    val mRemovedFlow: Flow<MutableList<Any>> get() = _removeFlow
 
     /**
      * 删除item
@@ -29,17 +28,17 @@ open class BaseViewModel : ViewModel() {
         if (item == null) {
             return
         }
-        val tempRemoveFlow = mTempRemoveFlow.value
+        val tempRemoveFlow = _removeFlow.value
         val removeItem = mutableListOf(item)
         removeItem.addAll(tempRemoveFlow)
-        mTempRemoveFlow.value = removeItem
+        _removeFlow.value = removeItem
     }
 
     /**
      * 删除所有item
      */
     fun removeAllItems(){
-        mTempRemoveFlow.value = mutableListOf()
+        _removeFlow.value = mutableListOf()
     }
 }
 
@@ -60,7 +59,7 @@ fun <T> BaseViewModel.request(
                 block()
             }
         }.onSuccess { result ->
-            Log.i("wislieZhu"," result=$result")
+//            Log.i("wislieZhu"," result=$result")
             if (isShowDialog) {
                 liveData.value = ResultState.Loading(loadingMessage, false)
             }
@@ -71,7 +70,7 @@ fun <T> BaseViewModel.request(
                     ResultState.Error(AppException(result.errorCode,result.errorMsg), result.errorCode)
             }
         }.onFailure { error ->
-            Log.i("wislieZhu"," result errorMsg=${ExceptionHandle.handleException(error).errorMsg} errorCode=${ExceptionHandle.handleException(error).errCode}")
+//            Log.i("wislieZhu"," result errorMsg=${ExceptionHandle.handleException(error).errorMsg} errorCode=${ExceptionHandle.handleException(error).errCode}")
             if (isShowDialog) {
                 liveData.value = ResultState.Loading(loadingMessage, false)
             }

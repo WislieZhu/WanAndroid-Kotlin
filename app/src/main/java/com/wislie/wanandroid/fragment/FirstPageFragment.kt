@@ -209,6 +209,9 @@ class FirstPageFragment : BaseViewModelFragment<BaseViewModel, FragmentToolbarLi
                 }
         }
     }
+    //列表 banner top
+
+    //banner 列表 top
 
     override fun getLayoutResId(): Int {
         return R.layout.fragment_toolbar_list

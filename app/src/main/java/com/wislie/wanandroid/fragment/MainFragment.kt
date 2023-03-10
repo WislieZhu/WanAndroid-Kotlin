@@ -7,6 +7,7 @@ import com.wislie.common.ext.bindViewPager2
 import com.wislie.common.ext.initMain
 import com.wislie.wanandroid.R
 import com.wislie.wanandroid.databinding.FragmentMainBinding
+import com.wislie.wanandroid.test.TestFragment
 
 /**
  * 主页面

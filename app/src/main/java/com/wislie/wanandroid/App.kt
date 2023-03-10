@@ -16,8 +16,10 @@ import com.wislie.common.callback.ErrorCallback
 import com.wislie.common.callback.LoadingCallback
 import com.wislie.common.test.TimeMonitorConfig
 import com.wislie.common.test.TimeMonitorManager
+import com.wislie.common.util.DeviceUtil
 import com.wislie.common.util.Utils
 import com.wislie.wanandroid.anr.ANRFileObserver
+import com.wislie.wanandroid.util.Settings
 import com.wislie.wanandroid.viewmodel.AppViewModel
 import java.io.File
 
@@ -78,6 +80,8 @@ class App : Application() {
             val fileObserver =   ANRFileObserver(file)
             fileObserver.startWatching()
         }*/
+
+        Settings.deviceId = DeviceUtil.getDeviceUniqueId()
 
     }
 
