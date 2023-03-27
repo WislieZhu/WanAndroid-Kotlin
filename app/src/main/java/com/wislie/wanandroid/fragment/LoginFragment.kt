@@ -50,6 +50,8 @@ class LoginFragment : BaseViewModelFragment<LoginStateViewModel, FragmentLoginBi
                     mViewModel?.password?.get()!!
                 )
             }
+
+
         }
         binding.tvRegister.setOnClickListener { //注册页面
             val direction =
@@ -63,7 +65,6 @@ class LoginFragment : BaseViewModelFragment<LoginStateViewModel, FragmentLoginBi
         super.observeData()
         loginViewModel.loginInfoResultLiveData
             .observe(viewLifecycleOwner) { resultState ->
-                Log.i("wislieZhu","11111111111111")
                 parseState(resultState, { userInfo ->
                     Log.i("wislieZhu","登录的用户信息:$userInfo")
                     userInfo?.run {

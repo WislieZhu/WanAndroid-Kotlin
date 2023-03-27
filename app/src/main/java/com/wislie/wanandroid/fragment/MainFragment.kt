@@ -18,8 +18,8 @@ class MainFragment : BaseFragment<FragmentMainBinding>() {
     override fun init(root: View) {
 
         val map = mutableMapOf<Int, Fragment>(
-            0 to FirstPageFragment(),
-//            0 to TestFragment(),
+//            0 to FirstPageFragment(),
+            0 to TestFragment(),
             1 to ProjectFragment(),
 //            1 to TestFragment(),
 //            2 to TestFragment(),

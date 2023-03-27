@@ -84,4 +84,6 @@ fun CommonNavigator.setNavigator(
             indicator.onPageScrollStateChanged(state)
         }
     })
+
+
 }

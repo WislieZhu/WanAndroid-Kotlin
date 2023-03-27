@@ -1,14 +1,13 @@
 package com.wislie.wanandroid.fragment
 
-import android.util.Log
 import android.view.View
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
-import androidx.paging.TerminalSeparatorType
+import androidx.lifecycle.repeatOnLifecycle
 import androidx.paging.cachedIn
 import androidx.paging.filter
-import androidx.paging.insertFooterItem
 import com.wislie.common.base.BaseViewModel
 import com.wislie.common.base.BaseViewModelFragment
 import com.wislie.common.base.parseState
@@ -42,7 +41,6 @@ class TodoListFragment : BaseViewModelFragment<BaseViewModel, FragmentToolbarLis
                 todoViewModel.doneTodo(toDoInfo.id)
             }
         })
-
     }
 
     override fun init(root: View) {
@@ -83,20 +81,29 @@ class TodoListFragment : BaseViewModelFragment<BaseViewModel, FragmentToolbarLis
 
     override fun loadData() {
         lifecycleScope.launch {
-            todoViewModel
-                .todoList
-                .cachedIn(scope = lifecycleScope)
-                .combine(todoViewModel.mRemovedFlow) { pagingData, removedList ->
-                    pagingData.filter {
-                        it !in removedList
+
+       /*     todoViewModel
+                .todoList. flowWithLifecycle2(viewLifecycleOwner,Lifecycle.State.STARTED){
+
+
+                }*/
+
+            repeatOnLifecycle(Lifecycle.State.STARTED) {
+                todoViewModel
+                    .todoList
+                    .cachedIn(scope = lifecycleScope)
+                    .combine(todoViewModel.mRemovedFlow) { pagingData, removedList ->
+                        pagingData.filter {
+                            it !in removedList
+                        }
                     }
-                }
-                .collectLatest {
-                    if (binding.list.swipeRefreshLayout.isRefreshing) {
-                        binding.list.swipeRefreshLayout.isRefreshing = false
+                    .collectLatest {
+                        if (binding.list.swipeRefreshLayout.isRefreshing) {
+                            binding.list.swipeRefreshLayout.isRefreshing = false
+                        }
+                        adapter.submitData(lifecycle, it)
                     }
-                    adapter.submitData(lifecycle, it)
-                }
+            }
         }
     }
 

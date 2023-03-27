@@ -144,4 +144,9 @@ dependencies {
     implementation 'com.github.anrwatchdog:anrwatchdog:1.4.0'
 
 
+    def mockkVersion = "1.13.4"
+    testImplementation "io.mockk:mockk:${mockkVersion}"
+
+
+
 }

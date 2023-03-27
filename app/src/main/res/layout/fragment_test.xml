@@ -8,11 +8,10 @@
 
     <LinearLayout
         android:orientation="vertical"
-        android:background="@color/purple_500"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-        <Button
+       <!-- <Button
             android:id="@+id/btn_test_xc"
             android:text="协程_多个任务顺序"
             android:layout_width="wrap_content"
@@ -20,8 +19,69 @@
 
         <Button
             android:id="@+id/btn_xc_not_block"
+            android:text="协程不阻塞线程"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
+            android:layout_height="wrap_content" />-->
+      <!--  <net.lucode.hackware.magicindicator.MagicIndicator
+            android:id="@+id/indicator_test"
+            android:layout_width="wrap_content"
+            android:background="@android:color/holo_green_light"
+            android:layout_height="?attr/actionBarSize"
+            android:layout_gravity="center_horizontal"
+            android:paddingLeft="8dp"
+            android:paddingRight="8dp" />-->
+
+
+        <com.google.android.material.tabs.TabLayout
+            android:id="@+id/tab_layout"
+            app:tabTextColor="@color/black"
+            android:background="@android:color/holo_green_light"
+            android:layout_width="wrap_content"
+            android:layout_height="40dp" />
+
+        <androidx.viewpager2.widget.ViewPager2
+            android:id="@+id/vp_test"
+            android:background="@color/color_CCCCCC"
+            android:layout_width="match_parent"
+            android:layout_height="200dp" />
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <Button
+                android:id="@+id/btn_add"
+                android:layout_marginLeft="20dp"
+                android:text="新增"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"/>
+
+            <Button
+                android:id="@+id/btn_remove_last"
+                android:layout_toRightOf="@id/btn_add"
+                android:layout_marginLeft="20dp"
+                android:text="删除"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"/>
+
+            <Button
+                android:id="@+id/btn_remove_sec"
+                android:layout_below="@id/btn_add"
+                android:layout_marginLeft="20dp"
+                android:text="删除第二个"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"/>
+
+            <Button
+                android:id="@+id/btn_remove_all"
+                android:layout_toRightOf="@id/btn_remove_sec"
+                android:layout_below="@id/btn_remove_last"
+                android:layout_marginLeft="20dp"
+                android:text="删除所有"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"/>
+
+        </RelativeLayout>
 
     </LinearLayout>
 </layout>

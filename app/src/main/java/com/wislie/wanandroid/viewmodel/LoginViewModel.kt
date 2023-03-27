@@ -46,4 +46,15 @@ class LoginViewModel : BaseViewModel() {
     }
 
 
+    //登录viewModel
+    // 构造参数中有登录Repository,还有LiveData变量
+    //登录方法:调用Repository的doLogin方法
+
+    //登录Repository
+    //doLogin方法
+    //flow{emit(登录)},返回Flow<T>
+
+    //登录Activity
+    //
+
 }

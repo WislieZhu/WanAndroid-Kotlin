@@ -3,7 +3,9 @@ package com.wislie.wanandroid.fragment
 import android.view.View
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.repeatOnLifecycle
 import androidx.paging.PagingData
 import com.wislie.common.base.*
 import com.wislie.common.ext.addStateListener
@@ -64,8 +66,10 @@ class UsualWebsiteFragment : BaseViewModelFragment<BaseViewModel, FragmentToolba
                     }
                     dataList?.run {
                         lifecycleScope.launch {
-                            val pagingData = PagingData.from(dataList)
-                            adapter.submitData(pagingData)
+                            repeatOnLifecycle(Lifecycle.State.STARTED) {
+                                val pagingData = PagingData.from(dataList)
+                                adapter.submitData(pagingData)
+                            }
                         }
                     }
                 })

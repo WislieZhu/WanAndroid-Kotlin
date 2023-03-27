@@ -3,7 +3,9 @@ package com.wislie.wanandroid.fragment
 import android.text.TextUtils
 import android.view.View
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.repeatOnLifecycle
 import com.wislie.common.base.BaseViewModel
 import com.wislie.common.base.BaseViewModelFragment
 import com.wislie.common.base.parseState
@@ -60,14 +62,16 @@ class SquareArticleListFragment :
     override fun loadData() {
         super.loadData()
         lifecycleScope.launch {
-            articlesViewModel
-                .squareArticleList
-                .collectLatest {
-                    if (binding.list.swipeRefreshLayout.isRefreshing) {
-                        binding.list.swipeRefreshLayout.isRefreshing = false
+            repeatOnLifecycle(Lifecycle.State.STARTED) {
+                articlesViewModel
+                    .squareArticleList
+                    .collectLatest {
+                        if (binding.list.swipeRefreshLayout.isRefreshing) {
+                            binding.list.swipeRefreshLayout.isRefreshing = false
+                        }
+                        adapter.submitData(lifecycle, it)
                     }
-                    adapter.submitData(lifecycle, it)
-                }
+            }
         }
     }
 

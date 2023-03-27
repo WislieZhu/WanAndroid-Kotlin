@@ -2,8 +2,10 @@ package com.wislie.wanandroid.fragment
 
 import android.view.View
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.Observer
 import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.repeatOnLifecycle
 import androidx.paging.PagingData
 import androidx.paging.filter
 import com.wislie.common.base.BaseViewModel
@@ -63,15 +65,17 @@ class CollectWebsiteListFragment :
                         binding.list.swipeRefreshLayout.isRefreshing = false
                     }
                     lifecycleScope.launch {
-                        websiteInfoList?.run {
-                            //list转换成 Flow, 方便删除
-                            val flow = MutableStateFlow(PagingData.from(this))
-                            flow.combine(articlesViewModel.mRemovedFlow) { pagingData, removedList ->
-                                pagingData.filter {
-                                    it !in removedList
+                        repeatOnLifecycle(Lifecycle.State.STARTED) {
+                            websiteInfoList?.run {
+                                //list转换成 Flow, 方便删除
+                                val flow = MutableStateFlow(PagingData.from(this))
+                                flow.combine(articlesViewModel.mRemovedFlow) { pagingData, removedList ->
+                                    pagingData.filter {
+                                        it !in removedList
+                                    }
+                                }.collectLatest {
+                                    adapter.submitData(lifecycle, it)
                                 }
-                            }.collectLatest {
-                                adapter.submitData(lifecycle, it)
                             }
                         }
                     }

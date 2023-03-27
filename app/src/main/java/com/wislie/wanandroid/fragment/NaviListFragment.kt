@@ -3,7 +3,9 @@ package com.wislie.wanandroid.fragment
 import android.text.TextUtils
 import android.view.View
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.repeatOnLifecycle
 import androidx.paging.PagingData
 import com.wislie.common.base.BaseViewModel
 import com.wislie.common.base.BaseViewModelFragment
@@ -53,8 +55,10 @@ class NaviListFragment : BaseViewModelFragment<BaseViewModel, FragmentListBindin
                 treeList?.run {
                     //list 数据填充
                     lifecycleScope.launch {
-                        val pagingData = PagingData.from(treeList)
-                        adapter.submitData(pagingData)
+                        repeatOnLifecycle(Lifecycle.State.STARTED){
+                            val pagingData = PagingData.from(treeList)
+                            adapter.submitData(pagingData)
+                        }
                     }
                 }
             }, {

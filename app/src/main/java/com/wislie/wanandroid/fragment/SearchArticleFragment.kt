@@ -5,7 +5,9 @@ import android.view.LayoutInflater
 import android.view.View
 import androidx.core.content.ContextCompat
 import androidx.databinding.DataBindingUtil
+import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.repeatOnLifecycle
 import androidx.paging.cachedIn
 import androidx.paging.filter
 import com.wislie.common.base.BaseViewModel
@@ -92,16 +94,18 @@ class SearchArticleFragment : BaseViewModelFragment<BaseViewModel, FragmentSearc
     override fun loadData() {
         searchViewModel.getHotKey()
         lifecycleScope.launch {
-            searchViewModel.queryAllSearchKey(hostActivity)
-                .cachedIn(scope = lifecycleScope)
-                .combine(searchViewModel.mRemovedFlow) { pagingData, removed ->
-                    pagingData.filter {
-                        it !in removed
+            repeatOnLifecycle(Lifecycle.State.STARTED) {
+                searchViewModel.queryAllSearchKey(hostActivity)
+                    .cachedIn(scope = lifecycleScope)
+                    .combine(searchViewModel.mRemovedFlow) { pagingData, removed ->
+                        pagingData.filter {
+                            it !in removed
+                        }
                     }
-                }
-                .collectLatest {
-                    adapter.submitData(lifecycle, it)
-                }
+                    .collectLatest {
+                        adapter.submitData(lifecycle, it)
+                    }
+            }
         }
     }
 
