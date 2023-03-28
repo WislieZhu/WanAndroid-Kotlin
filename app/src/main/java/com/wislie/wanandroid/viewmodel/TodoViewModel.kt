@@ -103,6 +103,8 @@ class TodoViewModel : BaseViewModel() {
             todoDoneLiveData.value = ResultState.Loading(loadingMessage, isShowingDialog)
         })
     }
+
+
 }
 
 //Failure(java.io.FileNotFoundException: /storage/emulated/0/Pictures/Screenshots/Screenshot_20221222_165319_frontier_defense.jiuqitech.cn.jpg: open failed: EACCES (Permission denied))
